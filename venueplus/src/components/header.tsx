@@ -68,11 +68,6 @@ export function Header() {
           <div className="hidden md:flex items-center space-x-8">
             <div className="flex items-center space-x-8">
               <button className="flex items-center space-x-1 text-gray-700 hover:text-purple-600 font-medium transition-all duration-200 group relative">
-                <span>Destinations</span>
-                <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-violet-600 transition-all duration-300 group-hover:w-full"></div>
-              </button>
-              <button className="flex items-center space-x-1 text-gray-700 hover:text-purple-600 font-medium transition-all duration-200 group relative">
                 <span>Experiences</span>
                 <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
                 <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-violet-600 transition-all duration-300 group-hover:w-full"></div>
@@ -102,9 +97,9 @@ export function Header() {
                     onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
                     className="flex items-center space-x-2 text-gray-700 hover:text-purple-600 transition-all duration-200 p-2 rounded-lg hover:bg-purple-50"
                   >
-                    <div className="w-8 h-8 bg-gradient-to-r from-violet-600 to-purple-600 rounded-full flex items-center justify-center">
-                      <User className="w-4 h-4 text-white" />
-                    </div>
+                  <div className="w-8 h-8 bg-gradient-to-r from-violet-600 to-purple-600 rounded-full flex items-center justify-center">
+                    <User className="w-4 h-4 text-white" />
+                  </div>
                     <span className="font-medium hidden lg:block">{session.user?.name || 'User'}</span>
                     <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isProfileMenuOpen ? 'rotate-180' : ''}`} />
                   </button>
@@ -373,7 +368,7 @@ export function Header() {
                       >
                         <LogOut className="w-5 h-5" />
                         <span>Sign Out</span>
-                      </button>
+                    </button>
                     </div>
                   </div>
                 </>
