@@ -11,6 +11,7 @@ import { BudgetPlanner } from './steps/budget-planner'
 import { PackageSelectionStep } from './steps/package-selection-step'
 import { EnhancedItineraryGenerator } from './steps/enhanced-itinerary-generator'
 import { TripSummary } from './steps/trip-summary'
+import { PaymentStep } from './steps/payment-step'
 import { useTripContext } from '@/contexts/TripContext'
 
 interface TripPlanningModalProps {
@@ -68,7 +69,8 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
     'budget',
     'packages',
     'itinerary',
-    'summary'
+    'summary',
+    'payment'
   ]
 
   const updateTripData = (data: Partial<TripData>) => {
@@ -129,6 +131,8 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
         return !!tripData.selectedPackage
       case 'itinerary':
         return !!tripData.itinerary
+      case 'summary':
+        return true // Summary step can always proceed to payment
       default:
         return true
     }
@@ -152,6 +156,8 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
         return 'Please select a travel package'
       case 'itinerary':
         return 'Please generate your itinerary'
+      case 'summary':
+        return 'Please review your trip details'
       default:
         return 'Please complete this step'
     }
@@ -196,7 +202,9 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
       case 'itinerary':
         return <EnhancedItineraryGenerator tripData={currentTripData} onUpdate={updateTripData} onNext={nextStep} />
       case 'summary':
-        return <TripSummary tripData={currentTripData} isAuthenticated={isAuthenticated} onClose={onClose} />
+        return <TripSummary tripData={currentTripData} isAuthenticated={isAuthenticated} onNext={nextStep} />
+      case 'payment':
+        return <PaymentStep tripData={currentTripData} isAuthenticated={isAuthenticated} onClose={onClose} />
       default:
         return <DestinationSelection tripData={currentTripData} onUpdate={updateTripData} onNext={nextStep} />
     }
@@ -212,7 +220,8 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
       budget: '💰',
       packages: '📦',
       itinerary: '🗺️',
-      summary: '📋'
+      summary: '📋',
+      payment: '💳'
     }
     return icons[stepName as keyof typeof icons] || '●'
   }
@@ -227,7 +236,8 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
       budget: 'Budget',
       packages: 'Packages',
       itinerary: 'Itinerary',
-      summary: 'Summary'
+      summary: 'Summary',
+      payment: 'Payment'
     }
     return titles[stepName as keyof typeof titles] || stepName
   }

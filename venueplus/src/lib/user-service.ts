@@ -189,6 +189,30 @@ export class UserDataService {
     }
   }
 
+  async updateUserStatsAfterBooking(userId: string, bookingAmount: number): Promise<UserProfile | null> {
+    try {
+      // Get current user profile to access existing stats
+      const currentProfile = await this.getUserProfile(userId)
+      if (!currentProfile) return null
+
+      const currentStats = currentProfile.stats || this.getDefaultStats(currentProfile.createdAt)
+      
+      // Update stats with new booking
+      const updatedStats = {
+        ...currentStats,
+        totalTrips: (currentStats.totalTrips || 0) + 1,
+        totalSpent: (currentStats.totalSpent || 0) + bookingAmount,
+        lastBookingDate: new Date(),
+      }
+
+      // Update the user's stats
+      return await this.updateUserProfile(userId, { stats: updatedStats })
+    } catch (error) {
+      console.error('Error updating user stats after booking:', error)
+      return null
+    }
+  }
+
   async updateUserPreferences(userId: string, preferences: Partial<UserPreferences>): Promise<UserProfile | null> {
     try {
       const user = await prisma.user.findUnique({

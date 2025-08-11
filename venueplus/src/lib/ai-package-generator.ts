@@ -9,7 +9,7 @@ import {
 } from './package-types'
 
 // Initialize Gemini AI
-const genAI = new GoogleGenerativeAI('AIzaSyBcTnpoAlQ7kz6CZh7ONr9nSLwYhn4yGi8')
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'AIzaSyBcTnpoAlQ7kz6CZh7ONr9nSLwYhn4yGi8')
 const model = genAI.getGenerativeModel({ 
   model: 'gemini-1.5-pro',
   generationConfig: {

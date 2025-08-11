@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 interface RecentViewItem {
   itemType: 'package' | 'destination' | 'activity' | 'hotel' | 'itinerary'
@@ -113,7 +113,7 @@ export function withRecentViews<T extends object>(
       }
     }, [props.userId, trackView])
 
-    return <Component {...props} />
+    return React.createElement(Component, props)
   }
 }
 

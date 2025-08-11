@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { SmartItinerary, TravelPackage, IndividualBookingOption } from '@/lib/gemini-ai'
 import { Calendar, Clock, MapPin, Star, Users, DollarSign, Package, Plane, Building2, Activity, Utensils, Car, ExternalLink, ThumbsUp, ThumbsDown, RefreshCw, Sparkles, Bot } from 'lucide-react'
+import { redirectToBookingPage } from '@/lib/booking-utils'
 
 interface SmartItineraryViewProps {
   itinerary: SmartItinerary
@@ -193,7 +194,7 @@ export function SmartItineraryView({
           <h2 className="text-2xl font-bold mb-6">Available Travel Packages</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {itinerary.packages.map((pkg) => (
-              <PackageCard key={pkg.id} package={pkg} onBook={onBookPackage} />
+              <PackageCard key={pkg.id} package={pkg} onBook={onBookPackage} destination="Package Destination" />
             ))}
           </div>
         </div>
@@ -220,11 +221,13 @@ export function SmartItineraryView({
 function PackageCard({ 
   package: pkg, 
   onBook, 
-  isRecommended = false 
+  isRecommended = false,
+  destination = 'Unknown'
 }: { 
   package: TravelPackage
   onBook?: (id: string) => void
   isRecommended?: boolean
+  destination?: string
 }) {
   return (
     <div className={`card-elegant overflow-hidden ${isRecommended ? 'ring-2 ring-purple-500' : ''}`}>
@@ -281,7 +284,15 @@ function PackageCard({
         </div>
 
         <button
-          onClick={() => onBook?.(pkg.id)}
+          onClick={() => redirectToBookingPage({
+            id: pkg.id,
+            name: pkg.name,
+            destination: destination,
+            price: pkg.price,
+            duration: pkg.duration,
+            provider: pkg.provider,
+            description: pkg.description
+          })}
           className="w-full mt-6 btn-primary flex items-center justify-center space-x-2"
         >
           <ExternalLink className="w-4 h-4" />
@@ -373,7 +384,11 @@ function BookingCard({
       </div>
 
       <button
-        onClick={() => onBook?.(booking)}
+        onClick={() => {
+          if (booking.availability && booking.bookingUrl) {
+            window.open(booking.bookingUrl, '_blank')
+          }
+        }}
         disabled={!booking.availability}
         className={`w-full flex items-center justify-center space-x-2 ${
           booking.availability ? 'btn-primary' : 'btn-secondary opacity-50 cursor-not-allowed'
