@@ -32,3 +32,4 @@ export function createBookingUrl(packageData: PackageBookingData): string {
   
   return `/book-package?${params.toString()}`
 }
+

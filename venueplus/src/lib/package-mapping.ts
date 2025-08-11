@@ -27,3 +27,4 @@ export function getDatabasePackageId(homepagePackageId: number): string {
 export function getPackagePrice(packageId: string): number {
   return packagePriceMapping[packageId] || 15000
 }
+

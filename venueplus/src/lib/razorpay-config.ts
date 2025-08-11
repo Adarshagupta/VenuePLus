@@ -158,3 +158,4 @@ export function formatAmount(amountInPaise: number): string {
 export function convertToPaise(amountInRupees: number): number {
   return Math.round(amountInRupees * 100)
 }
+
