@@ -1,8 +1,30 @@
 'use client'
 
+import { useState, useEffect, useRef } from 'react'
 import { Sparkles, Zap, Shield, Clock } from 'lucide-react'
 
 export function FeatureShowcase() {
+  const [visibleCards, setVisibleCards] = useState(new Set())
+  const sectionRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const cardIndex = parseInt(entry.target.getAttribute('data-card-index') || '0')
+            setVisibleCards(prev => new Set([...prev, cardIndex]))
+          }
+        })
+      },
+      { threshold: 0.2 }
+    )
+
+    const cards = sectionRef.current?.querySelectorAll('[data-card-index]')
+    cards?.forEach(card => observer.observe(card))
+
+    return () => observer.disconnect()
+  }, [])
   const features = [
     {
       icon: Sparkles,
@@ -31,13 +53,19 @@ export function FeatureShowcase() {
   ]
 
   return (
-    <section className="py-24 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6">
+    <section ref={sectionRef} className="py-24 bg-gray-50 relative overflow-hidden">
+      {/* Floating background elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-20 left-10 w-20 h-20 bg-purple-200/30 rounded-full blur-2xl animate-float-particles"></div>
+        <div className="absolute bottom-20 right-10 w-16 h-16 bg-blue-200/30 rounded-full blur-xl animate-float-particles" style={{ animationDelay: '2s' }}></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-light text-gray-800 mb-6">
-            Why Choose <span className="font-bold gradient-text-primary">VenuePlus</span>
+          <h2 className="text-4xl md:text-5xl font-light text-gray-800 mb-6 animate-fade-in">
+            Why Choose <span className="font-bold gradient-text-primary">Our Platform</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '0.2s' }}>
             Experience the future of travel planning with our cutting-edge platform designed for modern travelers
           </p>
         </div>
@@ -46,19 +74,34 @@ export function FeatureShowcase() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="group bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all-smooth hover:-translate-y-2 border border-gray-100"
+              data-card-index={index}
+              className={`group bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 relative overflow-hidden cursor-pointer ${
+                visibleCards.has(index) 
+                  ? 'animate-scale-in opacity-100' 
+                  : 'opacity-0 translate-y-8'
+              }`}
+              style={{ 
+                animationDelay: `${index * 150}ms`,
+                transitionDelay: `${index * 150}ms`
+              }}
             >
-              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} p-4 mb-6 group-hover:scale-110 transition-transform-smooth`}>
+              {/* Shine effect on hover */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out"></div>
+              
+              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} p-4 mb-6 group-hover:scale-110 transition-all duration-300 relative z-10 group-hover:rotate-3`}>
                 <feature.icon className="w-8 h-8 text-white" />
               </div>
               
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              <h3 className="text-xl font-semibold text-gray-800 mb-4 group-hover:text-purple-600 transition-colors duration-300 relative z-10">
                 {feature.title}
               </h3>
               
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300 relative z-10">
                 {feature.description}
               </p>
+
+              {/* Interactive border glow */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm"></div>
             </div>
           ))}
         </div>

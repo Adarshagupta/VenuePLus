@@ -20,28 +20,23 @@ export function Header() {
   }, [])
 
   return (
-    <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <header className={`transition-all duration-300 sticky top-0 z-50 ${
+      scrolled 
+        ? 'bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-lg' 
+        : 'bg-white border-b border-gray-100'
+    }`}>
       <div className="max-w-[1600px] mx-auto px-6 lg:px-8 xl:px-16">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center space-x-3">
+            <Link href="/" className="flex items-center space-x-3 group">
               <div className="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0">
                 <Image
                   src="/logo.png"
-                  alt="VenuePlus Logo"
+                  alt="Logo"
                   width={40}
                   height={40}
                   className="object-cover"
-                />
-              </div>
-              <div className="relative h-10 flex items-center">
-                <Image
-                  src="/name.png"
-                  alt="VenuePlus Name"
-                  width={120}
-                  height={32}
-                  className="object-contain"
                 />
               </div>
             </Link>
@@ -50,20 +45,24 @@ export function Header() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <div className="flex items-center space-x-8">
-              <button className="flex items-center space-x-1 text-gray-700 hover:text-gray-900 font-medium">
+              <button className="flex items-center space-x-1 text-gray-700 hover:text-purple-600 font-medium transition-all duration-200 group relative">
                 <span>Destinations</span>
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-violet-600 transition-all duration-300 group-hover:w-full"></div>
               </button>
-              <button className="flex items-center space-x-1 text-gray-700 hover:text-gray-900 font-medium">
+              <button className="flex items-center space-x-1 text-gray-700 hover:text-purple-600 font-medium transition-all duration-200 group relative">
                 <span>Experiences</span>
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-violet-600 transition-all duration-300 group-hover:w-full"></div>
               </button>
-              <button className="flex items-center space-x-1 text-gray-700 hover:text-gray-900 font-medium">
+              <button className="flex items-center space-x-1 text-gray-700 hover:text-purple-600 font-medium transition-all duration-200 group relative">
                 <span>Book Trip</span>
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-violet-600 transition-all duration-300 group-hover:w-full"></div>
               </button>
-              <Link href="/blog" className="text-gray-700 hover:text-gray-900 font-medium">
+              <Link href="/blog" className="text-gray-700 hover:text-purple-600 font-medium transition-all duration-200 group relative">
                 Blog
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-violet-600 transition-all duration-300 group-hover:w-full"></div>
               </Link>
             </div>
             
@@ -86,15 +85,17 @@ export function Header() {
               <div className="flex items-center space-x-4">
                 <Link
                   href="/auth/signin"
-                  className="text-gray-700 hover:text-gray-900 font-medium"
+                  className="text-gray-700 hover:text-purple-600 font-medium transition-all duration-200 relative group"
                 >
                   Sign up
+                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-violet-600 transition-all duration-300 group-hover:w-full"></div>
                 </Link>
                 <Link
                   href="/auth/signup"
-                  className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                  className="bg-gradient-to-r from-gray-900 to-gray-800 hover:from-purple-600 hover:to-violet-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-xl relative overflow-hidden group"
                 >
-                  Log in
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <span className="relative z-10">Log in</span>
                 </Link>
               </div>
             )}
