@@ -46,9 +46,10 @@ export function useUserActivity() {
       price: pkg.price,
       source: pkg.source
     })
+    
 
     // Also add to recently viewed
-    
+
     try {
       await fetch('/api/user/recent-views', {
         method: 'POST',
