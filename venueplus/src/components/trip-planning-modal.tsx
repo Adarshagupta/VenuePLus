@@ -242,18 +242,18 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">V</span>
+                  <span className="text-white font-bold text-lg">M</span>
                 </div>
                 <div>
                   <div className="flex items-center space-x-2">
-                    <h1 className="text-lg font-bold gradient-text-primary">VenuePlus</h1>
+                    <h1 className="text-lg font-semibold text-gray-800">Travel Planning</h1>
                     {isFullscreen && (
                       <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-full animate-bounce-in">
                         Fullscreen
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500">Travel Planning</p>
+                  <p className="text-xs text-gray-500">Plan Your Perfect Trip</p>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
