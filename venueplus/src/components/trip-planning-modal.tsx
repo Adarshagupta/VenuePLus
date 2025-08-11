@@ -8,6 +8,7 @@ import { DurationSelection } from './steps/duration-selection'
 import { TravelerSelection } from './steps/traveler-selection'
 import { DepartureSelection } from './steps/departure-selection'
 import { BudgetPlanner } from './steps/budget-planner'
+import { PackageSelectionStep } from './steps/package-selection-step'
 import { EnhancedItineraryGenerator } from './steps/enhanced-itinerary-generator'
 import { TripSummary } from './steps/trip-summary'
 import { useTripContext } from '@/contexts/TripContext'
@@ -35,6 +36,15 @@ export interface TripData {
       shopping: number
     }
   }
+  selectedPackage?: {
+    id: string
+    name: string
+    price: number
+    source: 'scraped' | 'ai_generated'
+    provider: string
+    description: string
+    fullData?: any
+  }
   itinerary?: {
     type: 'budget' | 'balanced' | 'luxury'
     activities: any[]
@@ -56,6 +66,7 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
     'travelers',
     'departure',
     'budget',
+    'packages',
     'itinerary',
     'summary'
   ]
@@ -114,6 +125,8 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
         return !!tripData.fromCity
       case 'budget':
         return !!tripData.budget
+      case 'packages':
+        return !!tripData.selectedPackage
       case 'itinerary':
         return !!tripData.itinerary
       default:
@@ -135,6 +148,8 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
         return 'Please select your departure city'
       case 'budget':
         return 'Please set your travel budget'
+      case 'packages':
+        return 'Please select a travel package'
       case 'itinerary':
         return 'Please generate your itinerary'
       default:
@@ -176,6 +191,8 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
         return <DepartureSelection tripData={currentTripData} onUpdate={updateTripData} onNext={nextStep} />
       case 'budget':
         return <BudgetPlanner tripData={currentTripData} onUpdate={updateTripData} onNext={nextStep} />
+      case 'packages':
+        return <PackageSelectionStep tripData={currentTripData} onUpdate={updateTripData} onNext={nextStep} onBack={prevStep} />
       case 'itinerary':
         return <EnhancedItineraryGenerator tripData={currentTripData} onUpdate={updateTripData} onNext={nextStep} />
       case 'summary':
@@ -193,6 +210,7 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
       travelers: '👥',
       departure: '✈️',
       budget: '💰',
+      packages: '📦',
       itinerary: '🗺️',
       summary: '📋'
     }
@@ -207,6 +225,7 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
       travelers: 'Travelers',
       departure: 'Departure',
       budget: 'Budget',
+      packages: 'Packages',
       itinerary: 'Itinerary',
       summary: 'Summary'
     }
