@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Search, MapPin, Star, TrendingUp, Globe, Sparkles, Heart, Users, Calendar } from 'lucide-react'
 
 interface DestinationSelectionProps {
@@ -29,6 +29,40 @@ export function DestinationSelection({ tripData, onUpdate, onNext }: Destination
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [hoveredDestination, setHoveredDestination] = useState<string | null>(null)
+  const [headerVisible, setHeaderVisible] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+
+  // Handle scroll to show/hide header with throttling
+  useEffect(() => {
+    let ticking = false
+    
+    const handleScroll = () => {
+      if (!ticking && scrollContainerRef.current) {
+        requestAnimationFrame(() => {
+          const currentScrollY = scrollContainerRef.current?.scrollTop || 0
+          
+          if (currentScrollY > 50) {
+            // Scrolled past threshold - hide header
+            setHeaderVisible(false)
+          } else if (currentScrollY <= 10) {
+            // At or near top - show header
+            setHeaderVisible(true)
+          }
+          
+          setLastScrollY(currentScrollY)
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+
+    const scrollContainer = scrollContainerRef.current
+    if (scrollContainer) {
+      scrollContainer.addEventListener('scroll', handleScroll, { passive: true })
+      return () => scrollContainer.removeEventListener('scroll', handleScroll)
+    }
+  }, [lastScrollY])
 
      const destinations: Destination[] = [
      {
@@ -178,23 +212,22 @@ export function DestinationSelection({ tripData, onUpdate, onNext }: Destination
   }
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Hero Section */}
-      <div className="text-center mb-6 flex-shrink-0">
-        <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full mb-3">
-          <Sparkles className="w-4 h-4 text-blue-600 mr-2" />
-          <span className="text-sm font-medium gradient-text-primary">Choose Your Dream Destination</span>
-        </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Where would you like to explore?</h2>
-        <p className="text-gray-600 text-sm">
-          From tropical beaches to bustling cities, discover your perfect getaway destination
-        </p>
-        
-        
-      </div>
+    <div className="h-full flex flex-col relative">
+      {/* Content */}
+      <div className="h-full flex flex-col">
+        {/* Hero Section - Dynamic */}
+        <div className={`absolute top-0 left-0 right-0 z-20 bg-white/90 border-b border-gray-100 pb-4 px-4 transition-transform duration-200 ${
+          headerVisible ? 'translate-y-0' : '-translate-y-full'
+        }`}>
+          <div className="text-center mb-4 pt-4">
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">Where would you like to explore?</h2>
+            <p className="text-gray-600 text-base max-w-2xl mx-auto leading-relaxed">
+              From tropical beaches to bustling cities, discover your perfect getaway destination
+            </p>
+          </div>
 
-      {/* Search and Filters */}
-      <div className="mb-6 flex-shrink-0">
+          {/* Search and Filters */}
+          <div className="mb-2">
         {/* Search Bar */}
         <div className="relative mb-4">
           <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -224,12 +257,13 @@ export function DestinationSelection({ tripData, onUpdate, onNext }: Destination
             </button>
           ))}
         </div>
-      </div>
+          </div>
+        </div>
 
       {/* Destinations Grid */}
       <div className="flex-1 min-h-0">
-        <div className="h-full overflow-y-auto custom-scrollbar">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
+        <div ref={scrollContainerRef} className="h-full overflow-y-auto custom-scrollbar pt-64" style={{ scrollBehavior: 'smooth' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4 mt-4">
           {filteredDestinations.map((destination) => (
             <div
               key={destination.id}
@@ -386,6 +420,7 @@ export function DestinationSelection({ tripData, onUpdate, onNext }: Destination
               </button>
             </div>
           )}
+        </div>
         </div>
       </div>
     </div>

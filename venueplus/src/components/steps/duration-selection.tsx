@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Clock, Calendar, Sparkles, Star, Zap, Plane } from 'lucide-react'
 import { TripData } from '../trip-planning-modal'
 
 interface DurationSelectionProps {
@@ -16,32 +17,62 @@ export function DurationSelection({ tripData, onUpdate, onNext }: DurationSelect
     {
       id: '4-6',
       label: '4-6 Days',
-      icon: '🌙',
-      recommended: false
+      subtitle: 'Quick getaway',
+      icon: Clock,
+      color: 'from-purple-400 to-purple-600',
+      bgColor: 'bg-purple-50',
+      borderColor: 'border-purple-200',
+      recommended: false,
+      tag: 'Budget',
+      tagColor: 'bg-green-100 text-green-700'
     },
     {
       id: '7-9',
       label: '7-9 Days',
-      icon: '🌙',
-      recommended: false
+      subtitle: 'Explore highlights',
+      icon: Calendar,
+      color: 'from-blue-400 to-cyan-500',
+      bgColor: 'bg-blue-50',
+      borderColor: 'border-blue-200',
+      recommended: false,
+      tag: 'Value',
+      tagColor: 'bg-blue-100 text-blue-700'
     },
     {
       id: '10-12',
       label: '10-12 Days',
-      icon: '🌙',
-      recommended: true
+      subtitle: 'Immersive experience',
+      icon: Star,
+      color: 'from-orange-400 to-pink-500',
+      bgColor: 'bg-orange-50',
+      borderColor: 'border-orange-200',
+      recommended: true,
+      tag: 'Premium',
+      tagColor: 'bg-purple-100 text-purple-700'
     },
     {
       id: '13-15',
       label: '13-15 Days',
-      icon: '☀️',
-      recommended: false
+      subtitle: 'Ultimate adventure',
+      icon: Sparkles,
+      color: 'from-pink-400 to-rose-500',
+      bgColor: 'bg-pink-50',
+      borderColor: 'border-pink-200',
+      recommended: false,
+      tag: 'Luxury',
+      tagColor: 'bg-amber-100 text-amber-700'
     },
     {
       id: 'custom',
       label: 'Custom Duration',
-      icon: '⚡',
-      recommended: false
+      subtitle: 'Your perfect length',
+      icon: Zap,
+      color: 'from-teal-400 to-green-500',
+      bgColor: 'bg-teal-50',
+      borderColor: 'border-teal-200',
+      recommended: false,
+      tag: 'Flexible',
+      tagColor: 'bg-teal-100 text-teal-700'
     }
   ]
 
@@ -75,76 +106,99 @@ export function DurationSelection({ tripData, onUpdate, onNext }: DurationSelect
   }
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="text-center mb-6 flex-shrink-0">
-        <h3 className="text-2xl font-bold text-slate-800 mb-2">
-          How long do you want to <span className="font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">explore</span>?
-        </h3>
-        <p className="text-slate-600">
-          Choose the perfect duration for your adventure
-        </p>
+    <div className="h-full flex flex-col relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100"></div>
+        
+        {/* Floating Decorative Elements */}
+        <div className="absolute top-10 right-10 opacity-15">
+          <div className="w-32 h-32 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full blur-3xl"></div>
+        </div>
+        <div className="absolute bottom-20 left-10 opacity-10">
+          <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full blur-2xl"></div>
+        </div>
+        <div className="absolute top-1/3 left-1/4 opacity-8">
+          <div className="w-20 h-20 bg-gradient-to-br from-gray-150 to-gray-250 rounded-full blur-xl"></div>
+        </div>
+        
+        {/* Floating Airplanes */}
+        <div className="absolute top-16 right-1/4 transform rotate-12 opacity-25">
+          <Plane className="w-12 h-12 text-gray-400" strokeWidth={1.5} />
+          <div className="absolute top-1/2 left-0 w-16 h-0.5 bg-gradient-to-r from-gray-300/40 to-transparent transform -translate-y-1/2 -translate-x-full"></div>
+        </div>
+        
+        <div className="absolute bottom-32 left-16 transform -rotate-6 opacity-20">
+          <Plane className="w-10 h-10 text-gray-500" strokeWidth={1.5} />
+          <div className="absolute top-1/2 left-0 w-12 h-0.5 bg-gradient-to-r from-gray-400/30 to-transparent transform -translate-y-1/2 -translate-x-full"></div>
+        </div>
       </div>
+      
+      {/* Content */}
+      <div className="relative z-10 h-full flex flex-col">
+        <div className="text-center mb-8 flex-shrink-0">
+          <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-gray-100 to-gray-200 rounded-full mb-4 shadow-lg shadow-gray-100/50">
+            <Clock className="w-5 h-5 text-gray-600 mr-2" />
+            <span className="text-sm font-semibold text-gray-700">Perfect Duration</span>
+          </div>
+          <h3 className="text-3xl font-bold text-gray-900 mb-3">
+            How long do you want to <span className="bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent">explore</span>?
+          </h3>
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
+            Choose the perfect duration for your adventure
+          </p>
+        </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {durations.map((duration) => (
-          <div
-            key={duration.id}
-            onClick={() => handleDurationSelect(duration.label)}
-            className={`group relative bg-white border-2 rounded-2xl p-4 cursor-pointer transition-all-smooth hover:scale-102 hover:shadow-lg ${
-              tripData.duration === duration.label
-                ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 shadow-lg scale-102'
-                : 'border-gray-200 hover:border-blue-300 shadow-md'
-            }`}
-          >
-            {duration.recommended && (
-              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-2 py-1 rounded-full text-xs font-bold shadow-lg">
-                🏆 POPULAR
-              </div>
-            )}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
+          {durations.map((duration) => {
+            const IconComponent = duration.icon
+            const isSelected = tripData.duration === duration.label
             
-            <div className="text-center">
-              {/* Duration Icon */}
-              <div className={`w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center ${
-                duration.id === '4-6' ? 'bg-gradient-to-br from-indigo-400 to-purple-500' :
-                duration.id === '7-9' ? 'bg-gradient-to-br from-blue-400 to-cyan-500' :
-                duration.id === '10-12' ? 'bg-gradient-to-br from-yellow-400 to-orange-500' :
-                duration.id === '13-15' ? 'bg-gradient-to-br from-pink-400 to-rose-500' :
-                'bg-gradient-to-br from-emerald-400 to-teal-500'
-              } shadow-lg group-hover:scale-110 transition-transform`}>
-                <div className="text-2xl text-white">
-                  {duration.icon}
+            return (
+              <div
+                key={duration.id}
+                onClick={() => handleDurationSelect(duration.label)}
+                className={`group relative bg-white/80 backdrop-blur-sm border-2 rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
+                  isSelected
+                    ? `${duration.borderColor} ${duration.bgColor} shadow-2xl scale-105 ring-4 ring-${duration.color.split('-')[1]}-200`
+                    : 'border-gray-200 hover:border-gray-300 shadow-lg hover:shadow-xl'
+                }`}
+              >
+                {duration.recommended && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg z-10">
+                    ⭐ POPULAR
+                  </div>
+                )}
+                
+                {/* Tag */}
+                <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold ${duration.tagColor}`}>
+                  {duration.tag}
+                </div>
+                
+                <div className="text-center">
+                  {/* Duration Icon */}
+                  <div className={`w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center bg-gradient-to-br ${duration.color} shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110`}>
+                    <IconComponent className="w-10 h-10 text-white" strokeWidth={1.5} />
+                  </div>
+                  
+                  <h4 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                    {duration.label}
+                  </h4>
+                  
+                  <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                    {duration.subtitle}
+                  </p>
+
+                  {/* Selection Indicator */}
+                  {isSelected && (
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-3xl"></div>
+                  )}
                 </div>
               </div>
-              
-              <h4 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">
-                {duration.label}
-              </h4>
-              
-              <div className="text-xs text-gray-500 mb-3">
-                {duration.id === '4-6' && 'Quick getaway'}
-                {duration.id === '7-9' && 'Explore highlights'}
-                {duration.id === '10-12' && 'Immersive experience'}
-                {duration.id === '13-15' && 'Ultimate adventure'}
-                {duration.id === 'custom' && 'Your perfect length'}
-              </div>
-
-              <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                duration.id === '4-6' ? 'bg-green-100 text-green-700' :
-                duration.id === '7-9' ? 'bg-blue-100 text-blue-700' :
-                duration.id === '10-12' ? 'bg-purple-100 text-purple-700' :
-                duration.id === '13-15' ? 'bg-orange-100 text-orange-700' :
-                'bg-teal-100 text-teal-700'
-              }`}>
-                {duration.id === '4-6' && '💰 Budget'}
-                {duration.id === '7-9' && '💎 Value'}
-                {duration.id === '10-12' && '⭐ Premium'}
-                {duration.id === '13-15' && '👑 Luxury'}
-                {duration.id === 'custom' && '🎯 Flexible'}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+            )
+          })}
+        </div>
 
       {/* Custom Duration Input */}
       {showCustomInput && (
@@ -183,6 +237,7 @@ export function DurationSelection({ tripData, onUpdate, onNext }: DurationSelect
           </div>
         </div>
       )}
+      </div>
     </div>
   )
 }

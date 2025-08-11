@@ -109,19 +109,30 @@ export function DateSelection({ tripData, onUpdate, onNext }: DateSelectionProps
   }
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="text-center mb-6 flex-shrink-0">
-        <h3 className="text-2xl font-bold text-slate-800 mb-2 flex items-center justify-center gap-2">
-          <CalendarIcon className="w-6 h-6 text-blue-600" />
+    <div className="h-full flex flex-col bg-white">
+      {/* Enhanced Header */}
+      <div className="text-center mb-8 flex-shrink-0">
+        <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-full mb-4 shadow-lg shadow-blue-100/30">
+          <CalendarIcon className="w-5 h-5 text-blue-600 mr-2" />
+          <span className="text-sm font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Travel Date</span>
+        </div>
+        <h3 className="text-3xl font-bold text-gray-900 mb-3">
           When would you like to travel?
         </h3>
-        <p className="text-slate-600">Select your departure date to {tripData.destination}</p>
+        <p className="text-gray-600 text-lg">Select your departure date to <span className="font-semibold text-blue-600">{tripData.destination}</span></p>
       </div>
 
       <div className="flex-1 flex gap-6">
-        {/* Calendar */}
+        {/* Enhanced Calendar */}
         <div className="flex-1">
-          <div className="card-elegant p-4">
+          <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 p-8 hover:shadow-3xl transition-all duration-300">
+            <div className="mb-6">
+              <h4 className="text-lg font-semibold text-gray-800 mb-2 flex items-center">
+                <CalendarIcon className="w-5 h-5 text-blue-500 mr-2" />
+                Choose Your Date
+              </h4>
+              <p className="text-sm text-gray-600">Pick the perfect day for your adventure</p>
+            </div>
             <div className="custom-calendar">
               <Calendar
                 onChange={handleDateSelect}
@@ -137,12 +148,17 @@ export function DateSelection({ tripData, onUpdate, onNext }: DateSelectionProps
           </div>
         </div>
 
-        {/* Recommended Dates */}
-        <div className="w-80 flex-shrink-0">
-          <div className="card-elegant p-4 h-full">
-            <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-4 h-4 text-orange-500" />
-              <h4 className="font-semibold text-slate-800">Recommended Dates</h4>
+        {/* Enhanced Recommended Dates */}
+        <div className="w-96 flex-shrink-0">
+          <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 p-6 h-full hover:shadow-3xl transition-all duration-300">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-gradient-to-r from-orange-100 to-amber-100 rounded-full">
+                <Sparkles className="w-5 h-5 text-orange-500" />
+              </div>
+              <div>
+                <h4 className="font-bold text-gray-900 text-lg">Recommended Dates</h4>
+                <p className="text-sm text-gray-600">Best times to visit</p>
+              </div>
             </div>
             
             <div className="space-y-3 max-h-80 overflow-y-auto custom-scrollbar">
@@ -150,35 +166,39 @@ export function DateSelection({ tripData, onUpdate, onNext }: DateSelectionProps
                 <div
                   key={index}
                   onClick={() => handleDateSelect(date)}
-                  className={`p-3 rounded-lg border-2 cursor-pointer transition-all hover:scale-102 ${
+                  className={`group p-4 rounded-2xl border-2 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg ${
                     selectedDate && date.toDateString() === selectedDate.toDateString()
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-slate-200 hover:border-blue-300 hover:bg-blue-50'
+                      ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg ring-2 ring-blue-200'
+                      : 'border-gray-200 hover:border-blue-300 hover:bg-gradient-to-br hover:from-blue-50 hover:to-indigo-50 bg-white'
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="text-sm font-semibold text-slate-800">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
                       {date.toLocaleDateString('en-US', { 
                         weekday: 'short', 
                         month: 'short', 
                         day: 'numeric' 
                       })}
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-3 h-3 text-orange-500 fill-current" />
-                      <TrendingUp className="w-3 h-3 text-green-500" />
+                    <div className="flex items-center gap-2">
+                      <div className="p-1 bg-orange-100 rounded-full">
+                        <Star className="w-4 h-4 text-orange-500 fill-current" />
+                      </div>
+                      <div className="p-1 bg-green-100 rounded-full">
+                        <TrendingUp className="w-4 h-4 text-green-500" />
+                      </div>
                     </div>
                   </div>
                   
-                  <div className="text-xs text-slate-600 mb-2">
+                  <div className="text-sm text-gray-700 mb-3 font-medium">
                     {getDateReason(date)}
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <div className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                    <div className="text-xs bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 px-3 py-1.5 rounded-full font-semibold">
                       Great weather
                     </div>
-                    <div className="text-xs text-slate-500">
+                    <div className="text-sm text-gray-500 font-medium">
                       {Math.ceil((date.getTime() - Date.now()) / (1000 * 60 * 60 * 24))} days
                     </div>
                   </div>
@@ -186,16 +206,20 @@ export function DateSelection({ tripData, onUpdate, onNext }: DateSelectionProps
               ))}
             </div>
 
-            {/* Legend */}
-            <div className="mt-4 pt-4 border-t border-slate-200">
-              <div className="text-xs text-slate-600 space-y-2">
-                <div className="flex items-center gap-2">
-                  <Star className="w-3 h-3 text-orange-500 fill-current" />
-                  <span>Recommended dates</span>
+            {/* Enhanced Legend */}
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <div className="text-sm text-gray-600 space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="p-1 bg-orange-100 rounded-full">
+                    <Star className="w-4 h-4 text-orange-500 fill-current" />
+                  </div>
+                  <span className="font-medium">Recommended dates</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="w-3 h-3 text-green-500" />
-                  <span>Best prices</span>
+                <div className="flex items-center gap-3">
+                  <div className="p-1 bg-green-100 rounded-full">
+                    <TrendingUp className="w-4 h-4 text-green-500" />
+                  </div>
+                  <span className="font-medium">Best prices</span>
                 </div>
               </div>
             </div>
@@ -204,15 +228,24 @@ export function DateSelection({ tripData, onUpdate, onNext }: DateSelectionProps
       </div>
 
       {selectedDate && (
-        <div className="flex-shrink-0 mt-6 text-center">
-          <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4 inline-block">
-            <div className="text-sm text-green-700">
+        <div className="flex-shrink-0 mt-8 text-center">
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-6 mb-4 inline-block shadow-lg">
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <div className="p-2 bg-green-100 rounded-full">
+                <CalendarIcon className="w-5 h-5 text-green-600" />
+              </div>
+              <span className="text-lg font-bold text-green-800">Trip Confirmed!</span>
+            </div>
+            <div className="text-base text-green-700 font-medium">
               ✈️ Departing on {selectedDate.toLocaleDateString('en-US', { 
                 weekday: 'long', 
                 year: 'numeric', 
                 month: 'long', 
                 day: 'numeric' 
               })}
+            </div>
+            <div className="text-sm text-green-600 mt-2">
+              Get ready for your amazing adventure to {tripData.destination}!
             </div>
           </div>
         </div>

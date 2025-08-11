@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
-import { User } from 'lucide-react'
+import { User, Plane } from 'lucide-react'
 import { Header } from '@/components/header'
 import { TripPlanningModal } from '@/components/trip-planning-modal'
 import { SearchSection } from '@/components/search-section'
@@ -1021,6 +1021,31 @@ export default function HomePage() {
       <main className="pt-4 relative overflow-hidden z-10">
         {/* Interactive Floating Background Elements */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* Airplane Elements - Travel Theme */}
+          <div className="absolute top-32 right-32 transform rotate-12">
+            <div className="relative">
+              <Plane className="w-16 h-16 text-sky-400/60" strokeWidth={2} />
+              {/* Vapor trail */}
+              <div className="absolute top-1/2 left-0 w-20 h-1 bg-gradient-to-r from-sky-300/40 to-transparent transform -translate-y-1/2 -translate-x-full"></div>
+            </div>
+          </div>
+          
+          <div className="absolute top-64 left-20 transform -rotate-6">
+            <div className="relative">
+              <Plane className="w-12 h-12 text-cyan-400/50" strokeWidth={2} />
+              {/* Vapor trail */}
+              <div className="absolute top-1/2 left-0 w-16 h-0.5 bg-gradient-to-r from-cyan-300/30 to-transparent transform -translate-y-1/2 -translate-x-full"></div>
+            </div>
+          </div>
+          
+          <div className="absolute bottom-48 right-20 transform rotate-45">
+            <div className="relative">
+              <Plane className="w-10 h-10 text-blue-400/40" strokeWidth={2} />
+              {/* Vapor trail */}
+              <div className="absolute top-1/2 left-0 w-12 h-0.5 bg-gradient-to-r from-blue-300/25 to-transparent transform -translate-y-1/2 -translate-x-full"></div>
+            </div>
+          </div>
+          
           {/* Parallax Particles */}
           <div 
             className="absolute top-20 left-10 w-32 h-32 bg-purple-200/20 rounded-full blur-3xl animate-pulse transform transition-transform duration-1000 ease-out"
@@ -1072,13 +1097,24 @@ export default function HomePage() {
           <div className="flex items-start justify-between min-h-[600px] py-8">
             {/* Left Content */}
             <div className="flex-1 max-w-[600px] pr-20 pt-8">
-              {/* Main Heading with Gradient */}
-              <h1 className="text-[4.5rem] leading-[1.1] font-bold mb-6 tracking-tight bg-gradient-to-r from-sky-700 via-sky-600 to-cyan-600 bg-clip-text text-transparent animate-fade-in">
-                Discover Your<br />
-                <span className="bg-gradient-to-r from-sky-600 via-cyan-500 to-blue-500 bg-clip-text text-transparent">
-                  Perfect Travel Experience
-            </span>
-          </h1>
+              {/* Main Heading with Gradient and Airplane */}
+              <div className="relative">
+                {/* Decorative Airplane */}
+                <div className="absolute -top-8 -right-16 transform rotate-12">
+                  <div className="relative">
+                    <Plane className="w-20 h-20 text-sky-500/40" strokeWidth={2} />
+                    {/* Vapor trail */}
+                    <div className="absolute top-1/2 left-0 w-24 h-1 bg-gradient-to-r from-sky-400/30 to-transparent transform -translate-y-1/2 -translate-x-full"></div>
+                  </div>
+                </div>
+                
+                <h1 className="text-[4.5rem] leading-[1.1] font-bold mb-6 tracking-tight bg-gradient-to-r from-sky-700 via-sky-600 to-cyan-600 bg-clip-text text-transparent animate-fade-in">
+                  Discover Your<br />
+                  <span className="bg-gradient-to-r from-sky-600 via-cyan-500 to-blue-500 bg-clip-text text-transparent">
+                    Perfect Travel Experience
+                  </span>
+                </h1>
+              </div>
           
               {/* Subtitle */}
               <p className="text-lg text-gray-600 mb-10 leading-relaxed max-w-[420px] font-normal">
