@@ -723,8 +723,18 @@ export class AIPackageGenerator {
 
   // Helper methods for itinerary generation
   private extractDaysFromDuration(duration: string): number {
-    const match = duration.match(/(\d+)\s*days?/i)
-    return match ? parseInt(match[1]) : 5
+    // Handle preset duration ranges
+    switch (duration) {
+      case '4-6 Days': return 5
+      case '7-9 Days': return 8
+      case '10-12 Days': return 11
+      case '13-15 Days': return 14
+      default: {
+        // Handle custom duration formats like "5 Days" or "10 Day"
+        const match = duration.match(/(\d+)\s*days?/i)
+        return match ? parseInt(match[1]) : 5
+      }
+    }
   }
 
   private getCitiesForDestination(destination: string): string[] {
@@ -1014,15 +1024,222 @@ export class AIPackageGenerator {
   }
 
   private generateTransport(dayNumber: number, city: string, category: string): any[] {
-    return [{
-      mode: dayNumber === 1 ? 'flight' : category === 'luxury' ? 'private_car' : 'car',
-      from: dayNumber === 1 ? 'Origin City' : 'Previous Location',
+    const isFirstDay = dayNumber === 1
+    const mode = isFirstDay ? 'flight' : (category === 'luxury' ? 'car' : 'bus')
+    
+    const transport: any = {
+      mode,
+      from: isFirstDay ? 'Delhi (DEL)' : 'Previous Location',
       to: city,
-      cost: dayNumber === 1 ? 5000 : 1000,
-      duration: dayNumber === 1 ? '2 hours' : '1 hour',
-      departure: dayNumber === 1 ? '09:00' : '10:00',
-      arrival: dayNumber === 1 ? '11:00' : '11:00'
-    }]
+      cost: isFirstDay ? 5000 : 1000,
+      duration: isFirstDay ? '2h 30m' : '1h 30m',
+      departure: isFirstDay ? '09:00' : '10:00',
+      arrival: isFirstDay ? '11:30' : '11:30',
+      included: true,
+      provider: isFirstDay ? 'Air India' : 'State Transport',
+      class: isFirstDay ? (category === 'luxury' ? 'Business' : 'Economy') : 'AC Sleeper'
+    }
+
+    if (isFirstDay) {
+      transport.detailedSchedule = this.generateAIFlightSchedule(city)
+      transport.checkInInfo = this.generateAICheckInInfo()
+      transport.baggageInfo = this.generateAIBaggageInfo()
+    } else {
+      transport.detailedSchedule = this.generateAIGroundTransportSchedule(city, mode)
+    }
+
+    return [transport]
+  }
+
+  private generateAIFlightSchedule(city: string): any {
+    // Similar to package service but with AI-specific variations
+    const departureAirport = {
+      name: 'Indira Gandhi International Airport',
+      address: 'New Delhi, Delhi 110037',
+      coordinates: { lat: 28.5562, lng: 77.1000 },
+      type: 'airport' as const,
+      code: 'DEL',
+      terminal: 'Terminal 3',
+      facilities: ['WiFi', 'Restaurants', 'Lounges', 'Duty Free', 'ATM', 'Currency Exchange'],
+      transportOptions: ['Metro', 'Taxi', 'Bus', 'Car Rental'],
+      nearbyAmenities: ['Hotels', 'Parking', 'Medical Center']
+    }
+
+    const arrivalAirport = {
+      name: `${city} Airport`,
+      address: `${city} Airport Complex`,
+      coordinates: { lat: 25.2744, lng: 82.9942 },
+      type: 'airport' as const,
+      code: city.substring(0, 3).toUpperCase(),
+      terminal: 'Main Terminal',
+      facilities: ['WiFi', 'Restaurants', 'Car Rental', 'ATM'],
+      transportOptions: ['Taxi', 'Bus', 'Car Rental'],
+      nearbyAmenities: ['Hotels', 'Parking']
+    }
+
+    const hourlyBreakdown = [
+      {
+        time: '06:30', duration: '30m', activity: 'AI-Optimized Departure Prep',
+        location: 'Home/Hotel', type: 'departure_prep' as const,
+        description: 'AI-scheduled departure preparation with optimal timing',
+        requirements: ['Valid ID', 'E-ticket', 'Luggage'], status: 'required' as const, icon: '🏠'
+      },
+      {
+        time: '07:00', duration: '1h', activity: 'Smart Route to Airport',
+        location: 'Delhi to DEL Airport', type: 'ground_transport' as const,
+        description: 'AI-recommended route avoiding traffic congestion',
+        tips: ['Real-time traffic monitoring', 'Alternative route suggestions'], cost: 400,
+        status: 'required' as const, icon: '🚗'
+      },
+      {
+        time: '08:00', duration: '45m', activity: 'Express Check-in',
+        location: 'DEL Terminal 3', type: 'check_in' as const,
+        description: 'Pre-selected seats and fast-track check-in',
+        requirements: ['Mobile boarding pass', 'ID verification'], status: 'required' as const, icon: '✈️'
+      },
+      {
+        time: '08:45', duration: '30m', activity: 'Priority Security',
+        location: 'DEL Security Area', type: 'security' as const,
+        description: 'Priority security lanes for faster processing',
+        tips: ['Pre-check cleared liquids', 'Fast-track lane access'], status: 'required' as const, icon: '🔒'
+      },
+      {
+        time: '09:15', duration: '30m', activity: 'Lounge Access & Relaxation',
+        location: 'Premium Lounge', type: 'layover' as const,
+        description: 'Complimentary lounge access with refreshments',
+        tips: ['Unlimited WiFi', 'Business center', 'Shower facilities'], status: 'recommended' as const, icon: '🛋️'
+      },
+      {
+        time: '09:45', duration: '15m', activity: 'Priority Boarding',
+        location: 'Aircraft Gate', type: 'boarding' as const,
+        description: 'Zone 1 priority boarding with seat selection',
+        status: 'required' as const, icon: '🎫'
+      },
+      {
+        time: '10:00', duration: '2h 30m', activity: 'Premium Flight Experience',
+        location: 'In-flight', type: 'travel' as const,
+        description: `AI-curated in-flight experience to ${city}`,
+        tips: ['Premium meal service', 'Entertainment system', 'Extra legroom'], status: 'required' as const, icon: '✈️'
+      },
+      {
+        time: '12:30', duration: '15m', activity: 'Priority Disembarkation',
+        location: `${city} Airport`, type: 'arrival' as const,
+        description: 'First-class disembarkation with ground assistance',
+        status: 'required' as const, icon: '🚪'
+      },
+      {
+        time: '12:45', duration: '15m', activity: 'Priority Baggage Collection',
+        location: 'Baggage Claim Area', type: 'baggage' as const,
+        description: 'Priority baggage delivery service',
+        tips: ['Baggage tracking app', 'First on carousel'], status: 'required' as const, icon: '🧳'
+      },
+      {
+        time: '13:00', duration: '20m', activity: 'VIP Transfer Service',
+        location: `${city} Airport to Hotel`, type: 'hotel_transfer' as const,
+        description: 'Premium transfer with meet & greet service',
+        cost: 500, status: 'required' as const, icon: '🚗'
+      }
+    ]
+
+    return {
+      departureLocation: departureAirport,
+      arrivalLocation: arrivalAirport,
+      hourlyBreakdown,
+      totalJourneyTime: '6h 30m',
+      distanceCovered: '~1,200 km',
+      recommendations: [
+        {
+          type: 'timing' as const, priority: 'high' as const,
+          title: 'AI-Optimized Timing', description: 'Schedule optimized by AI for minimal wait times',
+          applicableSteps: ['check_in', 'security'], timeRelevant: 'Throughout journey'
+        }
+      ],
+      journeyType: 'direct' as const
+    }
+  }
+
+  private generateAIGroundTransportSchedule(city: string, mode: string): any {
+    const hourlyBreakdown = [
+      {
+        time: '09:30', duration: '15m', activity: 'Smart Checkout Process',
+        location: 'Current Hotel', type: 'departure_prep' as const,
+        description: 'AI-assisted checkout with bill verification',
+        requirements: ['Digital receipt', 'Loyalty points claim'], status: 'required' as const, icon: '🏨'
+      },
+      {
+        time: '09:45', duration: '15m', activity: 'Premium Vehicle Pickup',
+        location: 'Hotel Pickup Point', type: 'ground_transport' as const,
+        description: 'GPS-tracked vehicle with professional driver',
+        status: 'required' as const, icon: '🚗'
+      },
+      {
+        time: '10:00', duration: '1h 20m', activity: `Scenic AI Route to ${city}`,
+        location: `En route to ${city}`, type: 'travel' as const,
+        description: 'AI-selected scenic route with photo stops',
+        tips: ['Real-time weather updates', 'Points of interest alerts'], status: 'required' as const, icon: '🛣️'
+      },
+      {
+        time: '11:20', duration: '10m', activity: 'Express Hotel Check-in',
+        location: `${city} Hotel`, type: 'hotel_transfer' as const,
+        description: 'Pre-registered check-in with room ready',
+        status: 'required' as const, icon: '🏨'
+      }
+    ]
+
+    return {
+      departureLocation: {
+        name: 'Previous Location Hotel', address: 'City Center',
+        coordinates: { lat: 25.2744, lng: 82.9942 }, type: 'hotel' as const,
+        facilities: ['AI Concierge', 'Smart Check-out'], transportOptions: ['Premium Car'],
+        nearbyAmenities: ['Curated Restaurants']
+      },
+      arrivalLocation: {
+        name: `${city} Premium Hotel`, address: `${city} City Center`,
+        coordinates: { lat: 25.2744, lng: 82.9942 }, type: 'hotel' as const,
+        facilities: ['AI Welcome', 'Smart Room'], transportOptions: ['City Tours'],
+        nearbyAmenities: ['AI-Recommended Attractions']
+      },
+      hourlyBreakdown,
+      totalJourneyTime: '1h 50m',
+      distanceCovered: '~85 km',
+      recommendations: [
+        {
+          type: 'comfort' as const, priority: 'high' as const,
+          title: 'AI Comfort Optimization', description: 'Route and timing optimized for maximum comfort',
+          applicableSteps: ['travel'], timeRelevant: 'During journey'
+        }
+      ],
+      journeyType: 'direct' as const
+    }
+  }
+
+  private generateAICheckInInfo(): any {
+    return {
+      onlineCheckIn: {
+        available: true, opensHoursBefore: 48, closesHoursBefore: 1,
+        website: 'ai-optimized check-in', mobileApp: 'Smart Travel App'
+      },
+      airportCheckIn: {
+        opensHoursBefore: 3, closesMinutesBefore: 45,
+        recommendedArrival: 'AI-calculated optimal time', counters: ['Priority A1-A5']
+      },
+      requirements: ['Digital ID', 'Mobile boarding pass', 'Smart luggage tags'],
+      documents: ['Aadhaar', 'E-passport'], specialServices: ['AI assistance', 'Smart boarding']
+    }
+  }
+
+  private generateAIBaggageInfo(): any {
+    return {
+      allowance: {
+        checkedBags: { weight: '20 kg', dimensions: '158 cm', count: 1 },
+        carryOn: { weight: '8 kg', dimensions: '55x35x25 cm', count: 1 },
+        personalItem: { weight: '3 kg', dimensions: '40x30x15 cm', count: 1 }
+      },
+      restrictions: ['Smart scanning compliance', 'AI-cleared electronics'],
+      additionalCosts: [{ weight: '5 kg extra', cost: 500 }],
+      tips: ['Smart packing suggestions', 'AI baggage tracking'],
+      checkInProcess: ['Digital check-in', 'Auto baggage tagging', 'Smart tracking']
+    }
   }
 
   private calculateFreeTime(activityCount: number): string {

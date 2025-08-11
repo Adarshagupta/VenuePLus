@@ -18,6 +18,7 @@ import {
 } from '@/lib/package-types'
 import { packageService } from '@/lib/package-service'
 import { PackageItineraryView } from './package-itinerary-view'
+import { userService } from '@/lib/user-service'
 
 interface PackageSelectorProps {
   destination?: string

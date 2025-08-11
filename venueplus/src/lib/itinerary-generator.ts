@@ -97,7 +97,14 @@ export class ItineraryGenerator {
       case '7-9 Days': return 8
       case '10-12 Days': return 11
       case '13-15 Days': return 14
-      default: return 7
+      default: {
+        // Handle custom duration formats like "5 Days" or "10 Day"
+        const customMatch = duration.match(/(\d+)\s+Days?/)
+        if (customMatch) {
+          return parseInt(customMatch[1])
+        }
+        return 7
+      }
     }
   }
 

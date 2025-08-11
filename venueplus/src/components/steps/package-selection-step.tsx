@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import { TripData } from '../trip-planning-modal'
 import { PackageSelector } from '../package-selector'
+import { PackageItineraryView } from '../package-itinerary-view'
 import { 
   ScrapedPackage, 
   AIGeneratedPackage, 
@@ -18,6 +19,7 @@ import {
 } from '@/lib/package-types'
 import { packageService } from '@/lib/package-service'
 import { aiPackageGenerator, PackageGenerationRequest } from '@/lib/ai-package-generator'
+import { useUserActivity } from '@/hooks/useUserActivity'
 
 interface PackageSelectionStepProps {
   tripData: TripData
@@ -38,6 +40,9 @@ export function PackageSelectionStep({ tripData, onUpdate, onNext, onBack }: Pac
     aiGenerated: 0,
     avgPrice: 0
   })
+  
+  // Activity tracking
+  const { trackPackageView, trackPackageSelection, saveItinerary } = useUserActivity()
 
   useEffect(() => {
     loadInitialPackageStats()
@@ -66,7 +71,7 @@ export function PackageSelectionStep({ tripData, onUpdate, onNext, onBack }: Pac
     }
   }
 
-  const handlePackageSelect = (pkg: ScrapedPackage | AIGeneratedPackage) => {
+  const handlePackageSelect = async (pkg: ScrapedPackage | AIGeneratedPackage) => {
     setSelectedPackage(pkg)
     setCurrentView('details')
     
@@ -81,11 +86,42 @@ export function PackageSelectionStep({ tripData, onUpdate, onNext, onBack }: Pac
         description: pkg.description
       }
     })
+    
+    // Track package selection activity
+    await trackPackageSelection(pkg)
   }
 
   const handleComparePackages = (packages: (ScrapedPackage | AIGeneratedPackage)[]) => {
     setComparisonPackages(packages)
     setCurrentView('comparison')
+  }
+
+  const handleProceedWithPackage = async () => {
+    if (selectedPackage) {
+      // Save the itinerary to database
+      const itineraryData = {
+        name: `${tripData.destination} Trip - ${selectedPackage.name}`,
+        description: selectedPackage.description,
+        destination: tripData.destination || '',
+        duration: tripData.duration || '',
+        travelers: parseInt(tripData.travelers || '1'),
+        totalCost: selectedPackage.price,
+        currency: 'INR',
+        startDate: tripData.startDate,
+        endDate: undefined, // Will be calculated from duration if needed
+        status: 'planned' as const,
+        packageId: selectedPackage.id,
+        tags: [tripData.destination, selectedPackage.source].filter(Boolean)
+      }
+      
+      const savedItinerary = await saveItinerary(itineraryData)
+      
+      if (savedItinerary) {
+        console.log('Itinerary saved successfully:', savedItinerary.id)
+      }
+    }
+    
+    onNext()
   }
 
   const generateMoreAIPackages = async () => {
@@ -118,7 +154,7 @@ export function PackageSelectionStep({ tripData, onUpdate, onNext, onBack }: Pac
     }
   }
 
-  const confirmPackageSelection = () => {
+  const confirmPackageSelection = async () => {
     if (selectedPackage) {
       onUpdate({
         selectedPackage: {
@@ -131,7 +167,9 @@ export function PackageSelectionStep({ tripData, onUpdate, onNext, onBack }: Pac
           fullData: selectedPackage // Store complete package data
         }
       })
-      onNext()
+      
+      // Save the itinerary to database and proceed
+      await handleProceedWithPackage()
     }
   }
 
@@ -579,6 +617,17 @@ export function PackageSelectionStep({ tripData, onUpdate, onNext, onBack }: Pac
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Detailed Itinerary */}
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">
+              <h3 className="text-2xl font-bold">📋 Detailed Package Itinerary</h3>
+              <p className="text-blue-100 mt-2">Hour-by-hour breakdown including transport, activities, and accommodations</p>
+            </div>
+            <div className="p-6">
+              <PackageItineraryView package={selectedPackage} showDetailed={true} />
             </div>
           </div>
 

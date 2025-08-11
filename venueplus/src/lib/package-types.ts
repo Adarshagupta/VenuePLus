@@ -222,6 +222,90 @@ export interface PackageTransport {
   class: string
   departure: string
   arrival: string
+  detailedSchedule?: TravelSchedule
+  connections?: PackageTransport[]
+  baggageInfo?: BaggageInfo
+  checkInInfo?: CheckInInfo
+}
+
+export interface TravelSchedule {
+  departureLocation: LocationDetails
+  arrivalLocation: LocationDetails
+  hourlyBreakdown: TravelTimelineItem[]
+  totalJourneyTime: string
+  distanceCovered: string
+  recommendations: TravelRecommendation[]
+  journeyType: 'direct' | 'connecting' | 'multi_modal'
+}
+
+export interface LocationDetails {
+  name: string
+  address: string
+  coordinates: { lat: number; lng: number }
+  type: 'airport' | 'railway_station' | 'bus_terminal' | 'hotel' | 'landmark'
+  code?: string // Airport/station code
+  terminal?: string
+  gate?: string
+  contactInfo?: string
+  facilities: string[]
+  transportOptions: string[]
+  nearbyAmenities: string[]
+}
+
+export interface TravelTimelineItem {
+  time: string
+  duration: string
+  activity: string
+  location: string
+  type: 'departure_prep' | 'check_in' | 'security' | 'boarding' | 'travel' | 'layover' | 'arrival' | 'baggage' | 'customs' | 'ground_transport' | 'hotel_transfer'
+  description: string
+  requirements?: string[]
+  tips?: string[]
+  cost?: number
+  status: 'required' | 'optional' | 'recommended'
+  icon: string
+  estimatedTime?: string
+  alternatives?: string[]
+}
+
+export interface TravelRecommendation {
+  type: 'timing' | 'documentation' | 'comfort' | 'cost' | 'safety' | 'logistics'
+  priority: 'high' | 'medium' | 'low'
+  title: string
+  description: string
+  applicableSteps: string[]
+  timeRelevant?: string
+}
+
+export interface BaggageInfo {
+  allowance: {
+    checkedBags: { weight: string; dimensions: string; count: number }
+    carryOn: { weight: string; dimensions: string; count: number }
+    personalItem: { weight: string; dimensions: string; count: number }
+  }
+  restrictions: string[]
+  additionalCosts: { weight: string; cost: number }[]
+  tips: string[]
+  checkInProcess: string[]
+}
+
+export interface CheckInInfo {
+  onlineCheckIn: {
+    available: boolean
+    opensHoursBefore: number
+    closesHoursBefore: number
+    website?: string
+    mobileApp?: string
+  }
+  airportCheckIn: {
+    opensHoursBefore: number
+    closesMinutesBefore: number
+    recommendedArrival: string
+    counters: string[]
+  }
+  requirements: string[]
+  documents: string[]
+  specialServices?: string[]
 }
 
 export interface PackageFilter {

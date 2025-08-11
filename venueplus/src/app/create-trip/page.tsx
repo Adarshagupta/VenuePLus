@@ -40,15 +40,26 @@ export default function CreateTripPage() {
     try {
       // Calculate end date based on duration and start date
       let endDate = new Date(tripData.startDate!)
-      if (tripData.duration === '4-6 Days') {
-        endDate.setDate(endDate.getDate() + 5)
-      } else if (tripData.duration === '7-9 Days') {
-        endDate.setDate(endDate.getDate() + 8)
-      } else if (tripData.duration === '10-12 Days') {
-        endDate.setDate(endDate.getDate() + 11)
-      } else if (tripData.duration === '13-15 Days') {
-        endDate.setDate(endDate.getDate() + 14)
+      
+      // Helper function to extract days from duration string
+      const getDaysFromDuration = (duration: string): number => {
+        if (duration === '4-6 Days') return 5
+        if (duration === '7-9 Days') return 8
+        if (duration === '10-12 Days') return 11
+        if (duration === '13-15 Days') return 14
+        
+        // Handle custom duration formats like "5 Days" or "10 Day"
+        const customMatch = duration.match(/(\d+)\s+Days?/)
+        if (customMatch) {
+          return parseInt(customMatch[1])
+        }
+        
+        // Default fallback
+        return 7
       }
+      
+      const daysToAdd = getDaysFromDuration(tripData.duration || '')
+      endDate.setDate(endDate.getDate() + daysToAdd)
 
       const response = await fetch('/api/trips', {
         method: 'POST',

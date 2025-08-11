@@ -13,6 +13,15 @@ import {
 } from './package-types'
 import { webScraper, RealTimeDataAggregator } from './web-scraper'
 import { geminiTravelAgent } from './gemini-ai'
+import { 
+  getDestinationInfo, 
+  getAirportInfo, 
+  getRealHotels, 
+  getRealActivities, 
+  getRealRestaurants,
+  getTransportationInfo,
+  getWeatherInfo 
+} from './destination-data'
 
 export class UnifiedPackageService {
   private scrapedPackages: ScrapedPackage[] = []
@@ -246,12 +255,15 @@ export class UnifiedPackageService {
     const variation = variations[params.index % variations.length]
     const adjustedBudget = this.adjustBudgetForVariation(params.budget, variation.name)
 
+    const duration = this.selectDurationForBudget(adjustedBudget)
+    const durationDays = this.extractDaysFromDuration(duration)
+    
     return {
       id: `ai_${Date.now()}_${params.index}`,
       name: `${params.destination} ${variation.name}`,
       description: `AI-curated ${variation.focus} package for ${params.destination}`,
       destination: params.destination,
-      duration: this.selectDurationForBudget(adjustedBudget),
+      duration,
       price: adjustedBudget,
       currency: 'INR',
       source: 'ai_generated',
@@ -268,7 +280,16 @@ export class UnifiedPackageService {
       confidence: 0.85 + (Math.random() * 0.1),
       aiFeatures: this.generateAIFeatures(variation.name),
       customizations: this.generateCustomizations(params.category),
-      realTimeData: await this.fetchRealTimeData(params.destination)
+      realTimeData: await this.fetchRealTimeData(params.destination),
+      summary: {
+        totalDays: durationDays,
+        cities: this.getCitiesForDestination(params.destination),
+        totalActivities: durationDays * 2,
+        totalMeals: durationDays * 3,
+        accommodationType: 'AI-Selected Hotel',
+        transportModes: ['AI-Optimized Transport']
+      },
+      itinerary: this.generateSampleItinerary(params.destination, durationDays, adjustedBudget)
     }
   }
 
@@ -620,8 +641,18 @@ export class UnifiedPackageService {
 
   // Helper methods for itinerary generation
   private extractDaysFromDuration(duration: string): number {
-    const match = duration.match(/(\d+)\s*days?/i)
-    return match ? parseInt(match[1]) : 5
+    // Handle preset duration ranges
+    switch (duration) {
+      case '4-6 Days': return 5
+      case '7-9 Days': return 8
+      case '10-12 Days': return 11
+      case '13-15 Days': return 14
+      default: {
+        // Handle custom duration formats like "5 Days" or "10 Day" or "5 days 4 nights"
+        const match = duration.match(/(\d+)\s*days?/i)
+        return match ? parseInt(match[1]) : 5
+      }
+    }
   }
 
   private inferAccommodationType(rawData: any): string {
@@ -683,50 +714,9 @@ export class UnifiedPackageService {
         recommendation: 'Light clothing, sunscreen recommended'
       },
       activities: dayActivities,
-      meals: [
-        {
-          type: 'breakfast',
-          venue: `${city} Hotel Restaurant`,
-          cuisine: 'Continental',
-          cost: Math.round(dailyBudget * 0.1),
-          description: 'Complimentary breakfast at hotel'
-        },
-        {
-          type: 'lunch',
-          venue: `Local ${city} Restaurant`,
-          cuisine: 'Local',
-          cost: Math.round(dailyBudget * 0.15),
-          description: 'Authentic local cuisine experience'
-        },
-        {
-          type: 'dinner',
-          venue: `${city} Fine Dining`,
-          cuisine: 'Multi-cuisine',
-          cost: Math.round(dailyBudget * 0.2),
-          description: 'Special dinner with cultural show'
-        }
-      ],
-      accommodation: {
-        name: `${city} Heritage Hotel`,
-        type: 'Hotel',
-        location: `Central ${city}`,
-        rating: 4.2,
-        amenities: ['WiFi', 'Pool', 'Restaurant', 'Spa'],
-        costPerNight: Math.round(dailyBudget * 0.4),
-        checkIn: '14:00',
-        checkOut: '11:00'
-      },
-      transport: [
-        {
-          mode: dayNumber === 1 ? 'flight' : 'car',
-          from: dayNumber === 1 ? 'Origin' : 'Previous location',
-          to: city,
-          cost: Math.round(dailyBudget * 0.1),
-          duration: dayNumber === 1 ? '2 hours' : '1 hour',
-          departure: '10:00',
-          arrival: dayNumber === 1 ? '12:00' : '11:00'
-        }
-      ],
+      meals: this.generateRealMeals(city, destination, dailyBudget),
+      accommodation: this.generateRealAccommodation(city, destination, dailyBudget * 0.4),
+      transport: this.generateDetailedTransport(dayNumber, city, dailyBudget, destination),
       freeTime: '2 hours',
       notes: [
         'Comfortable walking shoes recommended',
@@ -812,6 +802,36 @@ export class UnifiedPackageService {
   }
 
   private getActivitiesForDestination(destination: string, city: string): any[] {
+    // Get real activities from destination database
+    const realActivities = getRealActivities(destination) || getRealActivities(city)
+    
+    if (realActivities.length > 0) {
+      return realActivities.slice(0, 2).map(activity => ({
+        name: activity.name,
+        description: activity.description,
+        duration: activity.duration,
+        location: activity.location,
+        address: activity.address,
+        coordinates: activity.coordinates,
+        included: true,
+        optional: false,
+        bookingRequired: activity.category === 'adventure',
+        category: activity.category,
+        difficulty: activity.difficulty,
+        ageRecommendation: activity.ageRecommendation || 'All ages',
+        photos: [],
+        tips: [
+          `Best time: ${activity.bestTimeToVisit}`,
+          'Carry water bottle',
+          'Wear comfortable shoes'
+        ],
+        bestTimeToVisit: activity.bestTimeToVisit,
+        crowdLevel: 'medium' as const,
+        accessibility: ['Wheelchair accessible']
+      }))
+    }
+
+    // Fallback to generic activities
     return [
       {
         name: `${city} Heritage Walk`,
@@ -829,27 +849,8 @@ export class UnifiedPackageService {
         photos: [],
         tips: ['Wear comfortable shoes', 'Carry water bottle'],
         bestTimeToVisit: 'Morning hours',
-        crowdLevel: 'medium',
+        crowdLevel: 'medium' as const,
         accessibility: ['Wheelchair accessible']
-      },
-      {
-        name: `${city} Market Experience`,
-        description: `Explore local markets and interact with vendors, taste local snacks`,
-        duration: '2 hours',
-        location: `${city} Central Market`,
-        address: `Market Street, ${city}`,
-        coordinates: { lat: 25.2744, lng: 82.9942 },
-        included: true,
-        optional: false,
-        bookingRequired: false,
-        category: 'shopping',
-        difficulty: 'easy',
-        ageRecommendation: 'All ages',
-        photos: [],
-        tips: ['Bargaining is common', 'Try local snacks'],
-        bestTimeToVisit: 'Evening',
-        crowdLevel: 'high',
-        accessibility: ['Some areas may be crowded']
       }
     ]
   }
@@ -863,6 +864,525 @@ export class UnifiedPackageService {
       'Relaxation & Departure'
     ]
     return themes[(dayNumber - 1) % themes.length] || `Day ${dayNumber} Activities`
+  }
+
+  private parseDuration(duration: string): number {
+    // Parse duration like "2h 30m" into total minutes
+    const hourMatch = duration.match(/(\d+)h/)
+    const minuteMatch = duration.match(/(\d+)m/)
+    
+    const hours = hourMatch ? parseInt(hourMatch[1]) : 0
+    const minutes = minuteMatch ? parseInt(minuteMatch[1]) : 0
+    
+    return hours * 60 + minutes
+  }
+
+  private generateRealAccommodation(city: string, destination: string, budget: number): any {
+    const realHotels = getRealHotels(destination) || getRealHotels(city)
+    
+    if (realHotels.length > 0) {
+      // Find hotel that fits budget
+      const suitableHotel = realHotels.find(hotel => 
+        budget >= hotel.priceRange.min && budget <= hotel.priceRange.max
+      ) || realHotels[0] // Fallback to first hotel
+      
+      return {
+        name: suitableHotel.name,
+        type: suitableHotel.category.replace('_', ' '),
+        location: suitableHotel.location,
+        rating: suitableHotel.rating,
+        amenities: suitableHotel.amenities,
+        costPerNight: Math.round(budget),
+        checkIn: '14:00',
+        checkOut: '11:00',
+        address: suitableHotel.address,
+        coordinates: suitableHotel.coordinates
+      }
+    }
+    
+    // Fallback to generic hotel
+    return {
+      name: `${city} Heritage Hotel`,
+      type: 'Hotel',
+      location: `Central ${city}`,
+      rating: 4.2,
+      amenities: ['WiFi', 'Pool', 'Restaurant', 'Spa'],
+      costPerNight: Math.round(budget),
+      checkIn: '14:00',
+      checkOut: '11:00'
+    }
+  }
+
+  private generateRealMeals(city: string, destination: string, dailyBudget: number): any[] {
+    const realRestaurants = getRealRestaurants(destination) || getRealRestaurants(city)
+    
+    if (realRestaurants.length > 0) {
+      const breakfast = {
+        type: 'breakfast',
+        venue: `${city} Hotel Restaurant`,
+        cuisine: 'Continental',
+        cost: Math.round(dailyBudget * 0.1),
+        description: 'Complimentary breakfast at hotel',
+        included: true
+      }
+
+      const lunchRestaurant = realRestaurants.find(r => r.category === 'casual') || realRestaurants[0]
+      const lunch = {
+        type: 'lunch',
+        venue: lunchRestaurant.name,
+        cuisine: lunchRestaurant.cuisine,
+        cost: Math.round(dailyBudget * 0.15),
+        description: `Authentic ${lunchRestaurant.cuisine} cuisine - ${lunchRestaurant.specialties[0]}`,
+        included: true
+      }
+
+      const dinnerRestaurant = realRestaurants.find(r => r.category === 'fine_dining') || realRestaurants[realRestaurants.length - 1]
+      const dinner = {
+        type: 'dinner',
+        venue: dinnerRestaurant.name,
+        cuisine: dinnerRestaurant.cuisine,
+        cost: Math.round(dailyBudget * 0.2),
+        description: `Special ${dinnerRestaurant.cuisine} dinner - ${dinnerRestaurant.specialties[0]}`,
+        included: true
+      }
+
+      return [breakfast, lunch, dinner]
+    }
+
+    // Fallback to generic meals
+    return [
+      {
+        type: 'breakfast',
+        venue: `${city} Hotel Restaurant`,
+        cuisine: 'Continental',
+        cost: Math.round(dailyBudget * 0.1),
+        description: 'Complimentary breakfast at hotel',
+        included: true
+      },
+      {
+        type: 'lunch',
+        venue: `Local ${city} Restaurant`,
+        cuisine: 'Local',
+        cost: Math.round(dailyBudget * 0.15),
+        description: 'Authentic local cuisine experience',
+        included: true
+      },
+      {
+        type: 'dinner',
+        venue: `${city} Fine Dining`,
+        cuisine: 'Multi-cuisine',
+        cost: Math.round(dailyBudget * 0.2),
+        description: 'Special dinner with cultural show',
+        included: true
+      }
+    ]
+  }
+
+  private generateDetailedTransport(dayNumber: number, city: string, dailyBudget: number, destination: string): any[] {
+    const isFirstDay = dayNumber === 1
+    const mode = isFirstDay ? 'flight' : 'car'
+    
+    const transport: any = {
+      mode,
+      from: isFirstDay ? 'Delhi (DEL)' : 'Previous Location',
+      to: city,
+      cost: Math.round(dailyBudget * 0.1),
+      duration: isFirstDay ? '2h 30m' : '1h 30m',
+      departure: isFirstDay ? '09:00' : '10:00',
+      arrival: isFirstDay ? '11:30' : '11:30',
+      included: true,
+      provider: isFirstDay ? 'Air India' : 'State Transport',
+      class: isFirstDay ? 'Economy' : 'AC'
+    }
+
+    if (isFirstDay) {
+      transport.detailedSchedule = this.generateFlightSchedule(city, destination)
+      transport.checkInInfo = this.generateCheckInInfo()
+      transport.baggageInfo = this.generateBaggageInfo()
+    } else {
+      transport.detailedSchedule = this.generateGroundTransportSchedule(city, mode)
+    }
+
+    return [transport]
+  }
+
+  private generateFlightSchedule(city: string, destination: string): any {
+    const destInfo = getDestinationInfo(destination) || getDestinationInfo(city)
+    const transportInfo = getTransportationInfo(destination) || getTransportationInfo(city)
+    
+    const departureAirport = {
+      name: 'Indira Gandhi International Airport',
+      address: 'New Delhi, Delhi 110037',
+      coordinates: { lat: 28.5562, lng: 77.1000 },
+      type: 'airport' as const,
+      code: 'DEL',
+      terminal: 'Terminal 3',
+      facilities: ['WiFi', 'Restaurants', 'Lounges', 'Duty Free', 'ATM', 'Currency Exchange', 'Medical Center'],
+      transportOptions: ['Metro', 'Airport Express', 'Taxi', 'Bus', 'Car Rental'],
+      nearbyAmenities: ['Hotels', 'Parking', 'Medical Center', 'Food Courts']
+    }
+
+    const arrivalAirport = {
+      name: destInfo?.airportName || `${city} Airport`,
+      address: destInfo ? `${destInfo.airportName}, ${city}` : `${city} Airport Complex`,
+      coordinates: destInfo?.coordinates || { lat: 25.2744, lng: 82.9942 },
+      type: 'airport' as const,
+      code: destInfo?.airportCode || city.substring(0, 3).toUpperCase(),
+      terminal: destInfo?.airportCode === 'GOI' ? 'Main Terminal' : destInfo?.airportCode === 'KUU' ? 'Domestic Terminal' : 'Main Terminal',
+      facilities: ['WiFi', 'Restaurants', 'Car Rental', 'ATM', 'Currency Exchange'],
+      transportOptions: ['Taxi', 'Bus', 'Car Rental', 'Hotel Shuttle'],
+      nearbyAmenities: ['Hotels', 'Parking', 'Tourist Information']
+    }
+
+    // Get real flight duration and distance
+    const flightDuration = transportInfo?.fromDelhi.flight.duration || '2h 30m'
+    const flightDistance = transportInfo?.fromDelhi.flight.distance || '~1,200 km'
+    const airlines = transportInfo?.fromDelhi.flight.airlines || ['Air India', 'IndiGo']
+    const selectedAirline = airlines[0] || 'Air India'
+
+    const hourlyBreakdown = [
+      {
+        time: '06:30',
+        duration: '30m',
+        activity: 'Airport Departure Preparation',
+        location: 'Home/Hotel',
+        type: 'departure_prep' as const,
+        description: 'Final packing, document check, and departure to airport',
+        requirements: ['Valid ID', 'Ticket confirmation', 'Luggage ready'],
+        tips: ['Check flight status', 'Keep documents handy', 'Allow extra time for traffic'],
+        status: 'required' as const,
+        icon: '🏠',
+        estimatedTime: '20-40 minutes'
+      },
+              {
+        time: '07:00',
+        duration: '1h',
+        activity: 'Travel to Airport',
+        location: 'Delhi to DEL Airport',
+        type: 'ground_transport' as const,
+        description: 'Journey from pickup location to Indira Gandhi International Airport via Airport Express Metro',
+        tips: [
+          'Airport Express Metro: Fastest option (₹60-150)',
+          'Pre-paid taxi from Airport Taxi Booth',
+          'Allow 90 minutes during peak hours',
+          'Check Delhi Metro app for real-time updates'
+        ],
+        cost: transportInfo?.averageCosts.taxi.min || 400,
+        status: 'required' as const,
+        icon: '🚗',
+        alternatives: [
+          'Metro (₹60 - New Delhi to Airport)',
+          'Airport Express (₹150 - 20 minutes)',
+          'Uber/Ola (₹300-600)',
+          'Pre-paid Taxi (₹400-800)'
+        ]
+      },
+      {
+        time: '08:00',
+        duration: '45m',
+        activity: `${selectedAirline} Check-in`,
+        location: 'DEL Terminal 3',
+        type: 'check_in' as const,
+        description: `Complete ${selectedAirline} check-in process, baggage drop, and get boarding pass for ${destInfo?.airportCode || city.substring(0,3).toUpperCase()} flight`,
+        requirements: [
+          'Government Photo ID (Aadhaar/PAN/Passport)',
+          `${selectedAirline} booking PNR`,
+          'COVID vaccination certificate (if required)',
+          'Baggage within 15kg limit'
+        ],
+        tips: [
+          `Use ${selectedAirline} mobile app for web check-in`,
+          'Arrive 2 hours early for domestic flights',
+          'Keep boarding pass on phone + printout',
+          'Tag your luggage with contact details'
+        ],
+        status: 'required' as const,
+        icon: '✈️',
+        estimatedTime: '30-60 minutes'
+      },
+      {
+        time: '08:45',
+        duration: '30m',
+        activity: 'Security Check',
+        location: 'DEL Security Area',
+        type: 'security' as const,
+        description: 'Security screening for passengers and carry-on luggage',
+        requirements: ['Remove laptops/liquids', 'Metal detector screening', 'Baggage X-ray'],
+        tips: ['Keep liquids in 100ml containers', 'Wear slip-off shoes', 'Remove belt and jacket'],
+        status: 'required' as const,
+        icon: '🔒',
+        estimatedTime: '15-45 minutes'
+      },
+      {
+        time: '09:15',
+        duration: '30m',
+        activity: 'Pre-boarding Wait',
+        location: 'Departure Gate',
+        type: 'layover' as const,
+        description: 'Wait at departure gate, grab refreshments, final preparations',
+        tips: ['Locate your gate early', 'Use airport WiFi', 'Visit restroom', 'Buy snacks if needed'],
+        status: 'recommended' as const,
+        icon: '⏳',
+        alternatives: ['Visit lounge (₹1,500)', 'Duty-free shopping', 'Restaurant dining']
+      },
+      {
+        time: '09:45',
+        duration: '15m',
+        activity: 'Boarding Process',
+        location: 'Aircraft Gate',
+        type: 'boarding' as const,
+        description: 'Board the aircraft and locate your seat',
+        requirements: ['Boarding pass', 'Photo ID', 'Carry-on luggage'],
+        tips: ['Board according to your zone', 'Stow luggage efficiently', 'Keep essentials with you'],
+        status: 'required' as const,
+        icon: '🎫'
+      },
+      {
+        time: '10:00',
+        duration: flightDuration,
+        activity: `${selectedAirline} Flight Journey`,
+        location: `DEL → ${destInfo?.airportCode || city.substring(0,3).toUpperCase()}`,
+        type: 'travel' as const,
+        description: `${selectedAirline} flight from Delhi to ${destInfo?.airportName || city} (${flightDistance})`,
+        tips: [
+          'Stay hydrated - carry water bottle',
+          'In-flight meal service available',
+          'Entertainment system with movies/music',
+          'Window seat for scenic mountain/landscape views'
+        ],
+        cost: 0,
+        status: 'required' as const,
+        icon: '✈️',
+        estimatedTime: flightDuration
+      },
+      {
+        time: '12:30',
+        duration: '15m',
+        activity: 'Aircraft Disembarkation',
+        location: `${city} Airport`,
+        type: 'arrival' as const,
+        description: 'Exit aircraft and proceed to arrival area',
+        tips: ['Wait for your row to deplane', 'Check for belongings', 'Follow arrival signs'],
+        status: 'required' as const,
+        icon: '🚪'
+      },
+      {
+        time: '12:45',
+        duration: '20m',
+        activity: 'Baggage Collection',
+        location: 'Baggage Claim Area',
+        type: 'baggage' as const,
+        description: 'Collect checked baggage from carousel',
+        tips: ['Check baggage claim number', 'Keep baggage tags', 'Report missing luggage immediately'],
+        status: 'required' as const,
+        icon: '🧳',
+        estimatedTime: '15-30 minutes'
+      },
+      {
+        time: '13:05',
+        duration: '25m',
+        activity: 'Airport to Hotel Transfer',
+        location: `${city} Airport to Hotel`,
+        type: 'hotel_transfer' as const,
+        description: 'Ground transportation from airport to accommodation',
+        cost: 300,
+        tips: ['Pre-book airport transfer', 'Confirm hotel address', 'Keep contact numbers handy'],
+        status: 'required' as const,
+        icon: '🚗',
+        alternatives: ['Taxi (₹300-600)', 'Pre-paid cab', 'Hotel shuttle (if available)']
+      }
+    ]
+
+    const recommendations = [
+      {
+        type: 'timing' as const,
+        priority: 'high' as const,
+        title: 'Arrive Early at Airport',
+        description: 'Domestic flights require 2 hours, international flights need 3 hours before departure',
+        applicableSteps: ['check_in', 'security'],
+        timeRelevant: '2-3 hours before departure'
+      },
+      {
+        type: 'documentation' as const,
+        priority: 'high' as const,
+        title: 'Keep Documents Ready',
+        description: 'Have your ID, ticket confirmation, and any required permits easily accessible',
+        applicableSteps: ['check_in', 'security', 'boarding'],
+        timeRelevant: 'Throughout journey'
+      },
+      {
+        type: 'comfort' as const,
+        priority: 'medium' as const,
+        title: 'Pack Smart for Flight',
+        description: 'Keep essentials in carry-on, follow liquid restrictions, wear comfortable clothes',
+        applicableSteps: ['security', 'travel'],
+        timeRelevant: 'During packing and flight'
+      },
+      {
+        type: 'cost' as const,
+        priority: 'medium' as const,
+        title: 'Transportation Options',
+        description: 'Compare costs between Metro (₹60), Airport Express (₹150), and Taxi (₹400-800)',
+        applicableSteps: ['ground_transport', 'hotel_transfer'],
+        timeRelevant: 'Before travel'
+      }
+    ]
+
+    // Calculate total journey time based on real flight duration
+    const totalMinutes = 390 + this.parseDuration(flightDuration) // 6.5 hours base + actual flight time
+    const totalHours = Math.floor(totalMinutes / 60)
+    const remainingMinutes = totalMinutes % 60
+    const totalJourneyTime = `${totalHours}h ${remainingMinutes}m`
+
+    return {
+      departureLocation: departureAirport,
+      arrivalLocation: arrivalAirport,
+      hourlyBreakdown,
+      totalJourneyTime,
+      distanceCovered: flightDistance,
+      recommendations,
+      journeyType: 'direct' as const
+    }
+  }
+
+  private generateGroundTransportSchedule(city: string, mode: string): any {
+    const hourlyBreakdown = [
+      {
+        time: '09:30',
+        duration: '15m',
+        activity: 'Hotel Checkout & Preparation',
+        location: 'Current Hotel',
+        type: 'departure_prep' as const,
+        description: 'Complete hotel checkout and prepare for departure',
+        requirements: ['Room key return', 'Bill settlement', 'Luggage ready'],
+        tips: ['Check out early to avoid rush', 'Confirm bill details', 'Keep valuables secure'],
+        status: 'required' as const,
+        icon: '🏨'
+      },
+      {
+        time: '09:45',
+        duration: '15m',
+        activity: 'Vehicle Arrival & Loading',
+        location: 'Hotel Pickup Point',
+        type: 'ground_transport' as const,
+        description: 'Vehicle pickup and luggage loading',
+        tips: ['Verify vehicle details', 'Check driver ID', 'Secure luggage properly'],
+        status: 'required' as const,
+        icon: '🚗'
+      },
+      {
+        time: '10:00',
+        duration: '1h 20m',
+        activity: `Journey to ${city}`,
+        location: `En route to ${city}`,
+        type: 'travel' as const,
+        description: 'Scenic journey with rest stops',
+        tips: ['Stay hydrated', 'Enjoy scenery', 'Take photos at stops'],
+        cost: 0,
+        status: 'required' as const,
+        icon: '🛣️',
+        estimatedTime: '1 hour 20 minutes'
+      },
+      {
+        time: '11:20',
+        duration: '10m',
+        activity: 'Hotel Arrival & Check-in',
+        location: `${city} Hotel`,
+        type: 'hotel_transfer' as const,
+        description: 'Arrive at accommodation and begin check-in process',
+        tips: ['Have booking confirmation ready', 'Check room amenities', 'Ask about local attractions'],
+        status: 'required' as const,
+        icon: '🏨'
+      }
+    ]
+
+    return {
+      departureLocation: {
+        name: 'Previous Location Hotel',
+        address: 'City Center',
+        coordinates: { lat: 25.2744, lng: 82.9942 },
+        type: 'hotel' as const,
+        facilities: ['Reception', 'Parking', 'Wifi'],
+        transportOptions: ['Taxi', 'Car'],
+        nearbyAmenities: ['Restaurants', 'Shops']
+      },
+      arrivalLocation: {
+        name: `${city} Hotel`,
+        address: `${city} City Center`,
+        coordinates: { lat: 25.2744, lng: 82.9942 },
+        type: 'hotel' as const,
+        facilities: ['Reception', 'Restaurant', 'Room Service'],
+        transportOptions: ['Taxi', 'Auto', 'Walking'],
+        nearbyAmenities: ['Attractions', 'Restaurants', 'Markets']
+      },
+      hourlyBreakdown,
+      totalJourneyTime: '1h 50m',
+      distanceCovered: '~85 km',
+      recommendations: [
+        {
+          type: 'timing' as const,
+          priority: 'medium' as const,
+          title: 'Flexible Departure Time',
+          description: 'Ground transport offers more flexibility in departure timing compared to flights',
+          applicableSteps: ['departure_prep'],
+          timeRelevant: 'As per convenience'
+        }
+      ],
+      journeyType: 'direct' as const
+    }
+  }
+
+  private generateCheckInInfo(): any {
+    return {
+      onlineCheckIn: {
+        available: true,
+        opensHoursBefore: 48,
+        closesHoursBefore: 1,
+        website: 'www.airindia.in',
+        mobileApp: 'Air India Mobile App'
+      },
+      airportCheckIn: {
+        opensHoursBefore: 3,
+        closesMinutesBefore: 45,
+        recommendedArrival: '2 hours before departure',
+        counters: ['A1-A15', 'B1-B10']
+      },
+      requirements: ['Valid photo ID', 'Ticket confirmation/PNR', 'Passport (for international)'],
+      documents: ['Aadhaar Card', 'PAN Card', 'Driving License', 'Passport'],
+      specialServices: ['Wheelchair assistance', 'Special meals', 'Extra baggage']
+    }
+  }
+
+  private generateBaggageInfo(): any {
+    return {
+      allowance: {
+        checkedBags: { weight: '15 kg', dimensions: '158 cm', count: 1 },
+        carryOn: { weight: '7 kg', dimensions: '55x35x25 cm', count: 1 },
+        personalItem: { weight: '2 kg', dimensions: '40x30x15 cm', count: 1 }
+      },
+      restrictions: [
+        'No liquids above 100ml in carry-on',
+        'No sharp objects in carry-on',
+        'Electronics must be easily accessible',
+        'Lithium batteries only in carry-on'
+      ],
+      additionalCosts: [
+        { weight: '5 kg extra', cost: 750 },
+        { weight: '10 kg extra', cost: 1500 }
+      ],
+      tips: [
+        'Pack liquids in checked baggage',
+        'Keep valuables in carry-on',
+        'Label luggage clearly',
+        'Take photos of luggage contents'
+      ],
+      checkInProcess: [
+        'Present documents at counter',
+        'Place baggage on scale',
+        'Receive baggage tag',
+        'Keep baggage claim receipt'
+      ]
+    }
   }
 }
 

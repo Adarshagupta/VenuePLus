@@ -15,6 +15,7 @@ import {
   PackageDay,
   DayTimeline 
 } from '@/lib/package-types'
+import { DetailedTravelTimeline } from './detailed-travel-timeline'
 
 interface PackageItineraryViewProps {
   package: ScrapedPackage | AIGeneratedPackage
@@ -326,6 +327,25 @@ export function PackageItineraryView({ package: pkg, showDetailed = false }: Pac
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Transport Details */}
+      {day.transport && day.transport.length > 0 && (
+        <div className="bg-white rounded-lg p-6">
+          <h6 className="font-semibold text-gray-900 mb-4 flex items-center">
+            <Car className="w-4 h-4 mr-2" />
+            Transportation & Journey Details
+          </h6>
+          {day.transport.map((transport, index) => (
+            <div key={index} className="mb-6 last:mb-0">
+              <DetailedTravelTimeline 
+                transport={transport} 
+                showFullDetails={false}
+                compact={false}
+              />
+            </div>
+          ))}
         </div>
       )}
 
