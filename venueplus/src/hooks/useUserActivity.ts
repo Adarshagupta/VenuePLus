@@ -48,6 +48,7 @@ export function useUserActivity() {
     })
 
     // Also add to recently viewed
+    
     try {
       await fetch('/api/user/recent-views', {
         method: 'POST',
