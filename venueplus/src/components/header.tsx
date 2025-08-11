@@ -68,11 +68,6 @@ export function Header() {
           <div className="hidden md:flex items-center space-x-8">
             <div className="flex items-center space-x-8">
               <button className="flex items-center space-x-1 text-gray-700 hover:text-purple-600 font-medium transition-all duration-200 group relative">
-                <span>Destinations</span>
-                <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-violet-600 transition-all duration-300 group-hover:w-full"></div>
-              </button>
-              <button className="flex items-center space-x-1 text-gray-700 hover:text-purple-600 font-medium transition-all duration-200 group relative">
                 <span>Experiences</span>
                 <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
                 <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-violet-600 transition-all duration-300 group-hover:w-full"></div>

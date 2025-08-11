@@ -387,7 +387,7 @@ const blogPosts = {
     id: 2,
     title: "Hidden Gems of Kerala: 10 Offbeat Destinations You Must Visit",
     excerpt: "Explore Kerala beyond the popular tourist spots. From secret backwater villages to pristine hill stations, discover the untouched beauty of God's Own Country.",
-    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
     author: "Arjun Menon",
     authorImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80",
     authorBio: "Kerala native and travel writer with deep knowledge of the state's hidden treasures. Has explored every district of Kerala for over a decade.",
@@ -771,7 +771,7 @@ const blogPosts = {
     id: 6,
     title: "Cultural Immersion: Living with Local Families in Rural India",
     excerpt: "Experience authentic Indian culture through homestays in rural villages. Learn about local traditions, participate in daily activities, and create meaningful connections.",
-    image: "https://images.unsplash.com/photo-1524113026421-5ec8b8c4fb3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
     author: "Meera Krishnan",
     authorImage: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80",
     authorBio: "Cultural anthropologist and travel writer specializing in rural Indian communities. Has lived with families across 15 states documenting traditional lifestyles.",
@@ -1298,7 +1298,7 @@ const blogPosts = {
     id: 8,
     title: "Digital Nomad Guide: Working Remotely from Indian Hill Stations",
     excerpt: "Best hill stations in India for digital nomads, complete with WiFi availability, cost of living, coworking spaces, and lifestyle tips for remote workers.",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
     author: "Neha Agarwal",
     authorImage: "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80",
     authorBio: "Digital nomad and remote work consultant who has worked from 25+ Indian hill stations. Helps professionals transition to location-independent careers.",
@@ -1776,7 +1776,8 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* Article Content */}
           <div 
-            className="prose prose-lg max-w-none prose-headings:bg-gradient-to-r prose-headings:from-sky-700 prose-headings:to-cyan-600 prose-headings:bg-clip-text prose-headings:text-transparent prose-headings:font-bold prose-p:text-black prose-p:leading-relaxed prose-li:text-black prose-strong:text-black prose-ul:text-black prose-ol:text-black"
+            className="prose prose-lg max-w-none prose-headings:bg-gradient-to-r prose-headings:from-sky-700 prose-headings:to-cyan-600 prose-headings:bg-clip-text prose-headings:text-transparent prose-headings:font-bold prose-p:text-black prose-p:leading-relaxed prose-p:font-semibold prose-li:text-black prose-li:font-semibold prose-strong:text-black prose-strong:font-bold prose-ul:text-black prose-ol:text-black prose-h2:text-black prose-h3:text-black prose-h4:text-black"
+            style={{ color: '#000000' }}
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
 

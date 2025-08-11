@@ -1544,34 +1544,32 @@ export default function HomePage() {
           <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-cyan-300/10 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '8s', animationDelay: '2s' }}></div>
         </div>
         
-        <div className="relative flex items-center justify-between px-8 py-16 lg:px-16">
+        <div className="relative flex items-center justify-between px-6 py-8 h-full">
           
           {/* Left Content - Enhanced */}
-          <div className="flex-1 max-w-md relative z-10">
-            <div className="mb-6">
-              <div className="inline-flex items-center bg-gradient-to-r from-sky-500/10 to-cyan-500/10 backdrop-blur-sm border border-sky-200/50 rounded-full px-4 py-2">
-                <span className="text-sm font-semibold text-sky-700 uppercase tracking-wider">✈️ Travel Agency</span>
+          <div className="flex-1 max-w-xs relative z-10">
+            <div className="mb-3">
+              <div className="inline-flex items-center bg-gradient-to-r from-sky-500/10 to-cyan-500/10 backdrop-blur-sm border border-sky-200/50 rounded-full px-3 py-1.5">
+                <span className="text-xs font-semibold text-sky-700 uppercase tracking-wider">✈️ Travel Agency</span>
               </div>
             </div>
             
-            <h1 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-sky-700 via-blue-700 to-cyan-700 bg-clip-text text-transparent mb-4 leading-tight">
+            <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-sky-700 via-blue-700 to-cyan-700 bg-clip-text text-transparent mb-3 leading-tight">
               VenuePlus
             </h1>
             
-            <p className="text-sky-600/80 text-lg mb-8 font-medium">
+            <p className="text-sky-600/80 text-base mb-6 font-medium">
               www.venueplus.travel
             </p>
             
-
-            
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="group relative bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl overflow-hidden"
+              className="group relative bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
               <span className="relative flex items-center justify-center space-x-2">
                 <span>Book Your Adventure</span>
-                <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M13 7l5 5-5 5M6 12h12"/>
                 </svg>
               </span>
@@ -1679,75 +1677,128 @@ export default function HomePage() {
             </div>
 
             {/* Banner 2 - Adventure Tours */}
-            <div className="relative bg-gradient-to-br from-emerald-50 via-green-50 to-teal-100 rounded-3xl overflow-hidden border border-white/20 backdrop-blur-sm flex-shrink-0" style={{ width: '800px', height: '400px' }}>
-              {/* Animated background pattern */}
-              <div className="absolute inset-0 opacity-30">
-                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-emerald-200/20 to-transparent animate-pulse"></div>
-                <div className="absolute -top-24 -left-24 w-48 h-48 bg-emerald-300/10 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '7s' }}></div>
-                <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-teal-300/10 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '9s', animationDelay: '3s' }}></div>
+            <div className="relative bg-gradient-to-br from-emerald-50 via-green-50 to-teal-100 rounded-3xl overflow-hidden border border-white/20 backdrop-blur-sm flex-shrink-0 group hover:scale-[1.02] transition-all duration-500" style={{ width: '800px', height: '400px' }}>
+              {/* Enhanced Animated background pattern */}
+              <div className="absolute inset-0 opacity-40">
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-emerald-200/30 to-transparent animate-pulse"></div>
+                <div className="absolute -top-24 -left-24 w-48 h-48 bg-emerald-300/20 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '8s' }}></div>
+                <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-teal-300/20 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '10s', animationDelay: '2s' }}></div>
+                <div className="absolute top-1/2 left-1/2 w-32 h-32 bg-green-200/15 rounded-full blur-2xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }}></div>
+                {/* Floating particles */}
+                <div className="absolute top-8 left-8 w-2 h-2 bg-emerald-400 rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
+                <div className="absolute top-16 right-12 w-3 h-3 bg-teal-400 rounded-full animate-ping" style={{ animationDelay: '3s' }}></div>
+                <div className="absolute bottom-12 left-16 w-1.5 h-1.5 bg-green-400 rounded-full animate-ping" style={{ animationDelay: '5s' }}></div>
               </div>
               
-              <div className="relative flex items-center justify-between px-8 py-16 lg:px-12 h-full">
+              {/* Mesh gradient overlay for depth */}
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/5 via-transparent to-teal-400/10 opacity-60"></div>
+              
+              <div className="relative flex items-center justify-between px-6 py-8 h-full">
                 
                 {/* Left Content */}
-                <div className="flex-1 max-w-md relative z-10">
-                  <div className="mb-6">
-                    <div className="inline-flex items-center bg-gradient-to-r from-emerald-500/10 to-teal-500/10 backdrop-blur-sm border border-emerald-200/50 rounded-full px-4 py-2">
-                      <span className="text-sm font-semibold text-emerald-700 uppercase tracking-wider">🏔️ Adventure Tours</span>
+                <div className="flex-1 max-w-xs relative z-10">
+                  <div className="mb-3 transform group-hover:scale-105 transition-all duration-500">
+                    <div className="inline-flex items-center bg-gradient-to-r from-emerald-500/15 to-teal-500/15 backdrop-blur-md border border-emerald-200/60 rounded-full px-3 py-1.5 shadow-lg">
+                      <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider">🏔️ Adventure Tours</span>
                     </div>
                   </div>
                   
-                  <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-emerald-700 via-green-700 to-teal-700 bg-clip-text text-transparent mb-4 leading-tight">
-                    Mountain Explorer
+                  <h1 className="text-3xl lg:text-4xl font-black bg-gradient-to-r from-emerald-800 via-green-700 to-teal-800 bg-clip-text text-transparent mb-3 leading-tight transform group-hover:scale-102 transition-all duration-500">
+                    Mountain<br/>Explorer
                   </h1>
                   
-                  <p className="text-emerald-600/80 text-lg mb-8 font-medium">
+                  <p className="text-emerald-700/90 text-base mb-4 font-semibold tracking-wide transform group-hover:translate-x-1 transition-all duration-500">
                     www.mountainexplorer.com
                   </p>
                   
+                  <div className="mb-4 text-emerald-600/80 text-xs space-y-1 transform group-hover:translate-x-1 transition-all duration-700">
+                    <p className="flex items-center space-x-2">
+                      <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                      <span>Premium Mountain Adventures</span>
+                    </p>
+                    <p className="flex items-center space-x-2">
+                      <span className="w-1.5 h-1.5 bg-teal-500 rounded-full"></span>
+                      <span>Expert Guided Expeditions</span>
+                    </p>
+                  </div>
 
-                  
                   <button 
                     onClick={() => setIsModalOpen(true)}
-                    className="group relative bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-8 py-3 rounded-2xl font-bold text-lg shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl overflow-hidden"
+                    className="group/btn relative bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-xl transform transition-all duration-500 hover:scale-105 hover:shadow-emerald-500/25 overflow-hidden"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000"></div>
+                    <div className="absolute inset-0 bg-emerald-400/20 rounded-xl blur-xl opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
                     <span className="relative flex items-center justify-center space-x-2">
                       <span>Explore Mountains</span>
-                      <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform duration-500" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M13 7l5 5-5 5M6 12h12"/>
                       </svg>
                     </span>
                   </button>
                 </div>
                 
-                {/* Right Illustration - Mountain Theme */}
-                <div className="flex-1 relative max-w-lg">
+                {/* Right Illustration - Enhanced Mountain Theme */}
+                <div className="flex-1 relative max-w-sm transform group-hover:scale-102 transition-all duration-700">
                   <div className="relative z-10 flex items-center justify-center h-full">
                     
-                    {/* Mountain peaks */}
-                    <div className="absolute top-16 left-20">
-                      <div className="w-16 h-20 bg-gradient-to-b from-emerald-600 to-emerald-800 transform rotate-45 rounded-lg shadow-2xl"></div>
-                      <div className="absolute top-0 left-4 w-12 h-16 bg-gradient-to-b from-emerald-500 to-emerald-700 transform rotate-45 rounded-lg shadow-xl"></div>
+                    {/* Enhanced Mountain peaks with depth */}
+                    <div className="absolute top-8 left-8 transform group-hover:scale-105 transition-all duration-700">
+                      <div className="w-12 h-16 bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-900 transform rotate-45 rounded-lg shadow-xl relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-lg"></div>
+                        <div className="absolute top-0 left-0 w-1.5 h-1.5 bg-white/40 rounded-full blur-sm"></div>
+                      </div>
+                      <div className="absolute top-1 left-3 w-10 h-12 bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-800 transform rotate-45 rounded-lg shadow-lg relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-lg"></div>
+                        <div className="absolute top-1 left-1 w-1 h-1 bg-white/50 rounded-full blur-sm"></div>
+                      </div>
+                      <div className="absolute top-2 left-6 w-8 h-10 bg-gradient-to-br from-teal-500 via-teal-600 to-teal-800 transform rotate-45 rounded-lg shadow-md relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/25 to-transparent rounded-lg"></div>
+                      </div>
                     </div>
                     
-                    {/* Backpack */}
-                    <div className="w-20 h-24 bg-gradient-to-br from-orange-500 to-orange-700 rounded-2xl shadow-2xl relative">
-                      <div className="absolute top-2 left-2 right-2 h-4 bg-orange-800 rounded"></div>
-                      <div className="absolute top-8 left-3 right-3 h-12 bg-orange-600 rounded"></div>
-                      <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-6 bg-gray-700 rounded-t-lg"></div>
+                    {/* Enhanced Backpack with realistic details */}
+                    <div className="w-16 h-20 bg-gradient-to-br from-orange-400 via-orange-600 to-orange-800 rounded-xl shadow-xl relative transform group-hover:rotate-2 transition-all duration-700 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-xl"></div>
+                      <div className="absolute top-2 left-2 right-2 h-3 bg-gradient-to-r from-orange-800 to-orange-900 rounded shadow-inner"></div>
+                      <div className="absolute top-6 left-2 right-2 h-10 bg-gradient-to-br from-orange-500 to-orange-700 rounded shadow-inner"></div>
+                      <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-6 h-5 bg-gradient-to-b from-gray-600 to-gray-800 rounded-t-lg shadow-lg"></div>
+                      <div className="absolute top-4 left-3 w-1.5 h-1.5 bg-yellow-400 rounded-full shadow-sm"></div>
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-1.5 bg-gray-700 rounded"></div>
                     </div>
                     
-                    {/* Hiking boots */}
-                    <div className="absolute bottom-8 right-8">
-                      <div className="w-12 h-8 bg-gradient-to-r from-amber-700 to-amber-900 rounded-lg shadow-lg mb-1"></div>
-                      <div className="w-12 h-8 bg-gradient-to-r from-amber-700 to-amber-900 rounded-lg shadow-lg"></div>
+                    {/* Enhanced Hiking boots with laces */}
+                    <div className="absolute bottom-6 right-6 transform group-hover:scale-110 transition-all duration-700">
+                      <div className="w-14 h-10 bg-gradient-to-br from-amber-600 via-amber-700 to-amber-900 rounded-lg shadow-xl mb-1 relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/15 to-transparent rounded-lg"></div>
+                        <div className="absolute top-1 left-1 right-1 h-2 bg-amber-800 rounded"></div>
+                        <div className="absolute bottom-1 left-0 right-0 h-2 bg-amber-900 rounded-b-lg"></div>
+                      </div>
+                      <div className="w-14 h-10 bg-gradient-to-br from-amber-600 via-amber-700 to-amber-900 rounded-lg shadow-xl relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/15 to-transparent rounded-lg"></div>
+                        <div className="absolute top-1 left-1 right-1 h-2 bg-amber-800 rounded"></div>
+                        <div className="absolute bottom-1 left-0 right-0 h-2 bg-amber-900 rounded-b-lg"></div>
+                      </div>
                     </div>
                     
-                    {/* Trees */}
-                    <div className="absolute top-12 right-16">
-                      <div className="w-2 h-16 bg-amber-800 rounded"></div>
-                      <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-12 bg-emerald-600 rounded-full"></div>
+                    {/* Enhanced Pine Trees with depth */}
+                    <div className="absolute top-8 right-12 transform group-hover:sway transition-all duration-1000">
+                      <div className="w-3 h-20 bg-gradient-to-b from-amber-700 to-amber-900 rounded shadow-lg"></div>
+                      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                        <div className="w-10 h-14 bg-gradient-to-b from-emerald-500 to-emerald-700 rounded-full transform -rotate-12 shadow-lg"></div>
+                        <div className="w-8 h-10 bg-gradient-to-b from-emerald-500 to-emerald-700 rounded-full transform rotate-12 -mt-3 shadow-md"></div>
+                        <div className="w-6 h-8 bg-gradient-to-b from-emerald-600 to-emerald-800 rounded-full transform -rotate-45 -mt-2 shadow-md"></div>
+                      </div>
+                    </div>
+                    
+                    {/* Compass */}
+                    <div className="absolute top-20 right-20 w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full shadow-lg transform group-hover:rotate-180 transition-all duration-1000 border-2 border-yellow-200">
+                      <div className="absolute inset-1 bg-white rounded-full shadow-inner"></div>
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1 h-1 bg-red-500 rounded-full"></div>
+                    </div>
+                    
+                    {/* Rope coil */}
+                    <div className="absolute bottom-12 left-8 w-6 h-6 border-4 border-amber-600 rounded-full shadow-md transform group-hover:rotate-12 transition-all duration-500">
+                      <div className="absolute inset-1 border-2 border-amber-700 rounded-full"></div>
                     </div>
                     
                   </div>
@@ -1757,79 +1808,141 @@ export default function HomePage() {
             </div>
 
             {/* Banner 3 - Beach Resort */}
-            <div className="relative bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-100 rounded-3xl overflow-hidden border border-white/20 backdrop-blur-sm flex-shrink-0" style={{ width: '800px', height: '400px' }}>
-              {/* Animated background pattern */}
-              <div className="absolute inset-0 opacity-30">
-                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-orange-200/20 to-transparent animate-pulse"></div>
-                <div className="absolute -top-24 -left-24 w-48 h-48 bg-orange-300/10 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '5s' }}></div>
-                <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-yellow-300/10 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '7s', animationDelay: '1s' }}></div>
+            <div className="relative bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-100 rounded-3xl overflow-hidden border border-white/20 backdrop-blur-sm flex-shrink-0 group hover:scale-[1.02] transition-all duration-500" style={{ width: '800px', height: '400px' }}>
+              {/* Enhanced Animated background pattern */}
+              <div className="absolute inset-0 opacity-50">
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-orange-200/30 to-transparent animate-pulse"></div>
+                <div className="absolute -top-24 -left-24 w-48 h-48 bg-orange-300/20 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '6s' }}></div>
+                <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-yellow-300/20 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '8s', animationDelay: '1s' }}></div>
+                <div className="absolute top-1/3 left-1/3 w-40 h-40 bg-amber-200/15 rounded-full blur-2xl animate-pulse" style={{ animationDuration: '7s', animationDelay: '2s' }}></div>
+                {/* Floating particles */}
+                <div className="absolute top-12 left-12 w-2 h-2 bg-orange-400 rounded-full animate-ping" style={{ animationDelay: '2s' }}></div>
+                <div className="absolute top-20 right-16 w-3 h-3 bg-yellow-400 rounded-full animate-ping" style={{ animationDelay: '4s' }}></div>
+                <div className="absolute bottom-16 left-20 w-1.5 h-1.5 bg-amber-400 rounded-full animate-ping" style={{ animationDelay: '6s' }}></div>
               </div>
               
-              <div className="relative flex items-center justify-between px-8 py-16 lg:px-12 h-full">
+              {/* Mesh gradient overlay for depth */}
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-400/5 via-transparent to-yellow-400/10 opacity-60"></div>
+              
+              <div className="relative flex items-center justify-between px-6 py-8 h-full">
                 
                 {/* Left Content */}
-                <div className="flex-1 max-w-md relative z-10">
-                  <div className="mb-6">
-                    <div className="inline-flex items-center bg-gradient-to-r from-orange-500/10 to-yellow-500/10 backdrop-blur-sm border border-orange-200/50 rounded-full px-4 py-2">
-                      <span className="text-sm font-semibold text-orange-700 uppercase tracking-wider">🏖️ Beach Resort</span>
+                <div className="flex-1 max-w-xs relative z-10">
+                  <div className="mb-3 transform group-hover:scale-105 transition-all duration-500">
+                    <div className="inline-flex items-center bg-gradient-to-r from-orange-500/15 to-yellow-500/15 backdrop-blur-md border border-orange-200/60 rounded-full px-3 py-1.5 shadow-lg">
+                      <span className="text-xs font-bold text-orange-800 uppercase tracking-wider">🏖️ Beach Resort</span>
                     </div>
                   </div>
                   
-                  <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-orange-700 via-amber-700 to-yellow-700 bg-clip-text text-transparent mb-4 leading-tight">
-                    Sunset Paradise
+                  <h1 className="text-3xl lg:text-4xl font-black bg-gradient-to-r from-orange-800 via-amber-700 to-yellow-800 bg-clip-text text-transparent mb-3 leading-tight transform group-hover:scale-102 transition-all duration-500">
+                    Sunset<br/>Paradise
                   </h1>
                   
-                  <p className="text-orange-600/80 text-lg mb-8 font-medium">
+                  <p className="text-orange-700/90 text-base mb-4 font-semibold tracking-wide transform group-hover:translate-x-1 transition-all duration-500">
                     www.sunsetparadise.com
                   </p>
                   
+                  <div className="mb-4 text-orange-600/80 text-xs space-y-1 transform group-hover:translate-x-1 transition-all duration-700">
+                    <p className="flex items-center space-x-2">
+                      <span className="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
+                      <span>Luxury Beach Resorts</span>
+                    </p>
+                    <p className="flex items-center space-x-2">
+                      <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
+                      <span>Tropical Paradise Getaways</span>
+                    </p>
+                  </div>
 
-                  
                   <button 
                     onClick={() => setIsModalOpen(true)}
-                    className="group relative bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white px-8 py-3 rounded-2xl font-bold text-lg shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl overflow-hidden"
+                    className="group/btn relative bg-gradient-to-r from-orange-600 to-yellow-600 hover:from-orange-700 hover:to-yellow-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-xl transform transition-all duration-500 hover:scale-105 hover:shadow-orange-500/25 overflow-hidden"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000"></div>
+                    <div className="absolute inset-0 bg-orange-400/20 rounded-xl blur-xl opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
                     <span className="relative flex items-center justify-center space-x-2">
                       <span>Book Beach Stay</span>
-                      <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform duration-500" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M13 7l5 5-5 5M6 12h12"/>
                       </svg>
                     </span>
                   </button>
                 </div>
                 
-                {/* Right Illustration - Beach Theme */}
-                <div className="flex-1 relative max-w-lg">
+                {/* Right Illustration - Enhanced Beach Theme */}
+                <div className="flex-1 relative max-w-sm transform group-hover:scale-102 transition-all duration-700">
                   <div className="relative z-10 flex items-center justify-center h-full">
                     
-                    {/* Sun */}
-                    <div className="absolute top-8 right-8 w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full shadow-2xl animate-pulse">
-                      <div className="absolute inset-2 bg-yellow-300 rounded-full"></div>
+                    {/* Enhanced Sun with rays */}
+                    <div className="absolute top-4 right-4 w-12 h-12 bg-gradient-to-br from-yellow-300 via-yellow-400 to-orange-500 rounded-full shadow-xl animate-pulse relative transform group-hover:rotate-12 transition-all duration-1000">
+                      <div className="absolute inset-2 bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-full shadow-inner"></div>
+                      <div className="absolute inset-3 bg-yellow-100 rounded-full opacity-80"></div>
+                      {/* Sun rays */}
+                      <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-0.5 h-2 bg-yellow-400 rounded-full opacity-70"></div>
+                      <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0.5 h-2 bg-yellow-400 rounded-full opacity-70"></div>
+                      <div className="absolute -left-1 top-1/2 transform -translate-y-1/2 w-2 h-0.5 bg-yellow-400 rounded-full opacity-70"></div>
+                      <div className="absolute -right-1 top-1/2 transform -translate-y-1/2 w-2 h-0.5 bg-yellow-400 rounded-full opacity-70"></div>
                     </div>
                     
-                    {/* Palm tree */}
-                    <div className="absolute top-12 left-16">
-                      <div className="w-3 h-20 bg-amber-800 rounded"></div>
+                    {/* Enhanced Palm tree with coconuts */}
+                    <div className="absolute top-6 left-8 transform group-hover:sway transition-all duration-1000">
+                      <div className="w-2.5 h-16 bg-gradient-to-b from-amber-700 to-amber-900 rounded shadow-lg relative">
+                        <div className="absolute top-1 left-0 w-0.5 h-2 bg-amber-600 rounded"></div>
+                        <div className="absolute top-4 right-0 w-0.5 h-2 bg-amber-600 rounded"></div>
+                      </div>
                       <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                        <div className="w-12 h-8 bg-green-500 rounded-full transform -rotate-12"></div>
-                        <div className="w-10 h-6 bg-green-500 rounded-full transform rotate-12 -mt-2"></div>
-                        <div className="w-8 h-4 bg-green-500 rounded-full transform -rotate-45 -mt-1"></div>
+                        <div className="w-8 h-6 bg-gradient-to-b from-green-400 to-green-600 rounded-full transform -rotate-12 shadow-lg"></div>
+                        <div className="w-6 h-4 bg-gradient-to-b from-green-400 to-green-600 rounded-full transform rotate-12 -mt-2 shadow-md"></div>
+                        <div className="w-5 h-3 bg-gradient-to-b from-green-500 to-green-700 rounded-full transform -rotate-45 -mt-1 shadow-md"></div>
+                        <div className="w-4 h-2 bg-gradient-to-b from-green-500 to-green-700 rounded-full transform rotate-30 -mt-1 shadow-sm"></div>
+                        {/* Coconuts */}
+                        <div className="absolute top-1 left-1 w-1.5 h-1.5 bg-gradient-to-br from-amber-600 to-amber-800 rounded-full shadow-md"></div>
+                        <div className="absolute top-2 right-1 w-1 h-1 bg-gradient-to-br from-amber-600 to-amber-800 rounded-full shadow-md"></div>
                       </div>
                     </div>
                     
-                    {/* Beach ball */}
-                    <div className="w-16 h-16 bg-gradient-to-br from-red-500 via-white to-blue-500 rounded-full shadow-xl relative">
-                      <div className="absolute inset-0 rounded-full border-4 border-white"></div>
+                    {/* Enhanced Beach ball with more detail */}
+                    <div className="w-12 h-12 bg-gradient-to-br from-red-400 via-white to-blue-400 rounded-full shadow-xl relative transform group-hover:rotate-45 transition-all duration-700 overflow-hidden">
+                      <div className="absolute inset-0 rounded-full border-2 border-white shadow-inner"></div>
+                      <div className="absolute top-0 left-0 w-full h-1/3 bg-red-500 rounded-t-full opacity-80"></div>
+                      <div className="absolute bottom-0 left-0 w-full h-1/3 bg-blue-500 rounded-b-full opacity-80"></div>
+                      <div className="absolute top-1/3 left-0 w-full h-1/3 bg-white"></div>
+                      <div className="absolute top-1 left-1 w-1 h-1 bg-white/60 rounded-full blur-sm"></div>
                     </div>
                     
-                    {/* Surfboard */}
-                    <div className="absolute bottom-8 right-12 w-6 h-20 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-full shadow-lg transform rotate-12"></div>
+                    {/* Enhanced Surfboard with design */}
+                    <div className="absolute bottom-6 right-8 w-8 h-24 bg-gradient-to-b from-cyan-300 via-cyan-400 to-blue-600 rounded-full shadow-xl transform rotate-12 group-hover:rotate-6 transition-all duration-700 relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent rounded-full"></div>
+                      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-blue-800 rounded-full opacity-60"></div>
+                      <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-3 h-2 bg-white rounded-full opacity-80"></div>
+                    </div>
                     
-                    {/* Flip flops */}
-                    <div className="absolute bottom-12 left-12">
-                      <div className="w-8 h-4 bg-pink-400 rounded-full mb-1 shadow-md"></div>
-                      <div className="w-8 h-4 bg-pink-400 rounded-full shadow-md"></div>
+                    {/* Enhanced Flip flops with straps */}
+                    <div className="absolute bottom-8 left-8 transform group-hover:scale-110 transition-all duration-700">
+                      <div className="w-10 h-5 bg-gradient-to-r from-pink-300 to-pink-500 rounded-full mb-1 shadow-lg relative">
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1 h-3 bg-pink-600 rounded"></div>
+                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-3 h-2 bg-pink-600 rounded-b-full"></div>
+                      </div>
+                      <div className="w-10 h-5 bg-gradient-to-r from-pink-300 to-pink-500 rounded-full shadow-lg relative">
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1 h-3 bg-pink-600 rounded"></div>
+                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-3 h-2 bg-pink-600 rounded-b-full"></div>
+                      </div>
+                    </div>
+                    
+                    {/* Seashell */}
+                    <div className="absolute bottom-16 right-16 w-6 h-6 bg-gradient-to-br from-pink-200 to-pink-400 rounded-full shadow-lg transform group-hover:rotate-12 transition-all duration-500 relative">
+                      <div className="absolute inset-1 bg-white rounded-full opacity-80"></div>
+                      <div className="absolute top-1 left-1 w-1 h-1 bg-pink-300 rounded-full"></div>
+                    </div>
+                    
+                    {/* Starfish */}
+                    <div className="absolute top-16 left-20 transform group-hover:rotate-45 transition-all duration-1000">
+                      <div className="w-8 h-8 relative">
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-orange-400 rounded-full shadow-md"></div>
+                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-2 h-3 bg-orange-400 rounded-t-full shadow-sm"></div>
+                        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-2 h-3 bg-orange-400 rounded-b-full shadow-sm"></div>
+                        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-3 h-2 bg-orange-400 rounded-l-full shadow-sm"></div>
+                        <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-3 h-2 bg-orange-400 rounded-r-full shadow-sm"></div>
+                      </div>
                     </div>
                     
                   </div>
