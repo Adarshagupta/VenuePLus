@@ -35,7 +35,7 @@ export function FeatureShowcase() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-light text-gray-800 mb-6">
-            Why Choose <span className="font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">VenuePlus</span>
+            Why Choose <span className="font-bold gradient-text-primary">VenuePlus</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Experience the future of travel planning with our cutting-edge platform designed for modern travelers

@@ -41,7 +41,7 @@ export default function HomePage() {
           
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-light mb-8 animate-soft-fade-in animation-delay-200">
             <span className="block text-slate-800 font-extralight mb-2">Plan Your</span>
-            <span className="block text-blue-600 font-semibold mb-2">Perfect Journey</span>
+            <span className="block gradient-text-primary font-semibold mb-2">Perfect Journey</span>
             <span className="block text-slate-700 font-light text-2xl md:text-3xl">with intelligent recommendations</span>
           </h1>
           

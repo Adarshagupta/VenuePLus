@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X, ArrowLeft, ArrowRight } from 'lucide-react'
+import { X, ArrowLeft, ArrowRight, Edit2 } from 'lucide-react'
 import { DestinationSelection } from './steps/destination-selection'
 import { DateSelection } from './steps/date-selection'
 import { DurationSelection } from './steps/duration-selection'
@@ -57,6 +57,15 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
     }
     
     if (currentStep < steps.length - 1) {
+      // Add completion animation trigger
+      const currentStepElement = document.querySelector(`[data-step="${currentStep}"]`)
+      if (currentStepElement) {
+        currentStepElement.classList.add('animate-step-completion')
+        setTimeout(() => {
+          currentStepElement.classList.remove('animate-step-completion')
+        }, 600)
+      }
+      
       setCurrentStep(currentStep + 1)
     }
   }
@@ -107,6 +116,14 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
     }
   }
 
+  const goToStep = (stepIndex: number) => {
+    // Allow navigation to completed steps or current step
+    if (stepIndex <= currentStep) {
+      setCurrentStep(stepIndex)
+      setValidationError('') // Clear any validation errors
+    }
+  }
+
   const getProgressPercentage = () => {
     return ((currentStep + 1) / steps.length) * 100
   }
@@ -134,100 +151,259 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
     }
   }
 
+  const getStepIcon = (stepName: string, index: number) => {
+    const icons = {
+      destination: '🌍',
+      duration: '⏰',
+      dates: '📅',
+      travelers: '👥',
+      departure: '✈️',
+      cities: '🏛️',
+      summary: '📋'
+    }
+    return icons[stepName as keyof typeof icons] || '●'
+  }
+
+  const getStepTitle = (stepName: string) => {
+    const titles = {
+      destination: 'Destination',
+      duration: 'Duration',
+      dates: 'Dates',
+      travelers: 'Travelers',
+      departure: 'Departure',
+      cities: 'Cities',
+      summary: 'Summary'
+    }
+    return titles[stepName as keyof typeof titles] || stepName
+  }
+
   return (
     <div className="modal-backdrop flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl w-full max-w-6xl h-[85vh] flex flex-col shadow-2xl overflow-hidden">
-        {/* Compact Header */}
-        <div className="relative bg-gradient-to-r from-blue-50 to-purple-50 p-6 border-b border-gray-100 flex-shrink-0">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-3">
-              {currentStep > 0 && (
-                <button 
-                  onClick={prevStep}
-                  className="p-2 rounded-full bg-white/80 backdrop-blur-sm text-gray-600 hover:text-gray-800 hover:bg-white transition-smooth"
+      <div className="bg-white rounded-3xl w-full max-w-7xl h-[80vh] flex shadow-2xl overflow-hidden animate-soft-fade-in">
+        {/* Left Sidebar - Progress Navigation */}
+        <div className="w-80 bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 border-r border-gray-100 flex flex-col">
+          {/* Header */}
+          <div className="p-4 border-b border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">V</span>
+                </div>
+                <div>
+                  <h1 className="text-lg font-bold gradient-text-primary">VenuePlus</h1>
+                  <p className="text-xs text-gray-500">Travel Planning</p>
+                </div>
+              </div>
+              <button 
+                onClick={onClose}
+                className="p-2 rounded-xl bg-white/80 backdrop-blur-sm text-gray-600 hover:text-gray-800 hover:bg-white hover:shadow-md transition-all duration-200"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            {/* Overall Progress */}
+            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-4 border border-white/50">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-gray-700">Progress</span>
+                <span className="text-sm font-bold gradient-text-primary">{Math.round(getProgressPercentage())}%</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div 
+                  className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 h-3 rounded-full transition-all duration-700 ease-out transform relative overflow-hidden"
+                  style={{ width: `${getProgressPercentage()}%` }}
                 >
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-              )}
-              <div>
-                <h2 className="text-xs text-gray-500 uppercase tracking-wider font-medium">
-                  Plan Your Perfect Trip
-                </h2>
-                <div className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Step {currentStep + 1} of {steps.length}
+                  <div className="absolute inset-0 animate-progress-shimmer"></div>
                 </div>
               </div>
             </div>
-            <button 
-              onClick={onClose}
-              className="p-2 rounded-full bg-white/80 backdrop-blur-sm text-gray-600 hover:text-gray-800 hover:bg-white transition-smooth"
-            >
-              <X className="w-5 h-5" />
-            </button>
           </div>
-          
-          {/* Compact Progress Bar */}
-          <div className="mb-4">
-            <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
-              <div 
-                className="bg-gradient-to-r from-blue-500 to-purple-500 h-1.5 rounded-full transition-all duration-500 ease-out"
-                style={{ width: `${getProgressPercentage()}%` }}
-              />
-            </div>
-            <div className="flex justify-between mt-2">
-              {steps.map((step, index) => (
-                <div
-                  key={step}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    index <= currentStep
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-500'
-                      : 'bg-gray-300'
-                  }`}
-                />
-              ))}
+
+          {/* Step Navigation */}
+          <div className="flex-1 p-4 space-y-2">
+            <h3 className="text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wider">Planning Steps</h3>
+            <p className="text-xs text-gray-500 mb-4">Click on completed steps to edit your preferences</p>
+            {steps.map((step, index) => (
+              <div
+                key={step}
+                data-step={index}
+                className={`relative group transition-all duration-300 transform ${
+                  index === currentStep
+                    ? 'scale-105 animate-glow-pulse'
+                    : index < currentStep
+                    ? 'scale-100 opacity-80'
+                    : 'scale-95 opacity-60'
+                }`}
+              >
+                <button
+                  onClick={() => goToStep(index)}
+                  disabled={index > currentStep}
+                  className={`w-full text-left relative p-3 rounded-2xl border transition-all duration-300 ${
+                    index === currentStep
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 border-transparent shadow-lg text-white'
+                      : index < currentStep
+                      ? 'bg-white border-green-200 shadow-sm hover:border-green-300 hover:shadow-md cursor-pointer'
+                      : 'bg-white/60 border-gray-200 cursor-not-allowed'
+                  } ${index <= currentStep ? 'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2' : ''}`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <div
+                      className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                        index === currentStep
+                          ? 'bg-white/20 backdrop-blur-sm text-white'
+                          : index < currentStep
+                          ? 'bg-green-100 text-green-600'
+                          : 'bg-gray-100 text-gray-400'
+                      }`}
+                    >
+                      {index < currentStep ? (
+                        <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
+                          <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      ) : (
+                        <span className="text-lg">{getStepIcon(step, index)}</span>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <h4
+                        className={`font-semibold transition-colors duration-300 ${
+                          index === currentStep
+                            ? 'text-white'
+                            : index < currentStep
+                            ? 'text-gray-800'
+                            : 'text-gray-500'
+                        }`}
+                      >
+                        {getStepTitle(step)}
+                      </h4>
+                      <div className="flex items-center justify-between">
+                        <p
+                          className={`text-sm transition-colors duration-300 ${
+                            index === currentStep
+                              ? 'text-white/80'
+                              : index < currentStep
+                              ? 'text-green-600'
+                              : 'text-gray-400'
+                          }`}
+                        >
+                          {index < currentStep
+                            ? 'Complete'
+                            : index === currentStep
+                            ? 'In Progress'
+                            : 'Pending'
+                          }
+                        </p>
+                        {index < currentStep && (
+                          <Edit2 className="w-3 h-3 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Connecting Lines */}
+                  {index < steps.length - 1 && (
+                    <div
+                      className={`absolute left-9 -bottom-3 w-0.5 h-6 transition-colors duration-300 ${
+                        index < currentStep ? 'bg-green-300' : 'bg-gray-200'
+                      }`}
+                    />
+                  )}
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Trip Summary Pills */}
+          <div className="p-4 border-t border-gray-100">
+            <h4 className="text-sm font-semibold text-gray-700 mb-3">Trip Details</h4>
+            <div className="space-y-2">
+              <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-2 rounded-xl text-sm font-medium flex items-center space-x-2 animate-bounce-in">
+                <span>🌟</span>
+                <span>{tripData?.destination || 'Select Destination'}</span>
+              </div>
+              {tripData?.duration && (
+                <div className="bg-white border border-gray-200 px-3 py-2 rounded-xl text-sm font-medium text-gray-700 flex items-center space-x-2 animate-slide-in-left animation-delay-100">
+                  <span>⏱️</span>
+                  <span>{tripData.duration}</span>
+                </div>
+              )}
+              {tripData?.startDate && (
+                <div className="bg-white border border-gray-200 px-3 py-2 rounded-xl text-sm font-medium text-gray-700 flex items-center space-x-2 animate-slide-in-left animation-delay-200">
+                  <span>📅</span>
+                  <span>{tripData.startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                </div>
+              )}
+              {tripData?.fromCity && (
+                <div className="bg-white border border-gray-200 px-3 py-2 rounded-xl text-sm font-medium text-gray-700 flex items-center space-x-2 animate-slide-in-left animation-delay-300">
+                  <span>✈️</span>
+                  <span>{tripData.fromCity}</span>
+                </div>
+              )}
+              {tripData?.rooms && tripData.rooms.length > 0 && (
+                <div className="bg-white border border-gray-200 px-3 py-2 rounded-xl text-sm font-medium text-gray-700 flex items-center space-x-2 animate-slide-in-left animation-delay-400">
+                  <span>👥</span>
+                  <span>{tripData.rooms.reduce((total, room) => total + room.adults, 0)} Travelers</span>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Compact Trip Info Pills */}
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full text-xs font-medium">
-              🌟 {tripData?.destination || 'Select Destination'}
-            </div>
-            {tripData?.duration && (
-              <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-gray-700 border border-white/50">
-                ⏱️ {tripData.duration}
-              </div>
+          {/* Navigation Buttons */}
+          <div className="p-4 border-t border-gray-100 space-y-3">
+            {currentStep > 0 && (
+              <button
+                onClick={prevStep}
+                className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-white border border-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Previous</span>
+              </button>
             )}
-            {tripData?.startDate && (
-              <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-gray-700 border border-white/50">
-                📅 {tripData.startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-              </div>
-            )}
-            {tripData?.fromCity && (
-              <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-gray-700 border border-white/50">
-                ✈️ {tripData.fromCity}
-              </div>
-            )}
-            {tripData?.rooms && tripData.rooms.length > 0 && (
-              <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-gray-700 border border-white/50">
-                👥 {tripData.rooms.reduce((total, room) => total + room.adults, 0)} Pax
-              </div>
+            {currentStep < steps.length - 1 && canProceedToNextStep() && (
+              <button
+                onClick={nextStep}
+                className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
+              >
+                <span>Continue</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
             )}
           </div>
         </div>
 
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col min-h-0">
-          {/* Validation Error */}
-          {validationError && (
-            <div className="mx-6 mt-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm animate-soft-fade-in flex-shrink-0">
-              {validationError}
+        {/* Right Content Area */}
+        <div className="flex-1 flex flex-col">
+          {/* Step Header */}
+          <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-white to-gray-50">
+            <div className="flex items-center space-x-3 mb-2">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-xl">
+                {getStepIcon(steps[currentStep], currentStep)}
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">{getStepTitle(steps[currentStep])}</h2>
+                <p className="text-sm text-gray-600">Step {currentStep + 1} of {steps.length}</p>
+              </div>
             </div>
-          )}
+            
+            {/* Validation Error */}
+            {validationError && (
+              <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm animate-soft-fade-in flex items-center space-x-2">
+                <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-xs">!</span>
+                </div>
+                <span>{validationError}</span>
+              </div>
+            )}
+          </div>
           
           {/* Step Content */}
-          <div className="flex-1 p-6 overflow-y-auto custom-scrollbar">
-            <div className="h-full">
+          <div className="flex-1 overflow-y-auto custom-scrollbar">
+            <div 
+              key={currentStep}
+              className="p-6 h-full animate-slide-in-right"
+            >
               {renderCurrentStep()}
             </div>
           </div>
