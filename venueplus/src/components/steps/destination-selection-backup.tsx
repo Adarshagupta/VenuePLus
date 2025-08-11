@@ -30,22 +30,22 @@ export function DestinationSelection({ tripData, onUpdate, onNext }: Destination
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [hoveredDestination, setHoveredDestination] = useState<string | null>(null)
 
-     const destinations: Destination[] = [
-     {
-       id: 'indonesia',
-       name: 'Indonesia',
-       country: 'Indonesia',
-       description: 'Southeast Asian archipelago with diverse islands, temples, and tropical paradise',
-       imageUrl: 'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-       rating: 4.8,
-       trending: true,
-       category: 'Beach',
-       avgCost: '$50-80/day',
-       highlights: ['Bali', 'Java', 'Komodo', 'Cultural Diversity'],
-       bestTime: 'Apr-Oct',
-       popularWith: ['Couples', 'Solo Travelers'],
-       gradient: 'from-orange-400 to-pink-500'
-     },
+  const destinations: Destination[] = [
+    {
+      id: 'bali',
+      name: 'Bali',
+      country: 'Indonesia',
+      description: 'Tropical paradise with stunning beaches, ancient temples, and vibrant culture',
+      imageUrl: 'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+      rating: 4.8,
+      trending: true,
+      category: 'Beach',
+      avgCost: '$50-80/day',
+      highlights: ['Rice Terraces', 'Temples', 'Beaches', 'Yoga Retreats'],
+      bestTime: 'Apr-Oct',
+      popularWith: ['Couples', 'Solo Travelers'],
+      gradient: 'from-orange-400 to-pink-500'
+    },
     {
       id: 'tokyo',
       name: 'Tokyo',
@@ -190,7 +190,30 @@ export function DestinationSelection({ tripData, onUpdate, onNext }: Destination
           From tropical beaches to bustling cities, discover your perfect getaway destination
         </p>
         
-        
+        {/* Debug Test Buttons */}
+        <div className="mt-4 space-y-2">
+          <div className="flex gap-2 flex-wrap justify-center">
+            {destinations.slice(0, 6).map((dest, index) => (
+              <button 
+                key={dest.id}
+                onClick={() => {
+                  console.log(`Testing destination ${index + 1}:`, dest.name, dest)
+                  console.log('Calling handleDestinationSelect...')
+                  handleDestinationSelect(dest)
+                }}
+                className="bg-blue-500 text-white px-3 py-1 rounded text-xs hover:bg-blue-600"
+              >
+                Test {dest.name}
+              </button>
+            ))}
+          </div>
+          <div className="text-xs text-gray-500 text-center">
+            Current destination: {tripData.destination || 'None'}
+          </div>
+          <div className="text-xs text-red-500 text-center">
+            Click these test buttons first to see if the issue is with the cards or the core function
+          </div>
+        </div>
       </div>
 
       {/* Search and Filters */}
@@ -241,9 +264,17 @@ export function DestinationSelection({ tripData, onUpdate, onNext }: Destination
                 console.log('Event target:', e.target)
                 handleDestinationSelect(destination)
               }}
-                             onMouseEnter={() => setHoveredDestination(destination.id)}
-               onMouseLeave={() => setHoveredDestination(null)}
-                             className="group relative bg-white rounded-3xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 border border-gray-100 select-none"
+              onMouseEnter={() => {
+                console.log('Mouse entered:', destination.name)
+                setHoveredDestination(destination.id)
+              }}
+              onMouseLeave={() => {
+                console.log('Mouse left:', destination.name)
+                setHoveredDestination(null)
+              }}
+              className={`group relative bg-white rounded-3xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 border select-none ${
+                destination.id === 'bali' ? 'border-green-500 border-2' : 'border-gray-100'
+              }`}
               style={{ 
                 userSelect: 'none',
                 zIndex: 1,

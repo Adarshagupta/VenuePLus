@@ -7,7 +7,8 @@ import { DateSelection } from './steps/date-selection'
 import { DurationSelection } from './steps/duration-selection'
 import { TravelerSelection } from './steps/traveler-selection'
 import { DepartureSelection } from './steps/departure-selection'
-import { CitySelection } from './steps/city-selection'
+import { BudgetPlanner } from './steps/budget-planner'
+import { ItineraryGenerator } from './steps/itinerary-generator'
 import { TripSummary } from './steps/trip-summary'
 import { useTripContext } from '@/contexts/TripContext'
 
@@ -24,6 +25,22 @@ export interface TripData {
   rooms?: { adults: number; children: number }[]
   fromCity?: string
   selectedCities?: string[]
+  budget?: {
+    total: number
+    breakdown: {
+      accommodation: number
+      transportation: number
+      food: number
+      activities: number
+      shopping: number
+    }
+  }
+  itinerary?: {
+    type: 'budget' | 'balanced' | 'luxury'
+    activities: any[]
+    accommodation: any[]
+    transportation: any[]
+  }
 }
 
 export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModalProps) {
@@ -38,24 +55,33 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
     'dates', 
     'travelers',
     'departure',
-    'cities',
+    'budget',
+    'itinerary',
     'summary'
   ]
 
   const updateTripData = (data: Partial<TripData>) => {
+    console.log('updateTripData called with:', data)
     const updatedData = { ...(tripData || {}), ...data }
+    console.log('Updated trip data:', updatedData)
     setTripData(updatedData)
   }
 
   const nextStep = () => {
+    console.log('nextStep called - Current step:', steps[currentStep])
+    console.log('Trip data:', tripData)
+    
     // Clear any previous validation errors
     setValidationError('')
     
     // Validate current step before proceeding
     if (!canProceedToNextStep()) {
+      console.log('Validation failed:', getValidationMessage())
       setValidationError(getValidationMessage())
       return
     }
+    
+    console.log('Validation passed, moving to next step')
     
     if (currentStep < steps.length - 1) {
       // Add completion animation trigger
@@ -68,6 +94,7 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
       }
       
       setCurrentStep(currentStep + 1)
+      console.log('Moved to step:', currentStep + 1, '(' + steps[currentStep + 1] + ')')
     }
   }
 
@@ -85,8 +112,10 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
         return !!tripData.travelers && !!tripData.rooms
       case 'departure':
         return !!tripData.fromCity
-      case 'cities':
-        return !!tripData.selectedCities && tripData.selectedCities.length > 0
+      case 'budget':
+        return !!tripData.budget
+      case 'itinerary':
+        return !!tripData.itinerary
       default:
         return true
     }
@@ -104,8 +133,10 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
         return 'Please select travelers and room configuration'
       case 'departure':
         return 'Please select your departure city'
-      case 'cities':
-        return 'Please select at least one city to visit'
+      case 'budget':
+        return 'Please set your travel budget'
+      case 'itinerary':
+        return 'Please generate your itinerary'
       default:
         return 'Please complete this step'
     }
@@ -143,8 +174,10 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
         return <TravelerSelection tripData={currentTripData} onUpdate={updateTripData} onNext={nextStep} />
       case 'departure':
         return <DepartureSelection tripData={currentTripData} onUpdate={updateTripData} onNext={nextStep} />
-      case 'cities':
-        return <CitySelection tripData={currentTripData} onUpdate={updateTripData} onNext={nextStep} />
+      case 'budget':
+        return <BudgetPlanner tripData={currentTripData} onUpdate={updateTripData} onNext={nextStep} />
+      case 'itinerary':
+        return <ItineraryGenerator tripData={currentTripData} onUpdate={updateTripData} onNext={nextStep} />
       case 'summary':
         return <TripSummary tripData={currentTripData} isAuthenticated={isAuthenticated} onClose={onClose} />
       default:
@@ -159,7 +192,8 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
       dates: '📅',
       travelers: '👥',
       departure: '✈️',
-      cities: '🏛️',
+      budget: '💰',
+      itinerary: '🗺️',
       summary: '📋'
     }
     return icons[stepName as keyof typeof icons] || '●'
@@ -172,7 +206,8 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
       dates: 'Dates',
       travelers: 'Travelers',
       departure: 'Departure',
-      cities: 'Cities',
+      budget: 'Budget',
+      itinerary: 'Itinerary',
       summary: 'Summary'
     }
     return titles[stepName as keyof typeof titles] || stepName

@@ -101,10 +101,12 @@ export function CitySelection({ tripData, onUpdate, onNext }: CitySelectionProps
   )
 
   const handleCityToggle = (cityName: string) => {
+    console.log('City clicked:', cityName) // Debug log
     const newSelected = selectedCities.includes(cityName)
       ? selectedCities.filter(c => c !== cityName)
       : [...selectedCities, cityName]
     
+    console.log('New selected cities:', newSelected) // Debug log
     setSelectedCities(newSelected)
     onUpdate({ selectedCities: newSelected })
   }
@@ -125,6 +127,20 @@ export function CitySelection({ tripData, onUpdate, onNext }: CitySelectionProps
         <h3 className="text-2xl font-semibold text-center mb-8">
           What's <span className="text-green-500">your pick</span> for your next vacation?
         </h3>
+        
+        {/* Debug Test Button */}
+        <div className="text-center mb-4">
+          <button 
+            onClick={() => {
+              console.log('Test button clicked!')
+              handleCityToggle('Test City')
+            }}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+          >
+            Test Click (Debug)
+          </button>
+          <p className="text-sm text-gray-500 mt-2">Selected: {selectedCities.join(', ') || 'None'}</p>
+        </div>
 
         {/* Search Bar */}
         <div className="relative mb-8">
@@ -196,18 +212,28 @@ export function CitySelection({ tripData, onUpdate, onNext }: CitySelectionProps
           return (
             <div
               key={city.id}
-              onClick={() => handleCityToggle(city.name)}
-              className={`bg-white rounded-xl overflow-hidden shadow-sm border cursor-pointer hover:shadow-md transition-all ${
-                isSelected ? 'border-orange-500 ring-2 ring-orange-100' : 'border-gray-200'
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                handleCityToggle(city.name)
+              }}
+              className={`bg-white rounded-xl overflow-hidden shadow-sm border cursor-pointer hover:shadow-md transition-all duration-200 ${
+                isSelected ? 'border-orange-500 ring-2 ring-orange-100 bg-orange-50' : 'border-gray-200 hover:border-gray-300'
               }`}
+              style={{ userSelect: 'none' }}
             >
-              <div className="h-32 bg-gray-200 overflow-hidden">
+              <div className="h-32 bg-gray-200 overflow-hidden relative">
                 {city.imageUrl && (
                   <img 
                     src={city.imageUrl} 
                     alt={city.name}
                     className="w-full h-full object-cover"
                   />
+                )}
+                {isSelected && (
+                  <div className="absolute top-2 right-2 w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">✓</span>
+                  </div>
                 )}
               </div>
               
