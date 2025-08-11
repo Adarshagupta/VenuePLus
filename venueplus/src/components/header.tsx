@@ -248,7 +248,7 @@ export function Header() {
                   href="/auth/signin"
                   className="text-gray-700 hover:text-purple-600 font-medium transition-all duration-200 relative group"
                 >
-                  Sign up
+                  Log in
                   <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-violet-600 transition-all duration-300 group-hover:w-full"></div>
                 </Link>
                 <Link
@@ -256,7 +256,7 @@ export function Header() {
                   className="bg-gradient-to-r from-gray-900 to-gray-800 hover:from-purple-600 hover:to-violet-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-xl relative overflow-hidden group"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <span className="relative z-10">Log in</span>
+                  <span className="relative z-10">Sign up</span>
                 </Link>
               </div>
             )}
@@ -378,13 +378,13 @@ export function Header() {
                     href="/auth/signin"
                     className="block text-gray-700 hover:text-gray-900 py-2 font-medium"
                   >
-                    Sign up
+                    Log in
                   </Link>
                   <Link
                     href="/auth/signup"
                     className="block bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-center font-medium transition-colors"
                   >
-                    Log in
+                    Sign up
                   </Link>
                 </div>
               )}
