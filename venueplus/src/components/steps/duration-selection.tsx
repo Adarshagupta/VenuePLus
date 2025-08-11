@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { TripData } from '../trip-planning-modal'
 
 interface DurationSelectionProps {
@@ -9,6 +10,8 @@ interface DurationSelectionProps {
 }
 
 export function DurationSelection({ tripData, onUpdate, onNext }: DurationSelectionProps) {
+  const [showCustomInput, setShowCustomInput] = useState(false)
+  const [customDays, setCustomDays] = useState('')
   const durations = [
     {
       id: '4-6',
@@ -33,15 +36,42 @@ export function DurationSelection({ tripData, onUpdate, onNext }: DurationSelect
       label: '13-15 Days',
       icon: '☀️',
       recommended: false
+    },
+    {
+      id: 'custom',
+      label: 'Custom Duration',
+      icon: '⚡',
+      recommended: false
     }
   ]
 
   const handleDurationSelect = (duration: string) => {
+    if (duration === 'Custom Duration') {
+      setShowCustomInput(true)
+      return
+    }
     onUpdate({ duration })
     // Auto-advance after selection
     setTimeout(() => {
       onNext()
     }, 500)
+  }
+
+  const handleCustomDurationSubmit = () => {
+    const days = parseInt(customDays)
+    if (days && days > 0) {
+      const customDurationLabel = `${days} Day${days === 1 ? '' : 's'}`
+      onUpdate({ duration: customDurationLabel })
+      setTimeout(() => {
+        onNext()
+      }, 500)
+    }
+  }
+
+  const handleCustomInputKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleCustomDurationSubmit()
+    }
   }
 
   return (
@@ -78,7 +108,8 @@ export function DurationSelection({ tripData, onUpdate, onNext }: DurationSelect
                 duration.id === '4-6' ? 'bg-gradient-to-br from-indigo-400 to-purple-500' :
                 duration.id === '7-9' ? 'bg-gradient-to-br from-blue-400 to-cyan-500' :
                 duration.id === '10-12' ? 'bg-gradient-to-br from-yellow-400 to-orange-500' :
-                'bg-gradient-to-br from-pink-400 to-rose-500'
+                duration.id === '13-15' ? 'bg-gradient-to-br from-pink-400 to-rose-500' :
+                'bg-gradient-to-br from-emerald-400 to-teal-500'
               } shadow-lg group-hover:scale-110 transition-transform`}>
                 <div className="text-2xl text-white">
                   {duration.icon}
@@ -94,25 +125,64 @@ export function DurationSelection({ tripData, onUpdate, onNext }: DurationSelect
                 {duration.id === '7-9' && 'Explore highlights'}
                 {duration.id === '10-12' && 'Immersive experience'}
                 {duration.id === '13-15' && 'Ultimate adventure'}
+                {duration.id === 'custom' && 'Your perfect length'}
               </div>
 
               <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                 duration.id === '4-6' ? 'bg-green-100 text-green-700' :
                 duration.id === '7-9' ? 'bg-blue-100 text-blue-700' :
                 duration.id === '10-12' ? 'bg-purple-100 text-purple-700' :
-                'bg-orange-100 text-orange-700'
+                duration.id === '13-15' ? 'bg-orange-100 text-orange-700' :
+                'bg-teal-100 text-teal-700'
               }`}>
                 {duration.id === '4-6' && '💰 Budget'}
                 {duration.id === '7-9' && '💎 Value'}
                 {duration.id === '10-12' && '⭐ Premium'}
                 {duration.id === '13-15' && '👑 Luxury'}
+                {duration.id === 'custom' && '🎯 Flexible'}
               </div>
             </div>
           </div>
         ))}
       </div>
 
-
+      {/* Custom Duration Input */}
+      {showCustomInput && (
+        <div className="mt-6 p-6 bg-gradient-to-br from-teal-50 to-emerald-50 border-2 border-teal-200 rounded-2xl">
+          <h4 className="text-lg font-bold text-gray-800 mb-4 text-center">
+            How many days would you like your trip to be?
+          </h4>
+          <div className="flex items-center justify-center gap-4">
+            <input
+              type="number"
+              value={customDays}
+              onChange={(e) => setCustomDays(e.target.value)}
+              onKeyPress={handleCustomInputKeyPress}
+              placeholder="Enter days"
+              min="1"
+              max="365"
+              className="w-32 px-4 py-3 border-2 border-teal-200 rounded-xl text-center text-lg font-semibold focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all"
+              autoFocus
+            />
+            <span className="text-gray-600 font-medium">days</span>
+          </div>
+          <div className="flex gap-3 mt-4 justify-center">
+            <button
+              onClick={() => setShowCustomInput(false)}
+              className="px-6 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleCustomDurationSubmit}
+              disabled={!customDays || parseInt(customDays) <= 0}
+              className="px-6 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-xl hover:from-teal-600 hover:to-emerald-600 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Confirm
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

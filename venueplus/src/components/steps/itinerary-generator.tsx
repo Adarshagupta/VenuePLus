@@ -323,3 +323,4 @@ export function ItineraryGenerator({ tripData, onUpdate, onNext }: ItineraryGene
     </div>
   )
 }
+
