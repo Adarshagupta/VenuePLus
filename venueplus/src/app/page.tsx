@@ -966,7 +966,7 @@ export default function HomePage() {
     {
       name: 'Paris, France',
       description: 'City of Lights',
-      image: 'https://images.unsplash.com/photo-1431274172761-fca41d930114?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+      image: 'https://images.unsplash.com/photo-1431274172761-fca41d930114?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80',
       rating: '4.7',
       reviews: '4.8k',
       query: 'Paris, France'
@@ -1101,11 +1101,11 @@ export default function HomePage() {
                     onFocus={() => setShowSearchSuggestions(searchQuery.length > 0)}
                     onBlur={() => setTimeout(() => setShowSearchSuggestions(false), 200)}
                     placeholder="Where would you like to go? (e.g., Paris, Tokyo, Bali)"
-                    className="w-full px-5 py-4 pr-14 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-gray-900 placeholder-gray-400 text-base bg-white/95 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="w-full px-5 py-4 pr-14 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-gray-900 placeholder-gray-400 text-base bg-white/95 backdrop-blur-sm shadow-sky-lg hover:shadow-sky-xl transition-all duration-300"
                   />
                   <button 
                     onClick={() => setIsModalOpen(true)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 text-white p-2.5 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 text-white p-2.5 rounded-xl transition-all duration-300 shadow-sky-lg hover:shadow-sky-xl hover:scale-105"
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
@@ -1114,7 +1114,7 @@ export default function HomePage() {
                   
                   {/* Search Suggestions Dropdown */}
                   {showSearchSuggestions && (
-                    <div className="absolute top-full mt-2 w-full bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 overflow-hidden animate-slide-down">
+                    <div className="absolute top-full mt-2 w-full bg-white rounded-2xl shadow-sky-2xl border border-gray-100 z-50 overflow-hidden animate-slide-down">
                       <div className="p-4">
                         <div className="text-sm font-medium text-gray-500 mb-3">Popular Destinations</div>
                         <div className="space-y-2">
@@ -1180,7 +1180,7 @@ export default function HomePage() {
             {/* Right Content - Enhanced Visual Gallery */}
             <div className="flex-1 relative max-w-[900px] pl-8">
               {/* Main Hero Image */}
-              <div className="relative rounded-[2rem] h-[480px] overflow-hidden border border-gray-100 shadow-2xl group">
+              <div className="relative rounded-[2rem] h-[480px] overflow-hidden border border-gray-100 shadow-sky-2xl group">
                 <img 
                   src={selectedDestination.image}
                   alt={`Beautiful ${selectedDestination.name} landscape`}
@@ -1194,7 +1194,7 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                 
                 {/* Location badge */}
-                <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-lg transform transition-all duration-300 group-hover:scale-105">
+                <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-sky-lg transform transition-all duration-300 group-hover:scale-105">
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
                       <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -1266,7 +1266,7 @@ export default function HomePage() {
                 {destinations.slice(1).map((destination, index) => (
                   <div 
                     key={destination.name}
-                    className={`w-24 h-24 rounded-2xl overflow-hidden shadow-xl cursor-pointer transform transition-all duration-300 hover:scale-110 hover:shadow-2xl animate-slide-in-right relative ${
+                    className={`w-24 h-24 rounded-2xl overflow-hidden shadow-sky-xl cursor-pointer transform transition-all duration-300 hover:scale-110 hover:shadow-sky-2xl animate-slide-in-right relative ${
                       selectedDestination.name === destination.name ? 'ring-4 ring-blue-500 ring-opacity-60' : ''
                     }`}
                     style={{ animationDelay: `${(index + 1) * 0.2}s` }}
@@ -1419,10 +1419,10 @@ export default function HomePage() {
                       setSelectedDestinationPackage(selectedPackage)
                     }
                   }}
-                  className={`w-72 h-96 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden cursor-pointer transform transition-all duration-500 group perspective-1000 flex-shrink-0 ${
+                  className={`w-72 h-96 bg-white rounded-2xl shadow-sky-lg border border-gray-100 overflow-hidden cursor-pointer transform transition-all duration-500 group perspective-1000 flex-shrink-0 ${
                     hoveredCard === destination.name 
-                      ? 'shadow-2xl -translate-y-3 scale-105 rotate-x-2 rotate-y-2' 
-                      : 'hover:shadow-xl hover:-translate-y-2 hover:scale-102'
+                      ? 'shadow-sky-2xl -translate-y-3 scale-105 rotate-x-2 rotate-y-2' 
+                      : 'hover:shadow-sky-xl hover:-translate-y-2 hover:scale-102'
                   }`}
                   style={{ 
                     animationDelay: `${index * 100}ms`,
@@ -1502,7 +1502,7 @@ export default function HomePage() {
             const container = document.getElementById('banners-scroll')
             if (container) container.scrollBy({ left: -400, behavior: 'smooth' })
           }}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 z-20 bg-white/90 backdrop-blur-sm hover:bg-white shadow-xl hover:shadow-2xl border border-gray-200 rounded-full p-4 transition-all duration-300 group"
+          className="absolute left-0 top-1/2 transform -translate-y-1/2 z-20 bg-white/90 backdrop-blur-sm hover:bg-white shadow-sky-xl hover:shadow-sky-2xl border border-gray-200 rounded-full p-4 transition-all duration-300 group"
           style={{ marginLeft: '-20px' }}
         >
           <svg className="w-6 h-6 text-gray-600 group-hover:text-sky-600 transition-colors" fill="currentColor" viewBox="0 0 24 24">
@@ -1515,7 +1515,7 @@ export default function HomePage() {
             const container = document.getElementById('banners-scroll')
             if (container) container.scrollBy({ left: 400, behavior: 'smooth' })
           }}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 z-20 bg-white/90 backdrop-blur-sm hover:bg-white shadow-xl hover:shadow-2xl border border-gray-200 rounded-full p-4 transition-all duration-300 group"
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 z-20 bg-white/90 backdrop-blur-sm hover:bg-white shadow-sky-xl hover:shadow-sky-2xl border border-gray-200 rounded-full p-4 transition-all duration-300 group"
           style={{ marginRight: '-20px' }}
         >
           <svg className="w-6 h-6 text-gray-600 group-hover:text-sky-600 transition-colors" fill="currentColor" viewBox="0 0 24 24">
@@ -1564,7 +1564,7 @@ export default function HomePage() {
             
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="group relative bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl overflow-hidden"
+              className="group relative bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-sky-xl transform transition-all duration-300 hover:scale-105 hover:shadow-sky-2xl overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
               <span className="relative flex items-center justify-center space-x-2">

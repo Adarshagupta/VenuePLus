@@ -95,6 +95,8 @@ export const sendVerificationOTP = async (
             .header h1 { color: white; margin: 0; font-size: 28px; font-weight: 600; }
             .content { padding: 40px 20px; }
             .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 16px 32px; border-radius: 8px; font-weight: 600; margin: 20px 0; }
+            .otp-box { text-align: center; margin: 30px 0; padding: 20px; background-color: #f3f4f6; border-radius: 12px; }
+            .otp-code { font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #667eea; margin: 15px 0; font-family: monospace; }
             .footer { background-color: #f9fafb; padding: 20px; text-align: center; color: #6b7280; font-size: 14px; }
           </style>
         </head>
@@ -173,7 +175,8 @@ export const sendVerificationEmail = async (
 export const sendPasswordResetOTP = async (
   email: string,
   name: string,
-  otp: string
+  otp: string,
+  resetUrl: string = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/auth/reset-password`
 ): Promise<boolean> => {
   try {
 
@@ -276,7 +279,8 @@ export const sendPasswordResetEmail = async (
   resetToken: string
 ): Promise<boolean> => {
   // For now, redirect to OTP-based verification
-  return sendPasswordResetOTP(email, name, resetToken.substring(0, 6))
+  const resetUrl = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/auth/reset-password?token=${resetToken}`
+  return sendPasswordResetOTP(email, name, resetToken.substring(0, 6), resetUrl)
 }
 
 // Welcome email after verification
