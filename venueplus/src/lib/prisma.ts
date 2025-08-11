@@ -10,9 +10,14 @@ if (process.env.NODE_ENV !== 'production') {
   console.log('DATABASE_URL length:', process.env.DATABASE_URL?.length)
 }
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({
-  log: process.env.NODE_ENV !== 'production' ? ['error', 'warn'] : [],
-})
+// Only create Prisma client if DATABASE_URL is available
+export const prisma = globalForPrisma.prisma ?? (
+  process.env.DATABASE_URL 
+    ? new PrismaClient({
+        log: process.env.NODE_ENV !== 'production' ? ['error', 'warn'] : [],
+      })
+    : null as any // Fallback when no database is available
+)
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 

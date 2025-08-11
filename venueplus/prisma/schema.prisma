@@ -17,6 +17,11 @@ model User {
   name      String?
   phone     String?
   avatar    String?
+  emailVerified        Boolean?  @default(false)
+  emailVerificationOTP String?
+  emailVerificationExpires DateTime?
+  passwordResetOTP     String?
+  passwordResetExpires DateTime?
   preferences Json?  // Store user preferences and travel style
   stats     Json?    // Store user travel statistics
   subscription Json? // Store subscription information

@@ -45,7 +45,7 @@ export function Header() {
     <header className={`transition-all duration-300 sticky top-0 z-50 ${
       scrolled 
         ? 'bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-lg' 
-        : 'bg-white border-b border-gray-100'
+        : 'bg-transparent border-b border-gray-100/50'
     }`}>
       <div className="max-w-[1600px] mx-auto px-6 lg:px-8 xl:px-16">
         <div className="flex items-center justify-between h-16">

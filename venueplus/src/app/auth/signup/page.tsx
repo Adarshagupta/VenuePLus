@@ -73,23 +73,11 @@ export default function SignUpPage() {
       })
 
       if (response.ok) {
-        // Auto sign in after successful registration
-        const result = await signIn('credentials', {
-          email,
-          password,
-          redirect: false,
-        })
-
-        if (result?.ok) {
-          if (hasTripData) {
-            // If we have trip data, redirect to create the trip
-            router.push('/create-trip')
-          } else {
-            router.push('/')
-          }
-        } else {
-          setError('Registration successful, but login failed. Please try signing in.')
-        }
+        const data = await response.json()
+        // Don't auto sign in - user needs to verify OTP first
+        setError('')
+        // Redirect to OTP verification page
+        router.push(`/auth/verify-otp?email=${encodeURIComponent(email)}`)
       } else {
         const data = await response.json()
         setError(data.message || 'Registration failed')
