@@ -44,7 +44,7 @@ export function Header() {
   return (
     <header className={`transition-all duration-300 sticky top-0 z-50 ${
       scrolled 
-        ? 'bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-lg' 
+        ? 'bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sky-lg' 
         : 'bg-transparent border-b border-gray-100/50'
     }`}>
       <div className="max-w-[1600px] mx-auto px-6 lg:px-8 xl:px-16">
@@ -106,7 +106,7 @@ export function Header() {
 
                   {/* Profile Dropdown */}
                   {isProfileMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50">
+                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-sky-lg border border-gray-200 py-2 z-50">
                       {/* User Info Header */}
                       <div className="px-4 py-3 border-b border-gray-100">
                         <div className="flex items-center space-x-3">
@@ -253,7 +253,7 @@ export function Header() {
                 </Link>
                 <Link
                   href="/auth/signup"
-                  className="bg-gradient-to-r from-gray-900 to-gray-800 hover:from-purple-600 hover:to-violet-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-xl relative overflow-hidden group"
+                  className="bg-gradient-to-r from-gray-900 to-gray-800 hover:from-purple-600 hover:to-violet-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-sky-xl relative overflow-hidden group"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <span className="relative z-10">Sign up</span>

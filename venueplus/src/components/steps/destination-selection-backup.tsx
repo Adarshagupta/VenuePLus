@@ -66,7 +66,7 @@ export function DestinationSelection({ tripData, onUpdate, onNext }: Destination
       name: 'Paris',
       country: 'France',
       description: 'City of Light with iconic landmarks, world-class cuisine, and rich history',
-      imageUrl: 'https://images.unsplash.com/photo-1502602898536-47ad22581b52?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+      imageUrl: 'https://images.unsplash.com/photo-1431274172761-fca41d930114?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
       rating: 4.7,
       trending: false,
       category: 'City',

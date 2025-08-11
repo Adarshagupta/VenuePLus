@@ -75,6 +75,13 @@
   --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
+
+  /* Sky Blue Theme Shadows */
+  --shadow-sky-sm: 0 1px 2px 0 rgba(14, 165, 233, 0.1);
+  --shadow-sky: 0 1px 3px 0 rgba(14, 165, 233, 0.15), 0 1px 2px -1px rgba(14, 165, 233, 0.1);
+  --shadow-sky-lg: 0 10px 15px -3px rgba(14, 165, 233, 0.2), 0 4px 6px -4px rgba(14, 165, 233, 0.1);
+  --shadow-sky-xl: 0 20px 25px -5px rgba(14, 165, 233, 0.25), 0 10px 10px -5px rgba(14, 165, 233, 0.08);
+  --shadow-sky-2xl: 0 25px 50px -12px rgba(14, 165, 233, 0.3);
   
   /* Interactive States */
   --hover-bg: #f1f5f9;
@@ -1003,4 +1010,45 @@ body {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200px 100%;
   animation: skeleton-loading 1.5s infinite;
+}
+
+/* Sky Blue Shadow Utility Classes */
+.shadow-sky-sm {
+  box-shadow: var(--shadow-sky-sm);
+}
+
+.shadow-sky {
+  box-shadow: var(--shadow-sky);
+}
+
+.shadow-sky-lg {
+  box-shadow: var(--shadow-sky-lg);
+}
+
+.shadow-sky-xl {
+  box-shadow: var(--shadow-sky-xl);
+}
+
+.shadow-sky-2xl {
+  box-shadow: var(--shadow-sky-2xl);
+}
+
+.hover\:shadow-sky-sm:hover {
+  box-shadow: var(--shadow-sky-sm);
+}
+
+.hover\:shadow-sky:hover {
+  box-shadow: var(--shadow-sky);
+}
+
+.hover\:shadow-sky-lg:hover {
+  box-shadow: var(--shadow-sky-lg);
+}
+
+.hover\:shadow-sky-xl:hover {
+  box-shadow: var(--shadow-sky-xl);
+}
+
+.hover\:shadow-sky-2xl:hover {
+  box-shadow: var(--shadow-sky-2xl);
 }
