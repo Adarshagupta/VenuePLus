@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X, ArrowLeft, ArrowRight, Edit2 } from 'lucide-react'
+import { X, ArrowLeft, ArrowRight, Edit2, Maximize, Minimize } from 'lucide-react'
 import { DestinationSelection } from './steps/destination-selection'
 import { DateSelection } from './steps/date-selection'
 import { DurationSelection } from './steps/duration-selection'
@@ -29,6 +29,7 @@ export interface TripData {
 export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModalProps) {
   const [currentStep, setCurrentStep] = useState(0)
   const [validationError, setValidationError] = useState<string>('')
+  const [isFullscreen, setIsFullscreen] = useState(false)
   const { tripData, setTripData } = useTripContext()
 
   const steps = [
@@ -177,11 +178,30 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
     return titles[stepName as keyof typeof titles] || stepName
   }
 
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen)
+  }
+
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'F11') {
+        event.preventDefault()
+        toggleFullscreen()
+      } else if (event.key === 'Escape' && isFullscreen) {
+        setIsFullscreen(false)
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [isFullscreen])
+
   return (
-    <div className="modal-backdrop flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl w-full max-w-7xl h-[80vh] flex shadow-2xl overflow-hidden animate-soft-fade-in">
+    <div className={`modal-backdrop flex items-center justify-center ${isFullscreen ? 'p-0' : 'p-4'}`}>
+      <div className={`bg-white ${isFullscreen ? 'rounded-none w-full h-full' : 'rounded-3xl w-full max-w-7xl h-[85vh] max-h-[900px] min-h-[600px]'} flex shadow-2xl overflow-hidden animate-soft-fade-in transition-all duration-300`}>
         {/* Left Sidebar - Progress Navigation */}
-        <div className="w-80 bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 border-r border-gray-100 flex flex-col">
+        <div className={`${isFullscreen ? 'w-96' : 'w-80'} bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 border-r border-gray-100 flex flex-col transition-all duration-300`}>
           {/* Header */}
           <div className="p-4 border-b border-gray-100">
             <div className="flex items-center justify-between mb-4">
@@ -190,16 +210,37 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
                   <span className="text-white font-bold text-lg">V</span>
                 </div>
                 <div>
-                  <h1 className="text-lg font-bold gradient-text-primary">VenuePlus</h1>
+                  <div className="flex items-center space-x-2">
+                    <h1 className="text-lg font-bold gradient-text-primary">VenuePlus</h1>
+                    {isFullscreen && (
+                      <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-full animate-bounce-in">
+                        Fullscreen
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs text-gray-500">Travel Planning</p>
                 </div>
               </div>
-              <button 
-                onClick={onClose}
-                className="p-2 rounded-xl bg-white/80 backdrop-blur-sm text-gray-600 hover:text-gray-800 hover:bg-white hover:shadow-md transition-all duration-200"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <div className="flex items-center space-x-2">
+                <button 
+                  onClick={toggleFullscreen}
+                  className="p-2 rounded-xl bg-white/80 backdrop-blur-sm text-gray-600 hover:text-gray-800 hover:bg-white hover:shadow-md transition-all duration-200 group relative"
+                  title={isFullscreen ? 'Exit Fullscreen (ESC)' : 'Enter Fullscreen (F11)'}
+                >
+                  {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
+                  
+                  {/* Tooltip */}
+                  <div className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
+                    {isFullscreen ? 'Exit Fullscreen (ESC)' : 'Enter Fullscreen (F11)'}
+                  </div>
+                </button>
+                <button 
+                  onClick={onClose}
+                  className="p-2 rounded-xl bg-white/80 backdrop-blur-sm text-gray-600 hover:text-gray-800 hover:bg-white hover:shadow-md transition-all duration-200"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
             
             {/* Overall Progress */}
@@ -374,9 +415,9 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
         </div>
 
         {/* Right Content Area */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-h-0">
           {/* Step Header */}
-          <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-white to-gray-50">
+          <div className="flex-shrink-0 p-4 border-b border-gray-100 bg-gradient-to-r from-white to-gray-50">
             <div className="flex items-center space-x-3 mb-2">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-xl">
                 {getStepIcon(steps[currentStep], currentStep)}
@@ -399,10 +440,10 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
           </div>
           
           {/* Step Content */}
-          <div className="flex-1 overflow-y-auto custom-scrollbar">
+          <div className="flex-1 overflow-hidden">
             <div 
               key={currentStep}
-              className="p-6 h-full animate-slide-in-right"
+              className={`h-full overflow-y-auto custom-scrollbar ${isFullscreen ? 'p-8' : 'p-6'} animate-slide-in-right transition-all duration-300`}
             >
               {renderCurrentStep()}
             </div>

@@ -11,22 +11,17 @@ interface TripSummaryProps {
 }
 
 export function TripSummary({ tripData, isAuthenticated, onClose }: TripSummaryProps) {
-  const [phone, setPhone] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [useAI, setUseAI] = useState(true)
   const router = useRouter()
 
   const handleSubmit = async () => {
-    if (!isAuthenticated && !phone) {
-      alert('Please enter your mobile number')
-      return
-    }
-
     setIsSubmitting(true)
     
     try {
       if (!isAuthenticated) {
         // For non-authenticated users, redirect to signup with trip data
-        const tripDataParam = encodeURIComponent(JSON.stringify(tripData))
+        const tripDataParam = encodeURIComponent(JSON.stringify({ ...tripData, useAI }))
         router.push(`/auth/signup?tripData=${tripDataParam}`)
         onClose() // Close the modal
         return
@@ -44,32 +39,63 @@ export function TripSummary({ tripData, isAuthenticated, onClose }: TripSummaryP
         endDate.setDate(endDate.getDate() + 14)
       }
 
-      // For authenticated users, save to database with detailed information
-      const response = await fetch('/api/trips', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: `${tripData.destination} ${tripData.duration} Adventure`,
-          destination: tripData.destination,
-          duration: tripData.duration,
-          startDate: tripData.startDate,
-          endDate: endDate,
-          travelers: tripData.travelers,
-          fromCity: tripData.fromCity,
-          selectedCities: tripData.selectedCities,
-          rooms: tripData.rooms
-        }),
-      })
+      if (useAI) {
+        // Generate AI-powered itinerary
+        const aiResponse = await fetch('/api/itinerary/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            destination: tripData.destination,
+            duration: tripData.duration,
+            startDate: tripData.startDate,
+            endDate: endDate,
+            travelers: tripData.travelers,
+            fromCity: tripData.fromCity,
+            selectedCities: tripData.selectedCities,
+            rooms: tripData.rooms,
+            budget: 'mid-range',
+            interests: ['culture', 'sightseeing', 'food'],
+            travelStyle: 'balanced'
+          }),
+        })
 
-      if (response.ok) {
-        const trip = await response.json()
-        onClose()
-        router.push(`/trips/${trip.id}`)
+        if (aiResponse.ok) {
+          const aiResult = await aiResponse.json()
+          onClose()
+          router.push(`/trips/${aiResult.tripId}?ai=true`)
+        } else {
+          console.error('Failed to generate AI itinerary')
+        }
       } else {
-        const errorData = await response.json()
-        alert(errorData.message || 'Error creating trip. Please try again.')
+        // For authenticated users, save to database with detailed information
+        const response = await fetch('/api/trips', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: `${tripData.destination} ${tripData.duration} Adventure`,
+            destination: tripData.destination,
+            duration: tripData.duration,
+            startDate: tripData.startDate,
+            endDate: endDate,
+            travelers: tripData.travelers,
+            fromCity: tripData.fromCity,
+            selectedCities: tripData.selectedCities,
+            rooms: tripData.rooms
+          }),
+        })
+
+        if (response.ok) {
+          const trip = await response.json()
+          onClose()
+          router.push(`/trips/${trip.id}`)
+        } else {
+          const errorData = await response.json()
+          alert(errorData.message || 'Error creating trip. Please try again.')
+        }
       }
     } catch (error) {
       console.error('Error:', error)
@@ -82,66 +108,123 @@ export function TripSummary({ tripData, isAuthenticated, onClose }: TripSummaryP
   return (
     <div className="max-w-4xl mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Left Side - Promotional Content */}
-        <div className="bg-gradient-to-br from-teal-900 to-teal-700 rounded-xl p-8 text-white">
+        {/* Left Side - VenuePlus Branding */}
+        <div className="bg-gradient-to-br from-blue-600 to-purple-700 rounded-xl p-8 text-white">
           <div className="text-center">
-            <div className="text-2xl font-bold mb-2">
-              <span className="text-green-300">P</span> pickyourtrail
+            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl font-bold gradient-text-white">V</span>
             </div>
             
             <h2 className="text-3xl font-bold mb-6 leading-tight">
-              CREATE<br/>
-              <span className="text-green-300">SUPER HIT</span><br/>
-              HOLIDAYS
+              {useAI ? (
+                <>
+                  CREATE<br/>
+                  <span className="text-yellow-300">AI-POWERED</span><br/>
+                  ITINERARIES
+                </>
+              ) : (
+                <>
+                  CREATE<br/>
+                  <span className="text-green-300">CUSTOM</span><br/>
+                  TRAVEL PLANS
+                </>
+              )}
             </h2>
 
             <div className="space-y-4 mb-8">
-              <div className="flex items-center space-x-3">
-                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs">👍</span>
-                </div>
-                <span>100% Customised</span>
-              </div>
-              
-              <div className="flex items-center space-x-3">
-                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs">🛡️</span>
-                </div>
-                <span>Curated by Experts</span>
-              </div>
-              
-              <div className="flex items-center space-x-3">
-                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs">🎧</span>
-                </div>
-                <span>24x7 Live Support</span>
-              </div>
+              {useAI ? (
+                <>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs">🤖</span>
+                    </div>
+                    <span>AI-Generated Itineraries</span>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs">🎯</span>
+                    </div>
+                    <span>Smart Booking Options</span>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs">💡</span>
+                    </div>
+                    <span>Real-time Recommendations</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs">👍</span>
+                    </div>
+                    <span>100% Customised</span>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs">🛡️</span>
+                    </div>
+                    <span>Curated by Experts</span>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs">🎧</span>
+                    </div>
+                    <span>24x7 Live Support</span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Right Side - Contact Form */}
+        {/* Right Side - Trip Summary and AI Toggle */}
         <div className="bg-white rounded-xl p-8 border border-gray-200">
-          <h3 className="text-xl font-semibold mb-2">
+          <h3 className="text-xl font-semibold mb-6">
             {isAuthenticated 
-              ? 'Create your customized itinerary'
-              : 'Enter mobile number to save itinerary'
+              ? 'Choose Your Planning Method'
+              : 'Login to View Full Itinerary'
             }
           </h3>
           
-          {!isAuthenticated && (
-            <div className="space-y-4 mb-6">
-              <div className="flex">
-                <div className="bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg px-3 py-3 text-gray-600">
-                  +91
-                </div>
-                <input
-                  type="tel"
-                  placeholder="Enter your mobile number"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="flex-1 border border-gray-300 rounded-r-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                />
+          {/* AI Toggle for authenticated users */}
+          {isAuthenticated && (
+            <div className="mb-6">
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => setUseAI(true)}
+                  className={`p-4 rounded-lg border-2 transition-all duration-200 ${
+                    useAI
+                      ? 'border-purple-500 bg-purple-50 text-purple-700'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="text-center">
+                    <div className="text-2xl mb-2">🤖</div>
+                    <div className="font-semibold text-sm">AI Planning</div>
+                    <div className="text-xs opacity-75">Recommended</div>
+                  </div>
+                </button>
+                
+                <button
+                  onClick={() => setUseAI(false)}
+                  className={`p-4 rounded-lg border-2 transition-all duration-200 ${
+                    !useAI
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="text-center">
+                    <div className="text-2xl mb-2">📋</div>
+                    <div className="font-semibold text-sm">Basic Planning</div>
+                    <div className="text-xs opacity-75">Traditional</div>
+                  </div>
+                </button>
               </div>
             </div>
           )}
@@ -191,21 +274,39 @@ export function TripSummary({ tripData, isAuthenticated, onClose }: TripSummaryP
 
           <button
             onClick={handleSubmit}
-            disabled={isSubmitting || (!isAuthenticated && !phone)}
-            className="w-full bg-green-500 text-white py-4 rounded-lg font-semibold hover:bg-green-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+            disabled={isSubmitting}
+            className={`w-full py-4 rounded-lg font-semibold transition-all duration-200 ${
+              isAuthenticated
+                ? useAI
+                  ? 'bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white'
+                  : 'bg-gradient-to-r from-blue-500 to-green-600 hover:from-blue-600 hover:to-green-700 text-white'
+                : 'bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white'
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
           >
-            {isSubmitting 
-              ? 'Creating...' 
-              : isAuthenticated 
-                ? 'Create Trip'
-                : 'View customized itinerary'
-            }
+            {isSubmitting ? (
+              <div className="flex items-center justify-center space-x-2">
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>{useAI ? 'Generating AI Itinerary...' : 'Creating Trip...'}</span>
+              </div>
+            ) : isAuthenticated ? (
+              <div className="flex items-center justify-center space-x-2">
+                {useAI && <span>🤖</span>}
+                <span>{useAI ? 'Generate AI Itinerary' : 'Create Basic Trip'}</span>
+              </div>
+            ) : (
+              'Login to View Full Itinerary'
+            )}
           </button>
 
           {!isAuthenticated && (
-            <p className="text-xs text-gray-500 mt-4 text-center">
-              By continuing, you agree to our Terms & Conditions and Privacy Policy
-            </p>
+            <div className="mt-4 text-center">
+              <p className="text-sm text-gray-600 mb-3">
+                🔒 Sign up to unlock full itinerary with AI recommendations
+              </p>
+              <p className="text-xs text-gray-500">
+                Your trip preferences will be saved during signup
+              </p>
+            </div>
           )}
         </div>
       </div>

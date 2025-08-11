@@ -230,3 +230,4 @@ export function BudgetBreakdown({ tripId }: BudgetBreakdownProps) {
     </div>
   )
 }
+

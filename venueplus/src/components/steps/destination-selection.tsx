@@ -178,53 +178,54 @@ export function DestinationSelection({ tripData, onUpdate, onNext }: Destination
   return (
     <div className="h-full flex flex-col">
       {/* Hero Section */}
-      <div className="text-center mb-8 flex-shrink-0">
-        <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full mb-4">
+      <div className="text-center mb-6 flex-shrink-0">
+        <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full mb-3">
           <Sparkles className="w-4 h-4 text-blue-600 mr-2" />
           <span className="text-sm font-medium gradient-text-primary">Choose Your Dream Destination</span>
         </div>
-        <h2 className="text-3xl font-bold text-gray-900 mb-3">Where would you like to explore?</h2>
-        <p className="text-gray-600 max-w-2xl mx-auto">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Where would you like to explore?</h2>
+        <p className="text-gray-600 text-sm">
           From tropical beaches to bustling cities, discover your perfect getaway destination
         </p>
       </div>
 
       {/* Search and Filters */}
-      <div className="mb-8 flex-shrink-0">
+      <div className="mb-6 flex-shrink-0">
         {/* Search Bar */}
-        <div className="relative mb-6">
+        <div className="relative mb-4">
           <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
             type="text"
             placeholder="Search destinations, countries, or experiences..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-6 py-4 bg-white border border-gray-200 rounded-2xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-lg"
+            className="w-full pl-12 pr-6 py-3 bg-white border border-gray-200 rounded-2xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
           />
         </div>
         
         {/* Category Filters */}
-        <div className="flex gap-3 overflow-x-auto pb-2">
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
           {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className={`flex items-center px-6 py-3 rounded-2xl font-medium whitespace-nowrap transition-all duration-200 ${
+              className={`flex items-center px-4 py-2 rounded-2xl font-medium whitespace-nowrap transition-all duration-200 text-sm ${
                 selectedCategory === category.id
                   ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg scale-105'
                   : 'bg-white border border-gray-200 text-gray-700 hover:border-gray-300 hover:shadow-md'
               }`}
             >
-              <span className="mr-2 text-lg">{category.icon}</span>
-              <span className="text-sm font-semibold">{category.name}</span>
+              <span className="mr-1.5">{category.icon}</span>
+              <span className="font-semibold">{category.name}</span>
             </button>
           ))}
         </div>
       </div>
 
       {/* Destinations Grid */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="flex-1 min-h-0">
+        <div className="h-full overflow-y-auto custom-scrollbar">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
           {filteredDestinations.map((destination) => (
             <div
               key={destination.id}
@@ -332,29 +333,30 @@ export function DestinationSelection({ tripData, onUpdate, onNext }: Destination
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Empty State */}
-        {filteredDestinations.length === 0 && (
-          <div className="text-center py-16">
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Globe className="w-12 h-12 text-gray-400" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">No destinations found</h3>
-            <p className="text-gray-500 mb-6 max-w-md mx-auto">
-              We couldn't find any destinations matching your search. Try adjusting your filters or search terms.
-            </p>
-            <button
-              onClick={() => {
-                setSearchTerm('')
-                setSelectedCategory('All')
-              }}
-              className="px-6 py-3 bg-blue-600 text-white rounded-2xl font-semibold hover:bg-blue-700 transition-colors duration-200"
-            >
-              Clear Filters
-            </button>
           </div>
-        )}
+
+          {/* Empty State */}
+          {filteredDestinations.length === 0 && (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Globe className="w-8 h-8 text-gray-400" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">No destinations found</h3>
+              <p className="text-gray-500 mb-4 text-sm max-w-md mx-auto">
+                We couldn't find any destinations matching your search. Try adjusting your filters or search terms.
+              </p>
+              <button
+                onClick={() => {
+                  setSearchTerm('')
+                  setSelectedCategory('All')
+                }}
+                className="px-4 py-2 bg-blue-600 text-white rounded-2xl font-semibold hover:bg-blue-700 transition-colors duration-200 text-sm"
+              >
+                Clear Filters
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

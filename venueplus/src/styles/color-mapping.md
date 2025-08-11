@@ -63,3 +63,4 @@
 - [ ] Update badge colors to use new category system
 - [ ] Ensure all cards use `card-elegant` or `surface-elevated`
 - [ ] Apply text classes consistently across components
+

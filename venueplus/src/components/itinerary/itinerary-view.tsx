@@ -273,3 +273,4 @@ export function ItineraryView({ tripId }: ItineraryViewProps) {
     </div>
   )
 }
+

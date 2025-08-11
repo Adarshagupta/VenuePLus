@@ -403,3 +403,4 @@ export class ItineraryGenerator {
 }
 
 export type { TripItinerary, ItineraryDay, Activity, Meal }
+

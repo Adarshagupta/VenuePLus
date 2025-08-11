@@ -20,7 +20,7 @@ export default function SignInPage() {
   const { setTripData } = useTripContext()
 
   useEffect(() => {
-    // Check if there's trip data in URL params
+    // Check if there's trip data in URL params - only run once on mount
     const tripDataParam = searchParams.get('tripData')
     if (tripDataParam) {
       try {
@@ -34,7 +34,8 @@ export default function SignInPage() {
         console.error('Error parsing trip data from URL:', error)
       }
     }
-  }, [searchParams, setTripData])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Intentionally empty - only run once on mount
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

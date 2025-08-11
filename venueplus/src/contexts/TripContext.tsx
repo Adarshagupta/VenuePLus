@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react'
 import { TripData } from '@/components/trip-planning-modal'
 
 interface TripContextType {
@@ -33,16 +33,16 @@ export function TripProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const setTripData = (data: TripData) => {
+  const setTripData = useCallback((data: TripData) => {
     setTripDataState(data)
     // Save to localStorage for persistence
     localStorage.setItem('pendingTripData', JSON.stringify(data))
-  }
+  }, [])
 
-  const clearTripData = () => {
+  const clearTripData = useCallback(() => {
     setTripDataState(null)
     localStorage.removeItem('pendingTripData')
-  }
+  }, [])
 
   const hasPendingTrip = tripData !== null && Object.keys(tripData).length > 0
 
@@ -65,3 +65,4 @@ export function useTripContext() {
   }
   return context
 }
+

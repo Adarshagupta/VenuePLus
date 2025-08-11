@@ -404,3 +404,4 @@ export function ActivityList({ tripId }: ActivityListProps) {
     </div>
   )
 }
+
