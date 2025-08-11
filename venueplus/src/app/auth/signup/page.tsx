@@ -7,8 +7,9 @@ import Image from 'next/image'
 import { signIn } from 'next-auth/react'
 import { Eye, EyeOff, User } from 'lucide-react'
 import { useTripContext } from '@/contexts/TripContext'
+import { SuspenseWrapper } from '@/components/suspense-wrapper'
 
-export default function SignUpPage() {
+function SignUpForm() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -360,5 +361,13 @@ export default function SignUpPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SignUpPage() {
+  return (
+    <SuspenseWrapper>
+      <SignUpForm />
+    </SuspenseWrapper>
   )
 }
