@@ -294,34 +294,38 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
   }
 
   const renderOverview = () => (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Profile Header */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
+      <div className="bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 p-8 hover:shadow-3xl transition-all duration-500">
         <div className="flex items-start justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+          <div className="flex items-center space-x-6">
+            <div className="relative group">
+              <div className="w-24 h-24 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold shadow-xl group-hover:scale-110 transition-transform duration-300">
                 {profile.name.charAt(0).toUpperCase()}
               </div>
-              <button className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700">
-                <Camera className="w-3 h-3" />
+              <div className="absolute inset-0 w-24 h-24 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl opacity-30 blur-lg group-hover:opacity-50 transition-opacity duration-300"></div>
+              <button className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center text-white hover:scale-110 transition-transform duration-300 shadow-lg">
+                <Camera className="w-4 h-4" />
               </button>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{profile.name}</h1>
-              <p className="text-gray-600">{profile.email}</p>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-2">{profile.name}</h1>
+              <p className="text-gray-600 text-lg mb-1">{profile.email}</p>
               {profile.phone && (
-                <p className="text-gray-500 text-sm">{profile.phone}</p>
+                <p className="text-gray-500">{profile.phone}</p>
               )}
-              <div className="flex items-center space-x-4 mt-2">
-                <span className="text-sm text-gray-500">
-                  Member since {formatDate(profile.stats.memberSince)}
-                </span>
+              <div className="flex items-center space-x-4 mt-4">
+                <div className="flex items-center space-x-2 px-3 py-1 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-full">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm text-gray-600 font-medium">
+                    Member since {formatDate(profile.stats.memberSince)}
+                  </span>
+                </div>
                 {profile.subscription && (
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    profile.subscription.type === 'pro' ? 'bg-gold-100 text-gold-700' :
-                    profile.subscription.type === 'premium' ? 'bg-purple-100 text-purple-700' :
-                    'bg-gray-100 text-gray-700'
+                  <span className={`px-4 py-2 rounded-full text-sm font-semibold shadow-lg ${
+                    profile.subscription.type === 'pro' ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white' :
+                    profile.subscription.type === 'premium' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' :
+                    'bg-gradient-to-r from-gray-400 to-gray-500 text-white'
                   }`}>
                     {profile.subscription.type.toUpperCase()}
                   </span>
@@ -331,21 +335,21 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
           </div>
           <button 
             onClick={() => setEditingProfile(!editingProfile)}
-            className="flex items-center space-x-2 px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            className="group flex items-center space-x-3 px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-2xl hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
           >
-            <Edit3 className="w-4 h-4" />
-            <span>{editingProfile ? 'Cancel' : 'Edit Profile'}</span>
+            <Edit3 className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
+            <span className="font-medium">{editingProfile ? 'Cancel' : 'Edit Profile'}</span>
           </button>
         </div>
       </div>
 
       {/* Travel Stats */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Travel Statistics</h2>
+      <div className="bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 p-8 hover:shadow-3xl transition-all duration-500">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Travel Statistics</h2>
           <button
             onClick={() => toggleSection('stats')}
-            className="text-gray-400 hover:text-gray-600"
+            className="w-10 h-10 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 flex items-center justify-center transition-all duration-300 shadow-lg hover:scale-110"
           >
             {expandedSections.includes('stats') ? 
               <ChevronUp className="w-5 h-5" /> : 
@@ -356,125 +360,127 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
         
         {expandedSections.includes('stats') && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                <Plane className="w-6 h-6 text-blue-600" />
+            <div className="group text-center p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl hover:from-blue-100 hover:to-cyan-100 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <Plane className="w-8 h-8 text-white" />
               </div>
-              <div className="text-2xl font-bold text-gray-900">{profile.stats.totalTrips}</div>
-              <div className="text-sm text-gray-600">Total Trips</div>
+              <div className="text-3xl font-bold text-gray-900 mb-1">{profile.stats.totalTrips}</div>
+              <div className="text-sm text-gray-600 font-medium">Total Trips</div>
             </div>
             
-            <div className="text-center">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                <DollarSign className="w-6 h-6 text-green-600" />
+            <div className="group text-center p-6 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl hover:from-emerald-100 hover:to-teal-100 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+              <div className="w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <DollarSign className="w-8 h-8 text-white" />
               </div>
-              <div className="text-2xl font-bold text-gray-900">
+              <div className="text-3xl font-bold text-gray-900 mb-1">
                 {formatCurrency(profile.stats.totalSpent).replace('.00', '')}
               </div>
-              <div className="text-sm text-gray-600">Total Spent</div>
+              <div className="text-sm text-gray-600 font-medium">Total Spent</div>
             </div>
             
-            <div className="text-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                <Calendar className="w-6 h-6 text-purple-600" />
+            <div className="group text-center p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl hover:from-purple-100 hover:to-pink-100 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <Calendar className="w-8 h-8 text-white" />
               </div>
-              <div className="text-2xl font-bold text-gray-900">{profile.stats.totalDaysTravel}</div>
-              <div className="text-sm text-gray-600">Days Traveled</div>
+              <div className="text-3xl font-bold text-gray-900 mb-1">{profile.stats.totalDaysTravel}</div>
+              <div className="text-sm text-gray-600 font-medium">Days Traveled</div>
             </div>
             
-            <div className="text-center">
-              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                <Globe className="w-6 h-6 text-red-600" />
+            <div className="group text-center p-6 bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl hover:from-orange-100 hover:to-red-100 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+              <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <Globe className="w-8 h-8 text-white" />
               </div>
-              <div className="text-2xl font-bold text-gray-900">{profile.stats.countriesVisited}</div>
-              <div className="text-sm text-gray-600">Countries</div>
+              <div className="text-3xl font-bold text-gray-900 mb-1">{profile.stats.countriesVisited}</div>
+              <div className="text-sm text-gray-600 font-medium">Countries</div>
             </div>
           </div>
         )}
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <button
           onClick={() => setActiveTab('itineraries')}
-          className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow text-left"
+          className="group bg-white/70 backdrop-blur-lg rounded-3xl shadow-xl border border-white/30 p-6 hover:shadow-2xl transition-all duration-500 text-left transform hover:scale-105 hover:-translate-y-1"
         >
           <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-5 h-5 text-blue-600" />
+            <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <BookOpen className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold text-gray-900">{itineraries.length}</span>
+            <span className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">{itineraries.length}</span>
           </div>
-          <h3 className="font-semibold text-gray-900">Saved Itineraries</h3>
-          <p className="text-sm text-gray-600">Manage your trip plans</p>
+          <h3 className="font-bold text-gray-900 text-lg mb-1">Saved Itineraries</h3>
+          <p className="text-gray-600">Manage your trip plans</p>
         </button>
 
         <button
           onClick={() => setActiveTab('bookings')}
-          className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow text-left"
+          className="group bg-white/70 backdrop-blur-lg rounded-3xl shadow-xl border border-white/30 p-6 hover:shadow-2xl transition-all duration-500 text-left transform hover:scale-105 hover:-translate-y-1"
         >
           <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-green-600" />
+            <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <Calendar className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold text-gray-900">{bookings.length}</span>
+            <span className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">{bookings.length}</span>
           </div>
-          <h3 className="font-semibold text-gray-900">Bookings</h3>
-          <p className="text-sm text-gray-600">View booking history</p>
+          <h3 className="font-bold text-gray-900 text-lg mb-1">Bookings</h3>
+          <p className="text-gray-600">View booking history</p>
         </button>
 
         <button
           onClick={() => setActiveTab('memories')}
-          className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow text-left"
+          className="group bg-white/70 backdrop-blur-lg rounded-3xl shadow-xl border border-white/30 p-6 hover:shadow-2xl transition-all duration-500 text-left transform hover:scale-105 hover:-translate-y-1"
         >
           <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-              <CameraIcon className="w-5 h-5 text-purple-600" />
+            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <CameraIcon className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold text-gray-900">{memories.length}</span>
+            <span className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">{memories.length}</span>
           </div>
-          <h3 className="font-semibold text-gray-900">Travel Memories</h3>
-          <p className="text-sm text-gray-600">Photos and reviews</p>
+          <h3 className="font-bold text-gray-900 text-lg mb-1">Travel Memories</h3>
+          <p className="text-gray-600">Photos and reviews</p>
         </button>
 
-        <button className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow text-left">
+        <button className="group bg-white/70 backdrop-blur-lg rounded-3xl shadow-xl border border-white/30 p-6 hover:shadow-2xl transition-all duration-500 text-left transform hover:scale-105 hover:-translate-y-1">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-              <Heart className="w-5 h-5 text-red-600" />
+            <div className="w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <Heart className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold text-gray-900">{wishlists.reduce((acc, wl) => acc + wl.items.length, 0)}</span>
+            <span className="text-3xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">{wishlists.reduce((acc, wl) => acc + wl.items.length, 0)}</span>
           </div>
-          <h3 className="font-semibold text-gray-900">Wishlist</h3>
-          <p className="text-sm text-gray-600">Dream destinations</p>
+          <h3 className="font-bold text-gray-900 text-lg mb-1">Wishlist</h3>
+          <p className="text-gray-600">Dream destinations</p>
         </button>
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Recently Viewed</h2>
+      <div className="bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 p-8 hover:shadow-3xl transition-all duration-500">
+        <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6">Recently Viewed</h2>
         {recentViews.length > 0 ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {recentViews.slice(0, 5).map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gray-200 rounded-lg overflow-hidden">
+              <div key={index} className="group flex items-center justify-between p-4 hover:bg-white/50 rounded-2xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                <div className="flex items-center space-x-4">
+                  <div className="w-14 h-14 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl overflow-hidden shadow-lg group-hover:scale-110 transition-transform duration-300">
                     {item.itemData.imageUrl ? (
                       <img src={item.itemData.imageUrl} alt="" className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <MapPin className="w-5 h-5 text-gray-400" />
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600">
+                        <MapPin className="w-6 h-6 text-white" />
                       </div>
                     )}
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900">{item.itemData.name}</h4>
-                    <p className="text-sm text-gray-600 capitalize">{item.itemType}</p>
+                    <h4 className="font-semibold text-gray-900 text-lg">{item.itemData.name}</h4>
+                    <div className="flex items-center space-x-2">
+                      <span className="px-2 py-1 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 text-xs rounded-full font-medium capitalize">{item.itemType}</span>
+                    </div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-gray-500">{formatDate(item.viewedAt)}</p>
+                  <p className="text-sm text-gray-500 mb-1">{formatDate(item.viewedAt)}</p>
                   {item.itemData.price && (
-                    <p className="text-sm font-medium text-green-600">
+                    <p className="text-lg font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                       {formatCurrency(item.itemData.price)}
                     </p>
                   )}
@@ -483,7 +489,12 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
             ))}
           </div>
         ) : (
-          <p className="text-gray-500 text-center py-8">No recent activity</p>
+          <div className="text-center py-12">
+            <div className="w-16 h-16 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Activity className="w-8 h-8 text-gray-400" />
+            </div>
+            <p className="text-gray-500 text-lg">No recent activity</p>
+          </div>
         )}
       </div>
     </div>
@@ -903,20 +914,22 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
   )
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-transparent">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-white/60 backdrop-blur-lg shadow-xl border-b border-white/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-20">
             <div className="flex items-center space-x-4">
-              <h1 className="text-xl font-semibold text-gray-900">My Profile</h1>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                My Profile
+              </h1>
             </div>
             {onClose && (
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-600"
+                className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800 transition-all duration-300 flex items-center justify-center"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5" />
               </button>
             )}
           </div>
@@ -924,29 +937,37 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="bg-white border-b">
+      <div className="bg-white/40 backdrop-blur-lg border-b border-white/20 sticky top-0 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex space-x-8">
+          <nav className="flex space-x-1 py-4">
             {[
-              { id: 'overview', label: 'Overview', icon: User },
-              { id: 'itineraries', label: 'Itineraries', icon: BookOpen },
-              { id: 'bookings', label: 'Bookings', icon: Calendar },
-              { id: 'memories', label: 'Memories', icon: CameraIcon },
-              { id: 'settings', label: 'Settings', icon: Settings }
+              { id: 'overview', label: 'Overview', icon: User, gradient: 'from-blue-500 to-cyan-500' },
+              { id: 'itineraries', label: 'Itineraries', icon: BookOpen, gradient: 'from-emerald-500 to-teal-500' },
+              { id: 'bookings', label: 'Bookings', icon: Calendar, gradient: 'from-orange-500 to-red-500' },
+              { id: 'memories', label: 'Memories', icon: CameraIcon, gradient: 'from-purple-500 to-pink-500' },
+              { id: 'settings', label: 'Settings', icon: Settings, gradient: 'from-gray-500 to-slate-500' }
             ].map((tab) => {
               const Icon = tab.icon
+              const isActive = activeTab === tab.id
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                    activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  className={`group relative flex items-center space-x-3 px-6 py-3 rounded-2xl font-medium text-sm transition-all duration-300 transform hover:scale-105 ${
+                    isActive
+                      ? `bg-gradient-to-r ${tab.gradient} text-white shadow-lg`
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <div className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                    isActive ? 'bg-white/20' : 'bg-transparent group-hover:bg-white/20'
+                  }`}>
+                    <Icon className="w-4 h-4" />
+                  </div>
                   <span>{tab.label}</span>
+                  {isActive && (
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/20 to-transparent animate-pulse"></div>
+                  )}
                 </button>
               )
             })}
@@ -956,11 +977,13 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'overview' && renderOverview()}
-        {activeTab === 'itineraries' && renderItineraries()}
-        {activeTab === 'bookings' && renderBookings()}
-        {activeTab === 'memories' && renderMemories()}
-        {activeTab === 'settings' && renderSettings()}
+        <div className="animate-fade-in">
+          {activeTab === 'overview' && renderOverview()}
+          {activeTab === 'itineraries' && renderItineraries()}
+          {activeTab === 'bookings' && renderBookings()}
+          {activeTab === 'memories' && renderMemories()}
+          {activeTab === 'settings' && renderSettings()}
+        </div>
       </div>
     </div>
   )

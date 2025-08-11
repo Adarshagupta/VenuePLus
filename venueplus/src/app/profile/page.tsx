@@ -59,24 +59,35 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
+      {/* Background Decorative Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-purple-300/20 to-pink-300/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-r from-blue-300/20 to-cyan-300/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-emerald-300/10 to-teal-300/10 rounded-full blur-2xl"></div>
+      </div>
+
       {/* Navigation Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="relative bg-white/80 backdrop-blur-lg shadow-lg border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-20">
             <div className="flex items-center space-x-4">
               <Link
                 href="/"
-                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+                className="group flex items-center space-x-3 px-4 py-2 text-gray-600 hover:text-indigo-600 transition-all duration-300 rounded-xl hover:bg-white/50"
               >
-                <ArrowLeft className="w-5 h-5" />
-                <span>Back to Home</span>
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
+                  <ArrowLeft className="w-5 h-5" />
+                </div>
+                <span className="font-semibold">Back to Home</span>
               </Link>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2 text-gray-700">
-                <User className="w-5 h-5" />
-                <span className="font-medium">Profile</span>
+              <div className="flex items-center space-x-3 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl shadow-lg">
+                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                  <User className="w-4 h-4" />
+                </div>
+                <span className="font-semibold">My Profile</span>
               </div>
             </div>
           </div>
@@ -84,7 +95,9 @@ export default function ProfilePage() {
       </div>
 
       {/* User Profile Component */}
-      <UserProfile userId={userId} />
+      <div className="relative z-10">
+        <UserProfile userId={userId} />
+      </div>
     </div>
   )
 }
