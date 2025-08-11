@@ -51,18 +51,6 @@ export function DurationSelection({ tripData, onUpdate, onNext }: DurationSelect
       tagColor: 'bg-purple-100 text-purple-700'
     },
     {
-      id: '13-15',
-      label: '13-15 Days',
-      subtitle: 'Ultimate adventure',
-      icon: Sparkles,
-      color: 'from-pink-400 to-rose-500',
-      bgColor: 'bg-pink-50',
-      borderColor: 'border-pink-200',
-      recommended: false,
-      tag: 'Luxury',
-      tagColor: 'bg-amber-100 text-amber-700'
-    },
-    {
       id: 'custom',
       label: 'Custom Duration',
       subtitle: 'Your perfect length',
@@ -150,7 +138,7 @@ export function DurationSelection({ tripData, onUpdate, onNext }: DurationSelect
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
+        <div className="flex flex-wrap justify-center gap-6 mb-8 max-w-5xl mx-auto">
           {durations.map((duration) => {
             const IconComponent = duration.icon
             const isSelected = tripData.duration === duration.label
@@ -159,7 +147,7 @@ export function DurationSelection({ tripData, onUpdate, onNext }: DurationSelect
               <div
                 key={duration.id}
                 onClick={() => handleDurationSelect(duration.label)}
-                className={`group relative bg-white/80 backdrop-blur-sm border-2 rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
+                className={`group relative bg-white/80 backdrop-blur-sm border-2 rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl w-72 ${
                   isSelected
                     ? `${duration.borderColor} ${duration.bgColor} shadow-2xl scale-105 ring-4 ring-${duration.color.split('-')[1]}-200`
                     : 'border-gray-200 hover:border-gray-300 shadow-lg hover:shadow-xl'
