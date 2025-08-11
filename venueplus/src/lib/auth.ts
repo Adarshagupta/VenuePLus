@@ -5,8 +5,7 @@ import { prisma } from './prisma'
 import bcrypt from 'bcryptjs'
 
 export const authOptions: NextAuthOptions = {
-  // Disable adapter completely for now to avoid database issues
-  // ...(process.env.DATABASE_URL ? { adapter: PrismaAdapter(prisma) } : {}),
+  adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-for-development',
   providers: [
     CredentialsProvider({
@@ -20,17 +19,35 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        // Use demo authentication for development
-        if (credentials.email === 'demo@venueplus.com' && credentials.password === 'demo123') {
-          return {
-            id: 'demo-user-id',
-            email: 'demo@venueplus.com',
-            name: 'Demo User',
+        const user = await prisma.user.findUnique({
+          where: {
+            email: credentials.email
           }
+        })
+
+        if (!user) {
+          return null
         }
-        
-        // For now, only allow demo user to avoid database issues
-        return null
+
+        const isPasswordValid = await bcrypt.compare(
+          credentials.password,
+          user.password
+        )
+
+        if (!isPasswordValid) {
+          return null
+        }
+
+        // Check if email is verified
+        if (!user.emailVerified) {
+          throw new Error('Please verify your email address before signing in.')
+        }
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+        }
       }
     })
   ],

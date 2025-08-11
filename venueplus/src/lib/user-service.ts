@@ -22,6 +22,44 @@ const prisma = new PrismaClient()
 export class UserDataService {
 
   // User Profile Management
+  async createUserProfile(userData: {
+    email: string
+    name: string
+    phone?: string
+    preferences?: Partial<UserPreferences>
+  }): Promise<UserProfile> {
+    try {
+      const user = await prisma.user.create({
+        data: {
+          email: userData.email,
+          name: userData.name,
+          phone: userData.phone,
+          preferences: {
+            ...this.getDefaultPreferences(),
+            ...userData.preferences
+          } as any,
+          stats: this.getDefaultStats(new Date()) as any
+        } as any
+      })
+
+      return {
+        id: user.id,
+        email: user.email,
+        name: user.name || '',
+        phone: (user as any).phone,
+        avatar: (user as any).avatar,
+        preferences: ((user as any).preferences as UserPreferences) || this.getDefaultPreferences(),
+        stats: ((user as any).stats as UserStats) || this.getDefaultStats(user.createdAt),
+        subscription: (user as any).subscription as SubscriptionInfo,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+      }
+    } catch (error) {
+      console.error('Error creating user profile:', error)
+      throw error
+    }
+  }
+
   async getUserProfile(userId: string): Promise<UserProfile | null> {
     try {
       const user = await prisma.user.findUnique({
@@ -37,6 +75,40 @@ export class UserDataService {
 
       if (!user) return null
 
+      // Check if user profile is missing extended data and initialize it
+      const preferences = (user as any).preferences as UserPreferences
+      const stats = (user as any).stats as UserStats
+
+      if (!preferences || !stats) {
+        await this.initializeUserProfile(userId)
+        // Refetch the user after initialization
+        const updatedUser = await prisma.user.findUnique({
+          where: { id: userId },
+          include: {
+            _count: {
+              select: {
+                trips: true
+              }
+            }
+          }
+        })
+        if (!updatedUser) return null
+        
+        // Transform database user to UserProfile type
+        return {
+          id: updatedUser.id,
+          email: updatedUser.email,
+          name: updatedUser.name || '',
+          phone: (updatedUser as any).phone,
+          avatar: (updatedUser as any).avatar,
+          preferences: ((updatedUser as any).preferences as UserPreferences) || this.getDefaultPreferences(),
+          stats: this.transformStats((updatedUser as any).stats, updatedUser.createdAt),
+          subscription: (updatedUser as any).subscription as SubscriptionInfo,
+          createdAt: updatedUser.createdAt,
+          updatedAt: updatedUser.updatedAt
+        }
+      }
+
       // Transform database user to UserProfile type
       return {
         id: user.id,
@@ -44,8 +116,8 @@ export class UserDataService {
         name: user.name || '',
         phone: (user as any).phone,
         avatar: (user as any).avatar,
-        preferences: ((user as any).preferences as UserPreferences) || this.getDefaultPreferences(),
-        stats: ((user as any).stats as UserStats) || this.getDefaultStats(user.createdAt),
+        preferences: preferences || this.getDefaultPreferences(),
+        stats: this.transformStats(stats, user.createdAt),
         subscription: (user as any).subscription as SubscriptionInfo,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt
@@ -53,6 +125,42 @@ export class UserDataService {
     } catch (error) {
       console.error('Error fetching user profile:', error)
       return null
+    }
+  }
+
+  async initializeUserProfile(userId: string): Promise<boolean> {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId }
+      })
+
+      if (!user) return false
+
+      const updateData: any = {}
+      
+      // Initialize preferences if missing
+      if (!(user as any).preferences) {
+        updateData.preferences = this.getDefaultPreferences()
+      }
+      
+      // Initialize stats if missing
+      if (!(user as any).stats) {
+        updateData.stats = this.getDefaultStats(user.createdAt)
+      }
+      
+      if (Object.keys(updateData).length > 0) {
+        updateData.updatedAt = new Date()
+        
+        await prisma.user.update({
+          where: { id: userId },
+          data: updateData
+        })
+      }
+
+      return true
+    } catch (error) {
+      console.error('Error initializing user profile:', error)
+      return false
     }
   }
 
@@ -323,7 +431,7 @@ export class UserDataService {
         itemType: view.itemType as any,
         itemId: view.itemId,
         itemData: view.itemData as any,
-        viewedAt: view.viewedAt,
+        viewedAt: new Date(view.viewedAt),
         viewDuration: view.viewDuration,
         source: view.source as any
       }))
@@ -512,7 +620,7 @@ export class UserDataService {
         metadata: activity.metadata as any,
         location: activity.location,
         device: activity.device,
-        timestamp: activity.timestamp
+        timestamp: new Date(activity.timestamp)
       }))
     } catch (error) {
       console.error('Error fetching user activities:', error)
@@ -540,8 +648,8 @@ export class UserDataService {
         items: ((wishlist as any).items as any)?.items || [],
         isPublic: wishlist.isPublic,
         shareUrl: wishlist.shareUrl,
-        createdAt: wishlist.createdAt,
-        updatedAt: wishlist.updatedAt
+        createdAt: new Date(wishlist.createdAt),
+        updatedAt: new Date(wishlist.updatedAt)
       }
     } catch (error) {
       console.error('Error creating wishlist:', error)
@@ -564,8 +672,8 @@ export class UserDataService {
         items: (wishlist.items as any)?.items || [],
         isPublic: wishlist.isPublic,
         shareUrl: wishlist.shareUrl,
-        createdAt: wishlist.createdAt,
-        updatedAt: wishlist.updatedAt
+        createdAt: new Date(wishlist.createdAt),
+        updatedAt: new Date(wishlist.updatedAt)
       }))
     } catch (error) {
       console.error('Error fetching user wishlists:', error)
@@ -604,7 +712,7 @@ export class UserDataService {
         title: memory.title,
         description: memory.description,
         destination: memory.destination,
-        date: memory.date,
+        date: new Date(memory.date),
         photos: (memory.photos as any) || [],
         rating: memory.rating,
         highlights: memory.highlights,
@@ -614,8 +722,8 @@ export class UserDataService {
         tags: memory.tags,
         isPublic: memory.isPublic,
         likes: memory.likes,
-        createdAt: memory.createdAt,
-        updatedAt: memory.updatedAt
+        createdAt: new Date(memory.createdAt),
+        updatedAt: new Date(memory.updatedAt)
       }
     } catch (error) {
       console.error('Error adding travel memory:', error)
@@ -638,7 +746,7 @@ export class UserDataService {
         title: memory.title,
         description: memory.description,
         destination: memory.destination,
-        date: memory.date,
+        date: new Date(memory.date),
         photos: (memory.photos as any) || [],
         rating: memory.rating,
         highlights: memory.highlights,
@@ -648,8 +756,8 @@ export class UserDataService {
         tags: memory.tags,
         isPublic: memory.isPublic,
         likes: memory.likes,
-        createdAt: memory.createdAt,
-        updatedAt: memory.updatedAt
+        createdAt: new Date(memory.createdAt),
+        updatedAt: new Date(memory.updatedAt)
       }))
     } catch (error) {
       console.error('Error fetching user memories:', error)
@@ -702,14 +810,14 @@ export class UserDataService {
       travelers: dbItinerary.travelers,
       totalCost: dbItinerary.totalCost,
       currency: dbItinerary.currency,
-      startDate: dbItinerary.startDate,
-      endDate: dbItinerary.endDate,
+      startDate: dbItinerary.startDate ? new Date(dbItinerary.startDate) : undefined,
+      endDate: dbItinerary.endDate ? new Date(dbItinerary.endDate) : undefined,
       status: dbItinerary.status as any,
       packageId: dbItinerary.packageId,
       customizations: dbItinerary.customizations || [],
-      createdAt: dbItinerary.createdAt,
-      updatedAt: dbItinerary.updatedAt,
-      lastViewedAt: dbItinerary.lastViewedAt,
+      createdAt: new Date(dbItinerary.createdAt),
+      updatedAt: new Date(dbItinerary.updatedAt),
+      lastViewedAt: dbItinerary.lastViewedAt ? new Date(dbItinerary.lastViewedAt) : new Date(),
       shareSettings: dbItinerary.shareSettings as any || {
         isPublic: false,
         allowComments: false
@@ -729,10 +837,10 @@ export class UserDataService {
       itineraryId: dbBooking.itineraryId,
       packageId: dbBooking.packageId,
       status: dbBooking.status as any,
-      bookingDate: dbBooking.bookingDate,
+      bookingDate: new Date(dbBooking.bookingDate),
       travelDates: {
-        startDate: dbBooking.travelStartDate,
-        endDate: dbBooking.travelEndDate
+        startDate: new Date(dbBooking.travelStartDate),
+        endDate: new Date(dbBooking.travelEndDate)
       },
       destination: dbBooking.destination,
       travelers: dbBooking.travelers,
@@ -747,14 +855,31 @@ export class UserDataService {
       documents: dbBooking.documents as any || [],
       notifications: dbBooking.notifications as any || [],
       cancellationPolicy: dbBooking.cancellationPolicy,
-      cancellationDeadline: dbBooking.cancellationDeadline,
-      createdAt: dbBooking.createdAt,
-      updatedAt: dbBooking.updatedAt
+      cancellationDeadline: dbBooking.cancellationDeadline ? new Date(dbBooking.cancellationDeadline) : undefined,
+      createdAt: new Date(dbBooking.createdAt),
+      updatedAt: new Date(dbBooking.updatedAt)
+    }
+  }
+
+  // Helper method to transform stats data and ensure dates are properly handled
+  private transformStats(stats: any, fallbackDate: Date): UserStats {
+    if (!stats) {
+      return this.getDefaultStats(fallbackDate)
+    }
+
+    return {
+      totalTrips: stats.totalTrips || 0,
+      totalSpent: stats.totalSpent || 0,
+      favoriteDestination: stats.favoriteDestination || '',
+      averageTripDuration: stats.averageTripDuration || 0,
+      totalDaysTravel: stats.totalDaysTravel || 0,
+      countriesVisited: stats.countriesVisited || 0,
+      memberSince: stats.memberSince ? new Date(stats.memberSince) : fallbackDate
     }
   }
 
   // Utility methods
-  private getDefaultPreferences(): UserPreferences {
+  getDefaultPreferences(): UserPreferences {
     return {
       travelStyle: 'mid_range',
       preferredDestinations: [],
@@ -777,7 +902,7 @@ export class UserDataService {
     }
   }
 
-  private getDefaultStats(memberSince: Date): UserStats {
+  getDefaultStats(memberSince: Date): UserStats {
     return {
       totalTrips: 0,
       totalSpent: 0,

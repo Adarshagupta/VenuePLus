@@ -36,10 +36,51 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
   const [itineraryFilter, setItineraryFilter] = useState<ItineraryFilter>({})
   const [bookingFilter, setBookingFilter] = useState<BookingFilter>({})
   const [expandedSections, setExpandedSections] = useState<string[]>(['stats'])
+  
+  // Profile editing state
+  const [editingProfile, setEditingProfile] = useState(false)
+  const [profileForm, setProfileForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    language: 'en',
+    travelStyle: 'mid_range' as 'budget' | 'mid_range' | 'luxury' | 'adventure' | 'cultural' | 'family',
+    budgetMin: 10000,
+    budgetMax: 100000,
+    notifications: {
+      email: true,
+      sms: false,
+      push: true,
+      deals: true,
+      reminders: true
+    }
+  })
 
   useEffect(() => {
     loadUserData()
   }, [userId])
+
+  // Initialize form when profile loads
+  useEffect(() => {
+    if (profile) {
+      setProfileForm({
+        name: profile.name || '',
+        email: profile.email || '',
+        phone: profile.phone || '',
+        language: profile.preferences?.language || 'en',
+        travelStyle: profile.preferences?.travelStyle || 'mid_range',
+        budgetMin: profile.preferences?.budgetRange?.min || 10000,
+        budgetMax: profile.preferences?.budgetRange?.max || 100000,
+        notifications: profile.preferences?.notifications || {
+          email: true,
+          sms: false,
+          push: true,
+          deals: true,
+          reminders: true
+        }
+      })
+    }
+  }, [profile])
 
   // Handle URL tab parameter
   useEffect(() => {
@@ -52,7 +93,7 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
     }
   }, [])
 
-  const loadUserData = async () => {
+  const loadUserData = async (retryCount = 0) => {
     try {
       setLoading(true)
       
@@ -89,6 +130,10 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
       if (profileRes.ok) {
         const userProfile = await profileRes.json()
         setProfile(userProfile)
+      } else if (profileRes.status === 404 && retryCount < 3) {
+        // Profile not found, retry with a short delay (might be initializing)
+        setTimeout(() => loadUserData(retryCount + 1), 1000)
+        return
       }
       
       if (itinerariesRes.ok) {
@@ -113,6 +158,11 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
       
     } catch (error) {
       console.error('Error loading user data:', error)
+      if (retryCount < 3) {
+        // Retry with exponential backoff
+        setTimeout(() => loadUserData(retryCount + 1), Math.pow(2, retryCount) * 1000)
+        return
+      }
     } finally {
       setLoading(false)
     }
@@ -124,6 +174,59 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
         ? prev.filter(s => s !== section)
         : [...prev, section]
     )
+  }
+
+  const handleProfileFormChange = (field: string, value: any) => {
+    if (field.startsWith('notifications.')) {
+      // Handle nested notification preferences
+      const notificationKey = field.replace('notifications.', '')
+      setProfileForm(prev => ({
+        ...prev,
+        notifications: {
+          ...prev.notifications,
+          [notificationKey]: value
+        }
+      }))
+      return
+    }
+    
+    setProfileForm(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
+  const handleSaveProfile = async () => {
+    try {
+      const response = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: profileForm.name,
+          phone: profileForm.phone,
+          preferences: {
+            ...profile?.preferences,
+            language: profileForm.language,
+            travelStyle: profileForm.travelStyle,
+            budgetRange: {
+              min: profileForm.budgetMin,
+              max: profileForm.budgetMax
+            },
+            notifications: profileForm.notifications
+          }
+        })
+      })
+
+      if (response.ok) {
+        const updatedProfile = await response.json()
+        setProfile(updatedProfile)
+        setEditingProfile(false)
+      }
+    } catch (error) {
+      console.error('Error saving profile:', error)
+    }
   }
 
   const getStatusColor = (status: string) => {
@@ -139,12 +242,24 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
     return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-700'
   }
 
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-IN', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    }).format(date)
+  const formatDate = (date: Date | string | null | undefined) => {
+    if (!date) return 'N/A'
+    
+    try {
+      const dateObj = date instanceof Date ? date : new Date(date)
+      if (isNaN(dateObj.getTime())) {
+        return 'Invalid Date'
+      }
+      
+      return new Intl.DateTimeFormat('en-IN', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      }).format(dateObj)
+    } catch (error) {
+      console.warn('Error formatting date:', date, error)
+      return 'Invalid Date'
+    }
   }
 
   const formatCurrency = (amount: number, currency: string = 'INR') => {
@@ -170,8 +285,9 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <User className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Profile Not Found</h2>
-          <p className="text-gray-600">Unable to load user profile.</p>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Setting Up Your Profile</h2>
+          <p className="text-gray-600 mb-4">We're initializing your profile. This will only take a moment...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
         </div>
       </div>
     )
@@ -213,9 +329,12 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
               </div>
             </div>
           </div>
-          <button className="flex items-center space-x-2 px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+          <button 
+            onClick={() => setEditingProfile(!editingProfile)}
+            className="flex items-center space-x-2 px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+          >
             <Edit3 className="w-4 h-4" />
-            <span>Edit Profile</span>
+            <span>{editingProfile ? 'Cancel' : 'Edit Profile'}</span>
           </button>
         </div>
       </div>
@@ -638,8 +757,10 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
             <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
             <input
               type="text"
-              value={profile.name}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              value={editingProfile ? profileForm.name : profile.name}
+              onChange={(e) => handleProfileFormChange('name', e.target.value)}
+              readOnly={!editingProfile}
+              className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${!editingProfile ? 'bg-gray-50' : ''}`}
             />
           </div>
           <div>
@@ -647,20 +768,29 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
             <input
               type="email"
               value={profile.email}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              readOnly
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500"
             />
+            <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
             <input
               type="tel"
-              value={profile.phone || ''}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              value={editingProfile ? profileForm.phone : (profile.phone || '')}
+              onChange={(e) => handleProfileFormChange('phone', e.target.value)}
+              readOnly={!editingProfile}
+              className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${!editingProfile ? 'bg-gray-50' : ''}`}
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Preferred Language</label>
-            <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            <select 
+              value={editingProfile ? profileForm.language : (profile.preferences?.language || 'en')}
+              onChange={(e) => handleProfileFormChange('language', e.target.value)}
+              disabled={!editingProfile}
+              className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${!editingProfile ? 'bg-gray-50' : ''}`}
+            >
               <option value="en">English</option>
               <option value="hi">Hindi</option>
               <option value="es">Spanish</option>
@@ -678,12 +808,14 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
             <label className="block text-sm font-medium text-gray-700 mb-2">Travel Style</label>
             <div className="grid grid-cols-3 gap-2">
               {['budget', 'mid_range', 'luxury'].map((style) => (
-                <label key={style} className="flex items-center space-x-2 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                <label key={style} className={`flex items-center space-x-2 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 ${!editingProfile ? 'opacity-60' : ''}`}>
                   <input
                     type="radio"
                     name="travelStyle"
                     value={style}
-                    checked={profile.preferences.travelStyle === style}
+                    checked={editingProfile ? profileForm.travelStyle === style : profile.preferences.travelStyle === style}
+                    onChange={(e) => editingProfile && handleProfileFormChange('travelStyle', e.target.value)}
+                    disabled={!editingProfile}
                     className="text-blue-600"
                   />
                   <span className="capitalize">{style.replace('_', ' ')}</span>
@@ -698,14 +830,18 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
               <input
                 type="number"
                 placeholder="Min budget"
-                value={profile.preferences.budgetRange.min}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={editingProfile ? profileForm.budgetMin : profile.preferences.budgetRange.min}
+                onChange={(e) => handleProfileFormChange('budgetMin', parseInt(e.target.value) || 0)}
+                readOnly={!editingProfile}
+                className={`px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${!editingProfile ? 'bg-gray-50' : ''}`}
               />
               <input
                 type="number"
                 placeholder="Max budget"
-                value={profile.preferences.budgetRange.max}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={editingProfile ? profileForm.budgetMax : profile.preferences.budgetRange.max}
+                onChange={(e) => handleProfileFormChange('budgetMax', parseInt(e.target.value) || 0)}
+                readOnly={!editingProfile}
+                className={`px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${!editingProfile ? 'bg-gray-50' : ''}`}
               />
             </div>
           </div>
@@ -716,12 +852,14 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
       <div className="bg-white rounded-xl shadow-sm p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Notifications</h3>
         <div className="space-y-3">
-          {Object.entries(profile.preferences.notifications).map(([key, value]) => (
-            <label key={key} className="flex items-center justify-between">
+          {Object.entries(editingProfile ? profileForm.notifications : profile.preferences.notifications).map(([key, value]) => (
+            <label key={key} className={`flex items-center justify-between ${!editingProfile ? 'opacity-60' : ''}`}>
               <span className="text-gray-700 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
               <input
                 type="checkbox"
                 checked={value}
+                onChange={(e) => handleProfileFormChange(`notifications.${key}`, e.target.checked)}
+                disabled={!editingProfile}
                 className="rounded text-blue-600 focus:ring-blue-500"
               />
             </label>
@@ -745,11 +883,22 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
       </div>
 
       {/* Save Button */}
-      <div className="flex justify-end">
-        <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-          Save Changes
-        </button>
-      </div>
+      {editingProfile && (
+        <div className="flex justify-end space-x-4">
+          <button 
+            onClick={() => setEditingProfile(false)}
+            className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button 
+            onClick={handleSaveProfile}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Save Changes
+          </button>
+        </div>
+      )}
     </div>
   )
 
