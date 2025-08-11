@@ -8,7 +8,7 @@ import { DurationSelection } from './steps/duration-selection'
 import { TravelerSelection } from './steps/traveler-selection'
 import { DepartureSelection } from './steps/departure-selection'
 import { BudgetPlanner } from './steps/budget-planner'
-import { ItineraryGenerator } from './steps/itinerary-generator'
+import { EnhancedItineraryGenerator } from './steps/enhanced-itinerary-generator'
 import { TripSummary } from './steps/trip-summary'
 import { useTripContext } from '@/contexts/TripContext'
 
@@ -177,7 +177,7 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
       case 'budget':
         return <BudgetPlanner tripData={currentTripData} onUpdate={updateTripData} onNext={nextStep} />
       case 'itinerary':
-        return <ItineraryGenerator tripData={currentTripData} onUpdate={updateTripData} onNext={nextStep} />
+        return <EnhancedItineraryGenerator tripData={currentTripData} onUpdate={updateTripData} onNext={nextStep} />
       case 'summary':
         return <TripSummary tripData={currentTripData} isAuthenticated={isAuthenticated} onClose={onClose} />
       default:
