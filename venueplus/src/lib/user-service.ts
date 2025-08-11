@@ -195,7 +195,7 @@ export class UserDataService {
       const currentProfile = await this.getUserProfile(userId)
       if (!currentProfile) return null
 
-      const currentStats = currentProfile.stats || this.getDefaultStats()
+      const currentStats = currentProfile.stats || this.getDefaultStats(currentProfile.createdAt)
       
       // Update stats with new booking
       const updatedStats = {
