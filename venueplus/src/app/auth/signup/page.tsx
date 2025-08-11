@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { signIn } from 'next-auth/react'
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Globe, Sparkles } from 'lucide-react'
 import { useTripContext } from '@/contexts/TripContext'
@@ -121,10 +122,24 @@ export default function SignUpPage() {
         <div className="relative z-10 flex flex-col justify-center px-12 py-16 text-white">
           <div className="mb-8">
             <div className="flex items-center mb-6">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mr-3">
-                <Globe className="w-6 h-6" />
+              <div className="relative w-12 h-12 rounded-xl overflow-hidden mr-3 flex-shrink-0">
+                <Image
+                  src="/logo.png"
+                  alt="VenuePlus Logo"
+                  width={48}
+                  height={48}
+                  className="object-cover"
+                />
               </div>
-              <span className="text-2xl font-bold">VenuePlus</span>
+              <div className="relative h-12 flex items-center">
+                <Image
+                  src="/name.png"
+                  alt="VenuePlus Name"
+                  width={140}
+                  height={40}
+                  className="object-contain"
+                />
+              </div>
             </div>
             <div className="inline-block px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium mb-6">
               <Sparkles className="w-4 h-4 inline mr-1" />
@@ -173,10 +188,24 @@ export default function SignUpPage() {
         <div className="w-full max-w-md">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center justify-center mb-8">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mr-3">
-              <Globe className="w-6 h-6 text-white" />
+            <div className="relative w-12 h-12 rounded-xl overflow-hidden mr-3 flex-shrink-0">
+              <Image
+                src="/logo.png"
+                alt="VenuePlus Logo"
+                width={48}
+                height={48}
+                className="object-cover"
+              />
             </div>
-            <span className="text-2xl font-bold text-gray-900">VenuePlus</span>
+            <div className="relative h-12 flex items-center">
+              <Image
+                src="/name.png"
+                alt="VenuePlus Name"
+                width={140}
+                height={40}
+                className="object-contain"
+              />
+            </div>
           </div>
 
           <div className="text-center mb-8">
