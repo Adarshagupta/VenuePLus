@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { signIn } from 'next-auth/react'
-import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Globe, Sparkles } from 'lucide-react'
+import { Eye, EyeOff, User } from 'lucide-react'
 import { useTripContext } from '@/contexts/TripContext'
 
 export default function SignUpPage() {
@@ -91,124 +91,102 @@ export default function SignUpPage() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left Panel - Gradient Background with Content */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-        {/* Animated Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
-          <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/20 via-purple-500/10 to-pink-500/20"></div>
-          {/* Animated Waves */}
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-0 left-0 w-full h-full">
-              <div className="wave-animation-1"></div>
-              <div className="wave-animation-2"></div>
-              <div className="wave-animation-3"></div>
-            </div>
+      {/* Left Panel - Flowing Gradient Background */}
+      <div className="w-1/2 relative overflow-hidden">
+        {/* Beautiful Flowing Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-sky-900 via-blue-800 to-cyan-900">
+          {/* Flowing wave patterns */}
+          <div className="absolute inset-0">
+            <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1200 800">
+              <defs>
+                <linearGradient id="wave1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#0ea5e9" stopOpacity="0.4"/>
+                  <stop offset="50%" stopColor="#0284c7" stopOpacity="0.3"/>
+                  <stop offset="100%" stopColor="#0369a1" stopOpacity="0.4"/>
+                </linearGradient>
+                <linearGradient id="wave2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.3"/>
+                  <stop offset="50%" stopColor="#0ea5e9" stopOpacity="0.4"/>
+                  <stop offset="100%" stopColor="#0284c7" stopOpacity="0.3"/>
+                </linearGradient>
+                <linearGradient id="wave3" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#0369a1" stopOpacity="0.5"/>
+                  <stop offset="50%" stopColor="#075985" stopOpacity="0.4"/>
+                  <stop offset="100%" stopColor="#0284c7" stopOpacity="0.3"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,0 C300,200 600,100 1200,300 L1200,0 Z" fill="url(#wave1)">
+                <animate attributeName="d" dur="8s" repeatCount="indefinite" values="M0,0 C300,200 600,100 1200,300 L1200,0 Z;M0,0 C300,100 600,200 1200,200 L1200,0 Z;M0,0 C300,200 600,100 1200,300 L1200,0 Z"/>
+              </path>
+              <path d="M0,100 C400,300 800,200 1200,400 L1200,800 L0,800 Z" fill="url(#wave2)">
+                <animate attributeName="d" dur="12s" repeatCount="indefinite" values="M0,100 C400,300 800,200 1200,400 L1200,800 L0,800 Z;M0,200 C400,200 800,300 1200,300 L1200,800 L0,800 Z;M0,100 C400,300 800,200 1200,400 L1200,800 L0,800 Z"/>
+              </path>
+              <path d="M0,200 C500,400 700,300 1200,500 L1200,600 L0,600 Z" fill="url(#wave3)">
+                <animate attributeName="d" dur="16s" repeatCount="indefinite" values="M0,200 C500,400 700,300 1200,500 L1200,600 L0,600 Z;M0,300 C500,300 700,400 1200,400 L1200,600 L0,600 Z;M0,200 C500,400 700,300 1200,500 L1200,600 L0,600 Z"/>
+              </path>
+            </svg>
           </div>
         </div>
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col justify-center px-12 py-16 text-white">
-          <div className="mb-8">
-            <div className="flex items-center mb-6">
-              <div className="relative w-12 h-12 rounded-xl overflow-hidden mr-3 flex-shrink-0">
-                <Image
-                  src="/logo.png"
-                  alt="VenuePlus Logo"
-                  width={48}
-                  height={48}
-                  className="object-cover"
-                />
-              </div>
-              <div className="relative h-12 flex items-center">
-                <Image
-                  src="/name.png"
-                  alt="VenuePlus Name"
-                  width={140}
-                  height={40}
-                  className="object-contain"
-                />
-              </div>
-            </div>
-            <div className="inline-block px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium mb-6">
-              <Sparkles className="w-4 h-4 inline mr-1" />
-              JOIN THE JOURNEY
-            </div>
-          </div>
+        <div className="relative z-10 flex flex-col justify-between h-full px-12 py-16 text-white">
+          {/* Top Section */}
+          <div></div>
 
-          <div className="space-y-6">
-            <h1 className="text-5xl font-bold leading-tight">
-              Start Your
-              <br />
-              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Adventure
-              </span>
+          {/* Main Content */}
+          <div className="space-y-8">
+            <h1 className="text-6xl font-black leading-tight">
+              Your<br/>
+              Adventure<br/>
+              Awaits
             </h1>
             
-            <p className="text-xl text-white/80 leading-relaxed max-w-md">
-              Create your account and unlock personalized travel experiences tailored just for you.
-              {hasTripData && (
-                <span className="block mt-2 text-blue-300 font-medium">
-                  🎉 Your trip is ready to be saved!
-                </span>
-              )}
+            <p className="text-lg text-white/90 leading-relaxed max-w-md font-medium">
+              Explore new horizons, create memories,<br/>
+              and turn your travel dreams into reality.
             </p>
-
-            <div className="space-y-4 text-white/70">
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                <span>Personalized travel recommendations</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-                <span>Save and organize your itineraries</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-pink-400 rounded-full animate-pulse"></div>
-                <span>Discover hidden gems worldwide</span>
-              </div>
-            </div>
           </div>
+
+          {/* Bottom spacer */}
+          <div></div>
         </div>
       </div>
 
       {/* Right Panel - Sign Up Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-8 py-12 bg-gray-50">
+      <div className="w-1/2 flex items-center justify-center px-8 py-12 bg-white relative">
         <div className="w-full max-w-md">
-          {/* Mobile Logo */}
-          <div className="lg:hidden flex items-center justify-center mb-8">
-            <div className="relative w-12 h-12 rounded-xl overflow-hidden mr-3 flex-shrink-0">
+          {/* VenuePlus Logo - Center Top */}
+          <div className="flex items-center justify-center mb-8">
+            <div className="flex items-center space-x-3">
               <Image
                 src="/logo.png"
                 alt="VenuePlus Logo"
-                width={48}
-                height={48}
-                className="object-cover"
+                width={40}
+                height={40}
+                className="object-contain"
               />
-            </div>
-            <div className="relative h-12 flex items-center">
               <Image
                 src="/name.png"
-                alt="VenuePlus Name"
-                width={140}
-                height={40}
+                alt="VenuePlus"
+                width={120}
+                height={30}
                 className="object-contain"
               />
             </div>
           </div>
-
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h2>
-            <p className="text-gray-600">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Create Account</h2>
+            <p className="text-gray-600 text-lg">
               {hasTripData 
                 ? 'Complete your registration to save your trip'
-                : 'Join VenuePlus and start planning your perfect trips'
+                : 'Join us and start your travel journey today'
               }
             </p>
           </div>
 
           {hasTripData && (
-            <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl">
-              <p className="text-sm text-blue-700 text-center font-medium">
+            <div className="mb-6 p-4 bg-sky-50 border border-sky-200 rounded-xl">
+              <p className="text-sm text-sky-700 text-center font-medium">
                 🎉 Your trip plan is ready to be saved! Create an account to continue.
               </p>
             </div>
@@ -221,16 +199,13 @@ export default function SignUpPage() {
               </div>
             )}
 
-            <div className="space-y-4">
+            <div className="space-y-6">
               {/* Name Field */}
               <div>
-                <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="name" className="block text-base font-medium text-gray-700 mb-3">
                   Full Name
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-gray-400" />
-                  </div>
                   <input
                     id="name"
                     name="name"
@@ -238,7 +213,7 @@ export default function SignUpPage() {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 py-4 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-all duration-200"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -246,35 +221,27 @@ export default function SignUpPage() {
 
               {/* Email Field */}
               <div>
-                <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="email" className="block text-base font-medium text-gray-700 mb-3">
                   Email
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
-                    placeholder="Enter your email"
-                  />
-                </div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-4 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-all duration-200"
+                  placeholder="Enter your email"
+                />
               </div>
 
               {/* Password Field */}
               <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="password" className="block text-base font-medium text-gray-700 mb-3">
                   Password
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
-                  </div>
                   <input
                     id="password"
                     name="password"
@@ -282,7 +249,7 @@ export default function SignUpPage() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-12 pr-12 py-4 border border-gray-200 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 py-4 pr-12 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-all duration-200"
                     placeholder="Create a password"
                   />
                   <button
@@ -301,13 +268,10 @@ export default function SignUpPage() {
 
               {/* Confirm Password Field */}
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="confirmPassword" className="block text-base font-medium text-gray-700 mb-3">
                   Confirm Password
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
-                  </div>
                   <input
                     id="confirmPassword"
                     name="confirmPassword"
@@ -315,7 +279,7 @@ export default function SignUpPage() {
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full pl-12 pr-12 py-4 border border-gray-200 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 py-4 pr-12 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-all duration-200"
                     placeholder="Confirm your password"
                   />
                   <button
@@ -334,20 +298,20 @@ export default function SignUpPage() {
             </div>
 
             {/* Terms and Conditions */}
-            <div className="flex items-start">
+            <div className="flex items-center">
               <input
                 type="checkbox"
                 id="terms"
                 required
-                className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500 mt-1"
+                className="w-4 h-4 text-gray-600 border-gray-300 rounded focus:ring-gray-500"
               />
-              <label htmlFor="terms" className="ml-3 text-sm text-gray-600">
+              <label htmlFor="terms" className="ml-2 text-sm text-gray-600">
                 I agree to the{' '}
-                <Link href="/terms" className="text-purple-600 hover:text-purple-500 font-medium">
+                <Link href="/terms" className="font-medium text-gray-600 hover:text-gray-800 underline">
                   Terms of Service
                 </Link>{' '}
                 and{' '}
-                <Link href="/privacy" className="text-purple-600 hover:text-purple-500 font-medium">
+                <Link href="/privacy" className="font-medium text-gray-600 hover:text-gray-800 underline">
                   Privacy Policy
                 </Link>
               </label>
@@ -357,31 +321,19 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex items-center justify-center py-4 px-6 border border-transparent rounded-xl text-white font-semibold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02]"
+              className="w-full flex items-center justify-center py-4 px-6 border border-transparent rounded-lg text-white font-semibold bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             >
               {isLoading ? (
                 <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <>
-                  <span>{hasTripData ? 'Create Account & Save Trip' : 'Create Account'}</span>
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </>
+                <span>{hasTripData ? 'Create Account & Save Trip' : 'Create Account'}</span>
               )}
             </button>
 
             {/* Google Sign Up */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-gray-50 text-gray-500">Or continue with</span>
-              </div>
-            </div>
-
             <button
               type="button"
-              className="w-full flex items-center justify-center py-4 px-6 border border-gray-200 rounded-xl bg-white text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200"
+              className="w-full flex items-center justify-center py-4 px-6 border border-gray-300 rounded-lg bg-white text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200"
             >
               <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
                 <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -399,7 +351,7 @@ export default function SignUpPage() {
               Already have an account?{' '}
               <Link 
                 href={hasTripData ? `/auth/signin?tripData=${encodeURIComponent(JSON.stringify(searchParams.get('tripData')))}` : "/auth/signin"} 
-                className="font-semibold text-purple-600 hover:text-purple-500"
+                className="font-semibold text-gray-900 hover:text-gray-700 underline"
               >
                 Sign In
               </Link>

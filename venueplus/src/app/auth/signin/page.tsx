@@ -1,12 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { signIn, getSession } from 'next-auth/react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Eye, EyeOff, Mail, Lock, ArrowRight, Globe } from 'lucide-react'
-import { useTripContext } from '@/contexts/TripContext'
+import { Eye, EyeOff } from 'lucide-react'
 
 export default function SignInPage() {
   const [email, setEmail] = useState('')
@@ -14,29 +13,8 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-  const [hasTripData, setHasTripData] = useState(false)
 
-  const searchParams = useSearchParams()
   const router = useRouter()
-  const { setTripData } = useTripContext()
-
-  useEffect(() => {
-    // Check if there's trip data in URL params - only run once on mount
-    const tripDataParam = searchParams.get('tripData')
-    if (tripDataParam) {
-      try {
-        const decodedTripData = JSON.parse(decodeURIComponent(tripDataParam))
-        if (decodedTripData.startDate) {
-          decodedTripData.startDate = new Date(decodedTripData.startDate)
-        }
-        setTripData(decodedTripData)
-        setHasTripData(true)
-      } catch (error) {
-        console.error('Error parsing trip data from URL:', error)
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // Intentionally empty - only run once on mount
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -51,11 +29,7 @@ export default function SignInPage() {
       })
 
       if (result?.ok) {
-        if (hasTripData) {
-          router.push('/create-trip')
-        } else {
-          router.push('/')
-        }
+        router.push('/')
       } else {
         setError('Invalid email or password. Please try again.')
       }
@@ -68,127 +42,95 @@ export default function SignInPage() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left Panel - Gradient Background with Content */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-        {/* Animated Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
-          <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/20 via-purple-500/10 to-blue-500/20"></div>
-          {/* Animated Waves */}
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-0 left-0 w-full h-full">
-              <div className="wave-animation-1"></div>
-              <div className="wave-animation-2"></div>
-              <div className="wave-animation-3"></div>
-            </div>
+      {/* Left Panel - Flowing Gradient Background */}
+      <div className="w-1/2 relative overflow-hidden">
+                 {/* Beautiful Flowing Gradient Background */}
+         <div className="absolute inset-0 bg-gradient-to-br from-sky-900 via-blue-800 to-cyan-900">
+          {/* Flowing wave patterns */}
+          <div className="absolute inset-0">
+            <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1200 800">
+                             <defs>
+                 <linearGradient id="wave1" x1="0%" y1="0%" x2="100%" y2="100%">
+                   <stop offset="0%" stopColor="#0ea5e9" stopOpacity="0.4"/>
+                   <stop offset="50%" stopColor="#0284c7" stopOpacity="0.3"/>
+                   <stop offset="100%" stopColor="#0369a1" stopOpacity="0.4"/>
+                 </linearGradient>
+                 <linearGradient id="wave2" x1="0%" y1="0%" x2="100%" y2="100%">
+                   <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.3"/>
+                   <stop offset="50%" stopColor="#0ea5e9" stopOpacity="0.4"/>
+                   <stop offset="100%" stopColor="#0284c7" stopOpacity="0.3"/>
+                 </linearGradient>
+                 <linearGradient id="wave3" x1="0%" y1="0%" x2="100%" y2="100%">
+                   <stop offset="0%" stopColor="#0369a1" stopOpacity="0.5"/>
+                   <stop offset="50%" stopColor="#075985" stopOpacity="0.4"/>
+                   <stop offset="100%" stopColor="#0284c7" stopOpacity="0.3"/>
+                 </linearGradient>
+               </defs>
+              <path d="M0,0 C300,200 600,100 1200,300 L1200,0 Z" fill="url(#wave1)">
+                <animate attributeName="d" dur="8s" repeatCount="indefinite" values="M0,0 C300,200 600,100 1200,300 L1200,0 Z;M0,0 C300,100 600,200 1200,200 L1200,0 Z;M0,0 C300,200 600,100 1200,300 L1200,0 Z"/>
+              </path>
+              <path d="M0,100 C400,300 800,200 1200,400 L1200,800 L0,800 Z" fill="url(#wave2)">
+                <animate attributeName="d" dur="12s" repeatCount="indefinite" values="M0,100 C400,300 800,200 1200,400 L1200,800 L0,800 Z;M0,200 C400,200 800,300 1200,300 L1200,800 L0,800 Z;M0,100 C400,300 800,200 1200,400 L1200,800 L0,800 Z"/>
+              </path>
+              <path d="M0,200 C500,400 700,300 1200,500 L1200,600 L0,600 Z" fill="url(#wave3)">
+                <animate attributeName="d" dur="16s" repeatCount="indefinite" values="M0,200 C500,400 700,300 1200,500 L1200,600 L0,600 Z;M0,300 C500,300 700,400 1200,400 L1200,600 L0,600 Z;M0,200 C500,400 700,300 1200,500 L1200,600 L0,600 Z"/>
+              </path>
+            </svg>
           </div>
         </div>
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col justify-center px-12 py-16 text-white">
-          <div className="mb-8">
-            <div className="flex items-center mb-6">
-              <div className="relative w-12 h-12 rounded-xl overflow-hidden mr-3 flex-shrink-0">
-                <Image
-                  src="/logo.png"
-                  alt="VenuePlus Logo"
-                  width={48}
-                  height={48}
-                  className="object-cover"
-                />
-              </div>
-              <div className="relative h-12 flex items-center">
-                <Image
-                  src="/name.png"
-                  alt="VenuePlus Name"
-                  width={140}
-                  height={40}
-                  className="object-contain"
-                />
-              </div>
-            </div>
-            <div className="inline-block px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium mb-6">
-              ✨ A WISE CHOICE
-            </div>
-          </div>
+        <div className="relative z-10 flex flex-col justify-between h-full px-12 py-16 text-white">
+          {/* Top Section */}
+          <div></div>
 
-          <div className="space-y-6">
-            <h1 className="text-5xl font-bold leading-tight">
-              Welcome
-              <br />
-              <span className="bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
-                Back
-              </span>
+          {/* Main Content */}
+          <div className="space-y-8">
+            <h1 className="text-6xl font-black leading-tight">
+              Your<br/>
+              Adventure<br/>
+              Awaits
             </h1>
             
-            <p className="text-xl text-white/80 leading-relaxed max-w-md">
-              Continue your journey to create unforgettable travel experiences.
-              {hasTripData && (
-                <span className="block mt-2 text-pink-300 font-medium">
-                  🎉 Your trip plan is waiting!
-                </span>
-              )}
+            <p className="text-lg text-white/90 leading-relaxed max-w-md font-medium">
+              Explore new horizons, create memories,<br/>
+              and turn your travel dreams into reality.
             </p>
-
-            <div className="space-y-4 text-white/70">
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-pink-400 rounded-full animate-pulse"></div>
-                <span>Access your saved itineraries</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-                <span>Discover personalized recommendations</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                <span>Plan your next adventure</span>
-              </div>
-            </div>
           </div>
+
+          {/* Bottom spacer */}
+          <div></div>
         </div>
       </div>
 
       {/* Right Panel - Sign In Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-8 py-12 bg-gray-50">
+      <div className="w-1/2 flex items-center justify-center px-8 py-12 bg-white relative">
         <div className="w-full max-w-md">
-          {/* Mobile Logo */}
-          <div className="lg:hidden flex items-center justify-center mb-8">
-            <div className="relative w-12 h-12 rounded-xl overflow-hidden mr-3 flex-shrink-0">
+          {/* VenuePlus Logo - Center Top */}
+          <div className="flex items-center justify-center mb-8">
+            <div className="flex items-center space-x-3">
               <Image
                 src="/logo.png"
                 alt="VenuePlus Logo"
-                width={48}
-                height={48}
-                className="object-cover"
+                width={40}
+                height={40}
+                className="object-contain"
               />
-            </div>
-            <div className="relative h-12 flex items-center">
               <Image
                 src="/name.png"
-                alt="VenuePlus Name"
-                width={140}
-                height={40}
+                alt="VenuePlus"
+                width={120}
+                height={30}
                 className="object-contain"
               />
             </div>
           </div>
-
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-            <p className="text-gray-600">
-              {hasTripData 
-                ? 'Sign in to save your trip and continue planning'
-                : 'Enter your email and password to access your account'
-              }
+          <div className="text-center mb-10">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Welcome Back</h2>
+            <p className="text-gray-600 text-lg">
+              Enter your email and password to access your account
             </p>
           </div>
-
-          {hasTripData && (
-            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-              <p className="text-sm text-blue-700 text-center font-medium">
-                🎉 Your trip plan is ready! Sign in to continue.
-              </p>
-            </div>
-          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
@@ -197,38 +139,30 @@ export default function SignInPage() {
               </div>
             )}
 
-            <div className="space-y-4">
+            <div className="space-y-6">
               {/* Email Field */}
               <div>
-                <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="email" className="block text-base font-medium text-gray-700 mb-3">
                   Email
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                    placeholder="Enter your email"
-                  />
-                </div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-4 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-all duration-200 text-base"
+                  placeholder="Enter your email"
+                />
               </div>
 
               {/* Password Field */}
               <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="password" className="block text-base font-medium text-gray-700 mb-3">
                   Password
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
-                  </div>
                   <input
                     id="password"
                     name="password"
@@ -236,7 +170,7 @@ export default function SignInPage() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-12 pr-12 py-4 border border-gray-200 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 py-4 pr-12 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-all duration-200 text-base"
                     placeholder="Enter your password"
                   />
                   <button
@@ -259,12 +193,12 @@ export default function SignInPage() {
               <label className="flex items-center">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  className="w-4 h-4 text-gray-600 border-gray-300 rounded focus:ring-gray-500"
                 />
                 <span className="ml-2 text-sm text-gray-600">Remember me</span>
               </label>
-              <Link href="/auth/forgot-password" className="text-sm font-medium text-blue-600 hover:text-blue-500">
-                Forgot Password?
+              <Link href="/auth/forgot-password" className="text-sm font-medium text-gray-600 hover:text-gray-800">
+                Forgot Password
               </Link>
             </div>
 
@@ -272,15 +206,12 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex items-center justify-center py-4 px-6 border border-transparent rounded-xl text-white font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02]"
+              className="w-full flex items-center justify-center py-4 px-6 border border-transparent rounded-lg text-white font-semibold bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-base"
             >
               {isLoading ? (
                 <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <>
-                  <span>{hasTripData ? 'Sign In & Save Trip' : 'Sign In'}</span>
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </>
+                <span>Sign In</span>
               )}
             </button>
 
@@ -295,18 +226,9 @@ export default function SignInPage() {
             </div>
 
             {/* Google Sign In */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-gray-50 text-gray-500">Or continue with</span>
-              </div>
-            </div>
-
             <button
               type="button"
-              className="w-full flex items-center justify-center py-4 px-6 border border-gray-200 rounded-xl bg-white text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
+              className="w-full flex items-center justify-center py-4 px-6 border border-gray-300 rounded-lg bg-white text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200 text-base"
             >
               <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
                 <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -314,7 +236,7 @@ export default function SignInPage() {
                 <path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              Sign in with Google
+              Sign In with Google
             </button>
           </form>
 
@@ -323,8 +245,8 @@ export default function SignInPage() {
             <p className="text-gray-600">
               Don't have an account?{' '}
               <Link 
-                href={hasTripData ? `/auth/signup?tripData=${encodeURIComponent(JSON.stringify(searchParams.get('tripData')))}` : "/auth/signup"} 
-                className="font-semibold text-blue-600 hover:text-blue-500"
+                href="/auth/signup" 
+                className="font-semibold text-gray-900 hover:text-gray-700 underline"
               >
                 Sign Up
               </Link>
