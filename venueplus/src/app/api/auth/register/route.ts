@@ -3,6 +3,10 @@ import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
+  // Debug environment variables
+  console.log('API Route - DATABASE_URL exists:', !!process.env.DATABASE_URL)
+  console.log('API Route - NODE_ENV:', process.env.NODE_ENV)
+  
   try {
     const { name, email, password } = await request.json()
 
