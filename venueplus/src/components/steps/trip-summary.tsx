@@ -7,25 +7,32 @@ import { TripData } from '../trip-planning-modal'
 interface TripSummaryProps {
   tripData: TripData
   isAuthenticated: boolean
-  onClose: () => void
+  onNext?: () => void
 }
 
-export function TripSummary({ tripData, isAuthenticated, onClose }: TripSummaryProps) {
+export function TripSummary({ tripData, isAuthenticated, onNext }: TripSummaryProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [useAI, setUseAI] = useState(true)
   const router = useRouter()
 
   const handleSubmit = async () => {
+    if (!isAuthenticated) {
+      // For non-authenticated users, redirect to signup with trip data
+      const tripDataParam = encodeURIComponent(JSON.stringify({ ...tripData, useAI }))
+      router.push(`/auth/signup?tripData=${tripDataParam}`)
+      return
+    }
+
+    // For authenticated users, proceed to payment step
+    if (onNext) {
+      onNext()
+      return
+    }
+
+    // Fallback: create trip without payment (old behavior)
     setIsSubmitting(true)
     
     try {
-      if (!isAuthenticated) {
-        // For non-authenticated users, redirect to signup with trip data
-        const tripDataParam = encodeURIComponent(JSON.stringify({ ...tripData, useAI }))
-        router.push(`/auth/signup?tripData=${tripDataParam}`)
-        onClose() // Close the modal
-        return
-      }
 
       // Calculate end date based on duration and start date
       let endDate = new Date(tripData.startDate!)
@@ -63,7 +70,6 @@ export function TripSummary({ tripData, isAuthenticated, onClose }: TripSummaryP
 
         if (aiResponse.ok) {
           const aiResult = await aiResponse.json()
-          onClose()
           router.push(`/trips/${aiResult.tripId}?ai=true`)
         } else {
           console.error('Failed to generate AI itinerary')
@@ -90,7 +96,6 @@ export function TripSummary({ tripData, isAuthenticated, onClose }: TripSummaryP
 
         if (response.ok) {
           const trip = await response.json()
-          onClose()
           router.push(`/trips/${trip.id}`)
         } else {
           const errorData = await response.json()
@@ -277,24 +282,22 @@ export function TripSummary({ tripData, isAuthenticated, onClose }: TripSummaryP
             disabled={isSubmitting}
             className={`w-full py-4 rounded-lg font-semibold transition-all duration-200 ${
               isAuthenticated
-                ? useAI
-                  ? 'bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white'
-                  : 'bg-gradient-to-r from-blue-500 to-green-600 hover:from-blue-600 hover:to-green-700 text-white'
+                ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white'
                 : 'bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white'
             } disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             {isSubmitting ? (
               <div className="flex items-center justify-center space-x-2">
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                <span>{useAI ? 'Generating AI Itinerary...' : 'Creating Trip...'}</span>
+                <span>Processing...</span>
               </div>
             ) : isAuthenticated ? (
               <div className="flex items-center justify-center space-x-2">
-                {useAI && <span>🤖</span>}
-                <span>{useAI ? 'Generate AI Itinerary' : 'Create Basic Trip'}</span>
+                <span>💳</span>
+                <span>Proceed to Payment</span>
               </div>
             ) : (
-              'Login to View Full Itinerary'
+              'Login to Continue'
             )}
           </button>
 

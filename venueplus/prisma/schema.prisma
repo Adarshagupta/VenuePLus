@@ -239,9 +239,37 @@ model Booking {
   updatedAt         DateTime @updatedAt
   
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments          Payment[]
 
   @@index([userId, bookingDate])
   @@map("bookings")
+}
+
+model Payment {
+  id                  String   @id @default(cuid())
+  bookingId           String
+  razorpayPaymentId   String?  @unique
+  razorpayOrderId     String   @unique
+  razorpaySignature   String?
+  amount              Float
+  currency            String   @default("INR")
+  status              String   @default("created") // created, pending, paid, failed, cancelled, refunded
+  paymentMethod       String?  // card, netbanking, wallet, upi
+  description         String?
+  notes               Json?    // Store additional payment notes
+  failureReason       String?
+  refundId            String?
+  refundAmount        Float?
+  refundStatus        String?  // pending, processed, failed
+  metadata            Json?    // Store Razorpay response metadata
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  
+  booking             Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([razorpayOrderId])
+  @@index([bookingId])
+  @@map("payments")
 }
 
 model UserActivity {
@@ -301,4 +329,29 @@ model TravelMemory {
 
   @@index([userId, date])
   @@map("travel_memories")
+}
+
+model Package {
+  id            String   @id
+  name          String
+  description   String   @db.Text
+  price         Float
+  originalPrice Float?
+  duration      String
+  destination   String
+  provider      String
+  rating        Float    @default(0)
+  reviews       Int      @default(0)
+  currency      String   @default("INR")
+  images        String[] @default([])
+  highlights    String[] @default([])
+  inclusions    String[] @default([])
+  exclusions    String[] @default([])
+  category      String   @default("general")
+  tags          String[] @default([])
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("packages")
 }

@@ -1385,27 +1385,27 @@ export default function HomePage() {
                   packageId: 3
                 },
                 { 
-                  name: 'Mumbai', 
-                  country: 'Maharashtra', 
-                  rating: '4.7', 
-                  image: 'https://images.unsplash.com/photo-1595658658481-d53d3f999875?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-                  hoverGradient: 'from-blue-50/50 to-cyan-50/50',
-                  packageId: 4
-                },
-                { 
                   name: 'Goa', 
                   country: 'Beach Paradise', 
                   rating: '4.6', 
                   image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
                   hoverGradient: 'from-yellow-50/50 to-orange-50/50',
+                  packageId: 4
+                },
+                { 
+                  name: 'Leh', 
+                  country: 'Ladakh Adventure', 
+                  rating: '4.9', 
+                  image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                  hoverGradient: 'from-blue-50/50 to-cyan-50/50',
                   packageId: 5
                 },
                 { 
-                  name: 'Udaipur', 
-                  country: 'City of Lakes', 
-                  rating: '4.8', 
-                  image: 'https://images.unsplash.com/photo-1609920658906-8223bd289001?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-                  hoverGradient: 'from-rose-50/50 to-pink-50/50',
+                  name: 'Shimla', 
+                  country: 'Himachal Hills', 
+                  rating: '4.5', 
+                  image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                  hoverGradient: 'from-green-50/50 to-teal-50/50',
                   packageId: 6
                 }
               ].map((destination, index) => (
@@ -2244,8 +2244,17 @@ export default function HomePage() {
                 <div className="flex flex-col md:flex-row gap-4">
                   <button 
                     onClick={() => {
-                      setSelectedDestinationPackage(null)
-                      setIsModalOpen(true)
+                      // Use the mapping from the dedicated file
+                      const { getDatabasePackageId } = require('@/lib/package-mapping')
+                      const realPackageId = getDatabasePackageId(selectedDestinationPackage.id)
+                      
+                      const params = new URLSearchParams({
+                        packageId: realPackageId,
+                        destination: selectedDestinationPackage.destination || '',
+                        price: selectedDestinationPackage.price?.toString().replace(/[₹,]/g, '') || '15000',
+                        duration: selectedDestinationPackage.duration || '5 Days 4 Nights',
+                      })
+                      window.location.href = `/book-package?${params.toString()}`
                     }}
                     className="flex-1 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
                   >
