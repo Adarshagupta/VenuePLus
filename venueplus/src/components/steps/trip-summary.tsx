@@ -25,34 +25,51 @@ export function TripSummary({ tripData, isAuthenticated, onClose }: TripSummaryP
     
     try {
       if (!isAuthenticated) {
-        // For non-authenticated users, just show the itinerary view
-        alert('Thank you! Your customized itinerary has been created.')
-        onClose()
+        // For non-authenticated users, redirect to signup with trip data
+        const tripDataParam = encodeURIComponent(JSON.stringify(tripData))
+        router.push(`/auth/signup?tripData=${tripDataParam}`)
+        onClose() // Close the modal
         return
       }
 
-      // For authenticated users, save to database
+      // Calculate end date based on duration and start date
+      let endDate = new Date(tripData.startDate!)
+      if (tripData.duration === '4-6 Days') {
+        endDate.setDate(endDate.getDate() + 5)
+      } else if (tripData.duration === '7-9 Days') {
+        endDate.setDate(endDate.getDate() + 8)
+      } else if (tripData.duration === '10-12 Days') {
+        endDate.setDate(endDate.getDate() + 11)
+      } else if (tripData.duration === '13-15 Days') {
+        endDate.setDate(endDate.getDate() + 14)
+      }
+
+      // For authenticated users, save to database with detailed information
       const response = await fetch('/api/trips', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: `Trip to ${tripData.destination}`,
+          name: `${tripData.destination} ${tripData.duration} Adventure`,
           destination: tripData.destination,
           duration: tripData.duration,
           startDate: tripData.startDate,
+          endDate: endDate,
           travelers: tripData.travelers,
           fromCity: tripData.fromCity,
-          selectedCities: tripData.selectedCities
+          selectedCities: tripData.selectedCities,
+          rooms: tripData.rooms
         }),
       })
 
       if (response.ok) {
         const trip = await response.json()
+        onClose()
         router.push(`/trips/${trip.id}`)
       } else {
-        alert('Error creating trip. Please try again.')
+        const errorData = await response.json()
+        alert(errorData.message || 'Error creating trip. Please try again.')
       }
     } catch (error) {
       console.error('Error:', error)

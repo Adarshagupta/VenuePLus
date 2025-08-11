@@ -58,6 +58,13 @@ export function Header() {
               }`}>
                 About
               </Link>
+              {session && (
+                <Link href="/trips" className={`transition-colors hover:text-blue-600 ${
+                  scrolled ? 'text-gray-700' : 'text-white'
+                }`}>
+                  My Trips
+                </Link>
+              )}
             </div>
             
             {session ? (
