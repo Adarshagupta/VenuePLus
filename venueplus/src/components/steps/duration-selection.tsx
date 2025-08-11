@@ -153,12 +153,6 @@ export function DurationSelection({ tripData, onUpdate, onNext }: DurationSelect
                     : 'border-gray-200 hover:border-gray-300 shadow-lg hover:shadow-xl'
                 }`}
               >
-                {duration.recommended && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg z-10">
-                    ⭐ POPULAR
-                  </div>
-                )}
-                
                 {/* Tag */}
                 <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold ${duration.tagColor}`}>
                   {duration.tag}

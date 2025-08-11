@@ -299,7 +299,7 @@ export function PackageItineraryView({ package: pkg, showDetailed = false }: Pac
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center space-x-2">
                     {getActivityIcon(activity.category)}
-                    <h7 className="font-medium text-gray-900">{activity.name}</h7>
+                    <h4 className="font-medium text-gray-900">{activity.name}</h4>
                   </div>
                   {activity.optional && (
                     <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">
@@ -360,7 +360,7 @@ export function PackageItineraryView({ package: pkg, showDetailed = false }: Pac
             {day.meals.map((meal, index) => (
               <div key={index} className="border rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h7 className="font-medium text-gray-900 capitalize">{meal.type}</h7>
+                  <h4 className="font-medium text-gray-900 capitalize">{meal.type}</h4>
                   <span className="text-sm text-green-600 font-medium">
                     ₹{meal.cost?.toLocaleString() || 'Included'}
                   </span>
@@ -385,7 +385,7 @@ export function PackageItineraryView({ package: pkg, showDetailed = false }: Pac
           </h6>
           <div className="flex items-start justify-between">
             <div>
-              <h7 className="font-medium text-gray-900">{day.accommodation.name}</h7>
+              <h4 className="font-medium text-gray-900">{day.accommodation.name}</h4>
               <div className="text-sm text-gray-600">{day.accommodation.location}</div>
               <div className="text-xs text-gray-500 mt-1">{day.accommodation.type}</div>
               <div className="flex flex-wrap gap-1 mt-2">

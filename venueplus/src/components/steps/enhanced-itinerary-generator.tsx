@@ -564,15 +564,6 @@ export function EnhancedItineraryGenerator({ tripData, onUpdate, onNext }: Enhan
               <div className={`${type.bgColor} ${type.borderColor} border-2 rounded-3xl p-8 shadow-xl ${
                 isSelected ? 'ring-4 ring-offset-4 ring-blue-500/50' : ''
               } hover:shadow-2xl transition-all duration-300`}>
-                
-                {type.recommended && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg">
-                      ⭐ Recommended
-                    </span>
-                  </div>
-                )}
-
                 <div className="text-center mb-6">
                   <div className={`inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r ${type.color} rounded-2xl mb-4 shadow-lg`}>
                     <Icon className="w-10 h-10 text-white" />
