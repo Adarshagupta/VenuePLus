@@ -5,7 +5,7 @@ import {
   Package, Filter, ArrowRight, ArrowLeft, Sparkles, Globe, Brain,
   Star, Clock, MapPin, DollarSign, Users, CheckCircle, 
   Loader2, RefreshCw, GitCompare, Heart, Share2, Download,
-  Award, Shield, TrendingUp, Eye, Info, AlertCircle
+  Award, Shield, TrendingUp, Eye, Info, AlertCircle, ExternalLink
 } from 'lucide-react'
 import { TripData } from '../trip-planning-modal'
 import { PackageSelector } from '../package-selector'
@@ -20,6 +20,7 @@ import {
 import { packageService } from '@/lib/package-service'
 import { aiPackageGenerator, PackageGenerationRequest } from '@/lib/ai-package-generator'
 import { useUserActivity } from '@/hooks/useUserActivity'
+import { redirectToBookingPage } from '@/lib/booking-utils'
 
 interface PackageSelectionStepProps {
   tripData: TripData
@@ -646,8 +647,23 @@ export function PackageSelectionStep({ tripData, onUpdate, onNext, onBack }: Pac
                 Change Package
               </button>
               <button
+                onClick={() => redirectToBookingPage({
+                  id: selectedPackage.id,
+                  name: selectedPackage.name,
+                  destination: selectedPackage.destination,
+                  price: selectedPackage.price,
+                  duration: selectedPackage.duration,
+                  provider: selectedPackage.provider,
+                  description: selectedPackage.description
+                })}
+                className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-2"
+              >
+                <ExternalLink className="w-4 h-4" />
+                <span>Book Now</span>
+              </button>
+              <button
                 onClick={confirmPackageSelection}
-                className="px-8 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 Confirm & Continue
               </button>

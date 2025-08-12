@@ -16,6 +16,9 @@ export function redirectToBookingPage(packageData: PackageBookingData) {
     destination: packageData.destination || '',
     price: packageData.price?.toString() || '15000',
     duration: packageData.duration || '5 Days 4 Nights',
+    name: packageData.name || '',
+    provider: packageData.provider || 'VenuePlus',
+    description: packageData.description || ''
   })
   
   // Use window.location for immediate redirect
@@ -28,6 +31,9 @@ export function createBookingUrl(packageData: PackageBookingData): string {
     destination: packageData.destination || '',
     price: packageData.price?.toString() || '15000',
     duration: packageData.duration || '5 Days 4 Nights',
+    name: packageData.name || '',
+    provider: packageData.provider || 'VenuePlus',
+    description: packageData.description || ''
   })
   
   return `/book-package?${params.toString()}`

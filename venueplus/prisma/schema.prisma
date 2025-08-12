@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -38,6 +38,7 @@ model User {
   activities      UserActivity[]
   wishlists       Wishlist[]
   memories        TravelMemory[]
+  ticketBookings  TicketBooking[]
 
   @@map("users")
 }
@@ -48,12 +49,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -104,7 +105,7 @@ model City {
   popularity  Int      @default(50) // 1-100 scale
   imageUrl    String?
   description String?
-  tags        String[] @default([])
+  tags        String   @default("")
   createdAt   DateTime @default(now())
   
   tripStops   TripStop[]
@@ -139,7 +140,7 @@ model Activity {
   duration    Int?     // in minutes
   rating      Float?   // 1.0-5.0
   imageUrl    String?
-  tags        String[] @default([])
+  tags        String   @default("")
   createdAt   DateTime @default(now())
   
   city        City     @relation(fields: [cityId], references: [id])
@@ -182,10 +183,10 @@ model SavedItinerary {
   customizations Json?   // Store customization data
   itineraryData Json?    // Store detailed itinerary
   shareSettings Json?    // Store sharing preferences
-  tags          String[] @default([])
+  tags          String   @default("")
   rating        Float?
   review        String?
-  photos        String[] @default([])
+  photos        String   @default("")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   lastViewedAt  DateTime @default(now())
@@ -231,7 +232,7 @@ model Booking {
   provider          String
   contactInfo       Json     // Store contact information
   bookingData       Json?    // Store detailed booking information
-  specialRequests   String[] @default([])
+  specialRequests   String   @default("")
   documents         Json?    // Store document URLs and metadata
   notifications     Json?    // Store notification history
   cancellationPolicy String?
@@ -316,11 +317,11 @@ model TravelMemory {
   date          DateTime
   photos        Json?    // Store photo URLs and metadata
   rating        Float    @default(0)
-  highlights    String[] @default([])
-  recommendations String[] @default([])
+  highlights    String   @default("")
+  recommendations String   @default("")
   wouldRecommend Boolean @default(true)
   companionType String?  // solo, couple, family, friends, group
-  tags          String[] @default([])
+  tags          String   @default("")
   isPublic      Boolean  @default(false)
   likes         Int      @default(0)
   createdAt     DateTime @default(now())
@@ -335,7 +336,7 @@ model TravelMemory {
 model Package {
   id            String   @id
   name          String
-  description   String   @db.Text
+  description   String
   price         Float
   originalPrice Float?
   duration      String
@@ -344,15 +345,56 @@ model Package {
   rating        Float    @default(0)
   reviews       Int      @default(0)
   currency      String   @default("INR")
-  images        String[] @default([])
-  highlights    String[] @default([])
-  inclusions    String[] @default([])
-  exclusions    String[] @default([])
+  images        String   @default("")
+  highlights    String   @default("")
+  inclusions    String   @default("")
+  exclusions    String   @default("")
   category      String   @default("general")
-  tags          String[] @default([])
+  tags          String   @default("")
   isActive      Boolean  @default(true)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
   @@map("packages")
+}
+
+model TicketBooking {
+  id              String   @id @default(cuid())
+  userId          String
+  ticketType      String   // hotel, event, flight, transport, activity
+  title           String
+  description     String?
+  venue           String?
+  eventDate       DateTime?
+  eventTime       String?
+  checkInDate     DateTime?
+  checkOutDate    DateTime?
+  location        String
+  category        String   @default("general")
+  price           Float
+  currency        String   @default("INR")
+  quantity        Int      @default(1)
+  totalAmount     Float
+  status          String   @default("confirmed") // confirmed, cancelled, used, expired
+  paymentStatus   String   @default("paid") // paid, pending, failed, refunded
+  bookingReference String  @unique
+  qrCode          String?
+  qrCodeUrl       String?
+  razorpayOrderId String?
+  razorpayPaymentId String?
+  guestInfo       Json?    // Store guest information
+  bookingData     Json?    // Store additional booking details
+  providerInfo    Json?    // Store provider/vendor details
+  cancellationPolicy String?
+  termsConditions String?
+  specialInstructions String?
+  emailSent       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([bookingReference])
+  @@map("ticket_bookings")
 }

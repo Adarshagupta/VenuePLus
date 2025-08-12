@@ -90,12 +90,19 @@ export default function BookPackagePage() {
     try {
       setLoading(true)
       
-      if (!packageId || packageId === 'custom-package') {
-        // Create package data from URL parameters for custom packages
+      // Check if this is a dynamic package (scraped or AI generated) or custom package
+      const isDynamicPackage = packageId?.startsWith('scraped_') || packageId?.startsWith('ai_') || packageId === 'custom-package' || !packageId
+      
+      if (isDynamicPackage) {
+        // Create package data from URL parameters for dynamic/custom packages
+        const provider = searchParams.get('provider') || 'VenuePlus'
+        const name = searchParams.get('name') || `${destination} Adventure Package`
+        const description = searchParams.get('description') || `Explore the beautiful ${destination} with our carefully curated package`
+        
         const mockPackage: PackageData = {
           id: packageId || 'custom-package',
-          name: `${destination} Adventure Package`,
-          description: `Explore the beautiful ${destination} with our carefully curated package`,
+          name: decodeURIComponent(name),
+          description: decodeURIComponent(description),
           price: parseInt(price || '15000'),
           duration: duration || '5 Days 4 Nights',
           destination: destination || 'Unknown',
@@ -112,7 +119,7 @@ export default function BookPackagePage() {
             'Travel Insurance',
             'Lunch and Dinner'
           ],
-          provider: 'VenuePlus',
+          provider: decodeURIComponent(provider),
           images: [`https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80`]
         }
         setPackageData(mockPackage)
@@ -120,7 +127,7 @@ export default function BookPackagePage() {
         return
       }
 
-      // Fetch package data from API
+      // For database packages, try to fetch from API
       const response = await fetch(`/api/packages/${packageId}`)
       if (response.ok) {
         const data = await response.json()
@@ -141,7 +148,36 @@ export default function BookPackagePage() {
         
         setPackageData(transformedPackage)
       } else if (response.status === 404) {
-        setError('Package not found. It may have been removed or is no longer available.')
+        // If database package not found, fall back to URL parameters
+        console.warn(`Package ${packageId} not found in database, falling back to URL parameters`)
+        const provider = searchParams.get('provider') || 'VenuePlus'
+        const name = searchParams.get('name') || `${destination} Adventure Package`
+        const description = searchParams.get('description') || `Explore the beautiful ${destination} with our carefully curated package`
+        
+        const fallbackPackage: PackageData = {
+          id: packageId,
+          name: decodeURIComponent(name),
+          description: decodeURIComponent(description),
+          price: parseInt(price || '15000'),
+          duration: duration || '5 Days 4 Nights',
+          destination: destination || 'Unknown',
+          inclusions: [
+            'Accommodation',
+            'Daily Breakfast',
+            'Airport Transfers',
+            'Local Sightseeing',
+            'Professional Guide'
+          ],
+          exclusions: [
+            'International Flights',
+            'Personal Expenses',
+            'Travel Insurance',
+            'Lunch and Dinner'
+          ],
+          provider: decodeURIComponent(provider),
+          images: [`https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80`]
+        }
+        setPackageData(fallbackPackage)
       } else {
         throw new Error('Failed to fetch package details')
       }
@@ -268,8 +304,8 @@ export default function BookPackagePage() {
       },
       specialRequests: [
         bookingDetails.specialRequests,
-        ...travelers.map(t => t.specialRequests).filter(Boolean)
-      ].filter(Boolean),
+        ...travelers.map(t => t.specialRequests)
+      ].filter((request): request is string => Boolean(request)),
     }
   }
 

@@ -7,7 +7,8 @@ import {
   Download, Trash2, Share2, Eye, Filter, Search,
   Plus, ChevronDown, ChevronUp, Award, TrendingUp,
   Globe, Plane, Car, Camera as CameraIcon, Image, X,
-  Copy, Mail, Facebook, Twitter, MessageCircle, Check
+  Copy, Mail, Facebook, Twitter, MessageCircle, Check,
+  Ticket
 } from 'lucide-react'
 import { 
   UserProfile as UserProfileType, 
@@ -19,6 +20,7 @@ import {
   ItineraryFilter,
   BookingFilter 
 } from '@/lib/user-types'
+import { TicketsSection } from '@/components/profile/tickets-section'
 
 interface UserProfileProps {
   userId: string
@@ -26,7 +28,7 @@ interface UserProfileProps {
 }
 
 export function UserProfile({ userId, onClose }: UserProfileProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'itineraries' | 'bookings' | 'memories' | 'settings'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'itineraries' | 'bookings' | 'tickets' | 'memories' | 'settings'>('overview')
   const [profile, setProfile] = useState<UserProfileType | null>(null)
   const [itineraries, setItineraries] = useState<SavedItinerary[]>([])
   const [recentViews, setRecentViews] = useState<RecentlyViewedItem[]>([])
@@ -93,7 +95,7 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search)
       const tabParam = params.get('tab')
-      if (tabParam && ['overview', 'itineraries', 'bookings', 'memories', 'settings'].includes(tabParam)) {
+      if (tabParam && ['overview', 'itineraries', 'bookings', 'tickets', 'memories', 'settings'].includes(tabParam)) {
         setActiveTab(tabParam as any)
       }
     }
@@ -1275,6 +1277,7 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
               { id: 'overview', label: 'Overview', icon: User, gradient: 'from-blue-500 to-cyan-500' },
               { id: 'itineraries', label: 'Itineraries', icon: BookOpen, gradient: 'from-emerald-500 to-teal-500' },
               { id: 'bookings', label: 'Bookings', icon: Calendar, gradient: 'from-orange-500 to-red-500' },
+              { id: 'tickets', label: 'Tickets', icon: Ticket, gradient: 'from-indigo-500 to-purple-500' },
               { id: 'memories', label: 'Memories', icon: CameraIcon, gradient: 'from-purple-500 to-pink-500' },
               { id: 'settings', label: 'Settings', icon: Settings, gradient: 'from-gray-500 to-slate-500' }
             ].map((tab) => {
@@ -1309,12 +1312,13 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="animate-fade-in">
-        {activeTab === 'overview' && renderOverview()}
-        {activeTab === 'itineraries' && renderItineraries()}
-        {activeTab === 'bookings' && renderBookings()}
-        {activeTab === 'memories' && renderMemories()}
-        {activeTab === 'settings' && renderSettings()}
-      </div>
+          {activeTab === 'overview' && renderOverview()}
+          {activeTab === 'itineraries' && renderItineraries()}
+          {activeTab === 'bookings' && renderBookings()}
+          {activeTab === 'tickets' && <TicketsSection userId={userId} />}
+          {activeTab === 'memories' && renderMemories()}
+          {activeTab === 'settings' && renderSettings()}
+        </div>
       </div>
 
       {/* Modals */}

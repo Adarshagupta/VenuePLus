@@ -9,6 +9,7 @@ import { SearchSection } from '@/components/search-section'
 import { StatsSection } from '@/components/stats-section'
 import { FeatureShowcase } from '@/components/feature-showcase'
 import { TestimonialSection } from '@/components/testimonial-section'
+import { AIAgent } from '@/components/ai-agent'
 
 export default function HomePage() {
   const { data: session } = useSession()
@@ -2465,6 +2466,9 @@ export default function HomePage() {
           transform: 'scale(0.8)',
         }}
       ></div>
+
+      {/* AI Agent */}
+      <AIAgent />
     </div>
   )
 }
