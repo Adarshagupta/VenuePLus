@@ -6,7 +6,7 @@ import {
   Globe, Brain, CheckCircle, XCircle, ArrowUpDown, MoreHorizontal,
   Heart, Share2, Calendar, TrendingUp, Award, Shield, Sparkles,
   Verified, AlertCircle, Info, ChevronDown, ChevronUp, Eye,
-  BookOpen, Download, GitCompare, ShoppingCart
+  BookOpen, Download, GitCompare, ShoppingCart, ExternalLink
 } from 'lucide-react'
 import { 
   ScrapedPackage, 
@@ -19,6 +19,7 @@ import {
 import { packageService } from '@/lib/package-service'
 import { PackageItineraryView } from './package-itinerary-view'
 import { userService } from '@/lib/user-service'
+import { redirectToBookingPage } from '@/lib/booking-utils'
 
 interface PackageSelectorProps {
   destination?: string
@@ -398,6 +399,21 @@ export function PackageSelector({
           </div>
           <div className="flex space-x-2">
             <button
+              onClick={() => redirectToBookingPage({
+                id: pkg.id,
+                name: pkg.name,
+                destination: pkg.destination,
+                price: pkg.price,
+                duration: pkg.duration,
+                provider: pkg.provider,
+                description: pkg.description
+              })}
+              className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-medium rounded-lg transition-all duration-200 flex items-center space-x-1"
+            >
+              <ExternalLink className="w-4 h-4" />
+              <span>Book Now</span>
+            </button>
+            <button
               onClick={() => onPackageSelect(pkg)}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200"
             >
@@ -470,23 +486,40 @@ export function PackageSelector({
           <div className="text-xl font-bold text-green-600 mb-2">
             ₹{pkg.price.toLocaleString()}
           </div>
-          <div className="flex space-x-2">
+          <div className="flex flex-col space-y-2">
             <button
-              onClick={() => onPackageSelect(pkg)}
-              className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded"
+              onClick={() => redirectToBookingPage({
+                id: pkg.id,
+                name: pkg.name,
+                destination: pkg.destination,
+                price: pkg.price,
+                duration: pkg.duration,
+                provider: pkg.provider,
+                description: pkg.description
+              })}
+              className="px-3 py-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white text-sm font-medium rounded flex items-center justify-center space-x-1"
             >
-              Select
+              <ExternalLink className="w-3 h-3" />
+              <span>Book Now</span>
             </button>
-            <button
-              onClick={() => togglePackageSelection(pkg.id)}
-              className={`p-1 rounded transition-colors duration-200 ${
-                selectedPackages.includes(pkg.id)
-                  ? 'bg-red-100 text-red-600'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              <GitCompare className="w-4 h-4" />
-            </button>
+            <div className="flex space-x-2">
+              <button
+                onClick={() => onPackageSelect(pkg)}
+                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded"
+              >
+                Select
+              </button>
+              <button
+                onClick={() => togglePackageSelection(pkg.id)}
+                className={`p-1 rounded transition-colors duration-200 ${
+                  selectedPackages.includes(pkg.id)
+                    ? 'bg-red-100 text-red-600'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <GitCompare className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -386,6 +386,213 @@ export const sendWelcomeEmail = async (
   }
 }
 
+// Send ticket confirmation email with QR code
+export const sendTicketConfirmationEmail = async (
+  email: string,
+  name: string,
+  ticketBooking: any
+): Promise<boolean> => {
+  try {
+    const mailOptions = {
+      from: {
+        name: 'VenuePlus',
+        address: 'blueadarsh1@gmail.com'
+      },
+      to: email,
+      subject: `Ticket Confirmed - ${ticketBooking.title}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Ticket Confirmation</title>
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; background-color: #f3f4f6; }
+            .container { max-width: 600px; margin: 0 auto; background-color: white; }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center; }
+            .header h1 { color: white; margin: 0; font-size: 28px; font-weight: 600; }
+            .content { padding: 40px 20px; }
+            .ticket-card { border: 2px dashed #667eea; border-radius: 12px; padding: 20px; margin: 20px 0; background-color: #f8faff; }
+            .ticket-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+            .ticket-title { font-size: 20px; font-weight: bold; color: #374151; margin: 0; }
+            .ticket-type { background: #667eea; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
+            .ticket-details { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+            .detail-item { }
+            .detail-label { font-size: 12px; color: #6b7280; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+            .detail-value { font-size: 16px; color: #374151; font-weight: 500; margin-top: 4px; }
+            .qr-section { text-align: center; margin: 30px 0; padding: 20px; background-color: white; border-radius: 8px; }
+            .qr-code { max-width: 200px; margin: 15px auto; }
+            .booking-ref { font-family: monospace; font-size: 18px; font-weight: bold; letter-spacing: 2px; color: #667eea; margin: 10px 0; }
+            .instructions { background-color: #fef3cd; border: 1px solid #fde68a; padding: 16px; border-radius: 8px; margin: 20px 0; }
+            .footer { background-color: #f9fafb; padding: 20px; text-align: center; color: #6b7280; font-size: 14px; }
+            .price-info { text-align: right; }
+            .total-amount { font-size: 24px; font-weight: bold; color: #059669; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🎫 Ticket Confirmed!</h1>
+            </div>
+            <div class="content">
+              <h2>Hi ${name}!</h2>
+              <p>Great news! Your ${ticketBooking.ticketType} booking has been confirmed. Here are your ticket details:</p>
+              
+              <div class="ticket-card">
+                <div class="ticket-header">
+                  <h3 class="ticket-title">${ticketBooking.title}</h3>
+                  <span class="ticket-type">${ticketBooking.ticketType}</span>
+                </div>
+                
+                <div class="ticket-details">
+                  <div class="detail-item">
+                    <div class="detail-label">Booking Reference</div>
+                    <div class="detail-value booking-ref">${ticketBooking.bookingReference}</div>
+                  </div>
+                  <div class="detail-item price-info">
+                    <div class="detail-label">Total Amount</div>
+                    <div class="total-amount">₹${ticketBooking.totalAmount}</div>
+                  </div>
+                  ${ticketBooking.venue ? `
+                  <div class="detail-item">
+                    <div class="detail-label">Venue</div>
+                    <div class="detail-value">${ticketBooking.venue}</div>
+                  </div>
+                  ` : ''}
+                  <div class="detail-item">
+                    <div class="detail-label">Location</div>
+                    <div class="detail-value">${ticketBooking.location}</div>
+                  </div>
+                  ${ticketBooking.eventDate ? `
+                  <div class="detail-item">
+                    <div class="detail-label">Date</div>
+                    <div class="detail-value">${new Date(ticketBooking.eventDate).toLocaleDateString()}</div>
+                  </div>
+                  ` : ''}
+                  ${ticketBooking.eventTime ? `
+                  <div class="detail-item">
+                    <div class="detail-label">Time</div>
+                    <div class="detail-value">${ticketBooking.eventTime}</div>
+                  </div>
+                  ` : ''}
+                  ${ticketBooking.checkInDate ? `
+                  <div class="detail-item">
+                    <div class="detail-label">Check-in</div>
+                    <div class="detail-value">${new Date(ticketBooking.checkInDate).toLocaleDateString()}</div>
+                  </div>
+                  ` : ''}
+                  ${ticketBooking.checkOutDate ? `
+                  <div class="detail-item">
+                    <div class="detail-label">Check-out</div>
+                    <div class="detail-value">${new Date(ticketBooking.checkOutDate).toLocaleDateString()}</div>
+                  </div>
+                  ` : ''}
+                  <div class="detail-item">
+                    <div class="detail-label">Quantity</div>
+                    <div class="detail-value">${ticketBooking.quantity} ticket(s)</div>
+                  </div>
+                  <div class="detail-item">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value" style="color: #059669;">✅ Confirmed</div>
+                  </div>
+                </div>
+                
+                ${ticketBooking.qrCode ? `
+                <div class="qr-section">
+                  <div class="detail-label">Your Digital Ticket</div>
+                  <img src="${ticketBooking.qrCode}" alt="QR Code" class="qr-code" />
+                  <p style="font-size: 14px; color: #6b7280; margin: 10px 0;">Present this QR code at the venue</p>
+                </div>
+                ` : ''}
+              </div>
+              
+              <div class="instructions">
+                <h3 style="margin-top: 0; color: #92400e;">📋 Important Instructions</h3>
+                <ul style="color: #92400e; margin: 10px 0;">
+                  <li><strong>Save this email</strong> - You'll need it for entry</li>
+                  <li><strong>Arrive early</strong> - Allow extra time for security checks</li>
+                  <li><strong>Bring ID</strong> - Valid photo identification may be required</li>
+                  <li><strong>No screenshots</strong> - Present the original QR code from this email</li>
+                  ${ticketBooking.specialInstructions ? `<li><strong>Special Note:</strong> ${ticketBooking.specialInstructions}</li>` : ''}
+                </ul>
+              </div>
+              
+              ${ticketBooking.description ? `
+              <div style="margin: 20px 0;">
+                <h3>About This ${ticketBooking.ticketType}</h3>
+                <p style="color: #374151; line-height: 1.6;">${ticketBooking.description}</p>
+              </div>
+              ` : ''}
+              
+              <div style="margin: 30px 0;">
+                <h3>Need Help?</h3>
+                <p>If you have any questions about your booking, please contact our support team with your booking reference: <strong>${ticketBooking.bookingReference}</strong></p>
+                <p style="color: #667eea;">📧 support@venueplus.com | 📞 +91-XXXXX-XXXXX</p>
+              </div>
+              
+              <p>Thank you for choosing VenuePlus! We hope you have an amazing experience.</p>
+              
+              <p>Best regards,<br>The VenuePlus Team</p>
+            </div>
+            <div class="footer">
+              <p>© 2025 VenuePlus. All rights reserved.</p>
+              <p>This email was sent to ${email}</p>
+              <p>Booking Reference: ${ticketBooking.bookingReference}</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `
+        Ticket Confirmation - ${ticketBooking.title}
+        
+        Hi ${name}!
+        
+        Your ${ticketBooking.ticketType} booking has been confirmed!
+        
+        Booking Details:
+        - Reference: ${ticketBooking.bookingReference}
+        - Title: ${ticketBooking.title}
+        - Location: ${ticketBooking.location}
+        ${ticketBooking.venue ? `- Venue: ${ticketBooking.venue}` : ''}
+        ${ticketBooking.eventDate ? `- Date: ${new Date(ticketBooking.eventDate).toLocaleDateString()}` : ''}
+        ${ticketBooking.eventTime ? `- Time: ${ticketBooking.eventTime}` : ''}
+        - Quantity: ${ticketBooking.quantity} ticket(s)
+        - Total Amount: ₹${ticketBooking.totalAmount}
+        - Status: ✅ Confirmed
+        
+        Important Instructions:
+        - Save this email - You'll need it for entry
+        - Arrive early - Allow extra time for security checks  
+        - Bring ID - Valid photo identification may be required
+        - Present the QR code from this email at the venue
+        
+        Need help? Contact support with reference: ${ticketBooking.bookingReference}
+        Email: support@venueplus.com
+        
+        Thank you for choosing VenuePlus!
+        The VenuePlus Team
+      `,
+      attachments: ticketBooking.qrCode ? [
+        {
+          filename: `ticket-${ticketBooking.bookingReference}.png`,
+          content: ticketBooking.qrCode.split(',')[1],
+          encoding: 'base64',
+          cid: 'qr-code'
+        }
+      ] : []
+    }
+
+    await transporter.sendMail(mailOptions)
+    console.log('Ticket confirmation email sent successfully to:', email)
+    return true
+  } catch (error) {
+    console.error('Failed to send ticket confirmation email:', error)
+    return false
+  }
+}
+
 export default {
   verifyEmailConnection,
   generateOTP,
@@ -395,5 +602,6 @@ export default {
   sendVerificationEmail,
   sendPasswordResetOTP,
   sendPasswordResetEmail,
-  sendWelcomeEmail
+  sendWelcomeEmail,
+  sendTicketConfirmationEmail
 }
