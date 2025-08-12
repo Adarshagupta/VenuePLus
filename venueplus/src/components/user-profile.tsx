@@ -6,7 +6,8 @@ import {
   MapPin, Clock, DollarSign, Star, Edit3, Camera,
   Download, Trash2, Share2, Eye, Filter, Search,
   Plus, ChevronDown, ChevronUp, Award, TrendingUp,
-  Globe, Plane, Car, Camera as CameraIcon, Image, X
+  Globe, Plane, Car, Camera as CameraIcon, Image, X,
+  Copy, Mail, Facebook, Twitter, MessageCircle, Check
 } from 'lucide-react'
 import { 
   UserProfile as UserProfileType, 
@@ -36,6 +37,11 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
   const [itineraryFilter, setItineraryFilter] = useState<ItineraryFilter>({})
   const [bookingFilter, setBookingFilter] = useState<BookingFilter>({})
   const [expandedSections, setExpandedSections] = useState<string[]>(['stats'])
+  const [selectedBooking, setSelectedBooking] = useState<BookingHistory | null>(null)
+  const [showBookingDetails, setShowBookingDetails] = useState(false)
+  const [showShareModal, setShowShareModal] = useState(false)
+  const [shareBooking, setShareBooking] = useState<BookingHistory | null>(null)
+  const [copySuccess, setCopySuccess] = useState(false)
   
   // Profile editing state
   const [editingProfile, setEditingProfile] = useState(false)
@@ -267,6 +273,55 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
       style: 'currency',
       currency: currency
     }).format(amount)
+  }
+
+  const handleViewBookingDetails = (booking: BookingHistory) => {
+    setSelectedBooking(booking)
+    setShowBookingDetails(true)
+  }
+
+  const handleShareItinerary = (booking: BookingHistory) => {
+    setShareBooking(booking)
+    setShowShareModal(true)
+  }
+
+  const handleCopyLink = async (booking: BookingHistory) => {
+    try {
+      const shareUrl = `${window.location.origin}/shared-itinerary/${booking.id}`
+      await navigator.clipboard.writeText(shareUrl)
+      setCopySuccess(true)
+      setTimeout(() => setCopySuccess(false), 2000)
+    } catch (error) {
+      console.error('Failed to copy link:', error)
+    }
+  }
+
+  const handleEmailShare = (booking: BookingHistory) => {
+    const subject = `Check out my travel itinerary for ${booking.destination}`
+    const body = `I wanted to share my travel itinerary for ${booking.destination}!\n\nTravel Dates: ${formatDate(booking.travelDates.startDate)} - ${formatDate(booking.travelDates.endDate)}\nTravelers: ${booking.travelers}\n\nView the full itinerary: ${window.location.origin}/shared-itinerary/${booking.id}`
+    window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`)
+  }
+
+  const handleSocialShare = (platform: string, booking: BookingHistory) => {
+    const shareUrl = `${window.location.origin}/shared-itinerary/${booking.id}`
+    const text = `Check out my travel itinerary for ${booking.destination}!`
+    
+    let url = ''
+    switch (platform) {
+      case 'twitter':
+        url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`
+        break
+      case 'facebook':
+        url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`
+        break
+      case 'whatsapp':
+        url = `https://wa.me/?text=${encodeURIComponent(text + ' ' + shareUrl)}`
+        break
+    }
+    
+    if (url) {
+      window.open(url, '_blank', 'width=600,height=400')
+    }
   }
 
   if (loading) {
@@ -668,12 +723,27 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
                 <span>•</span>
                 <span>{booking.contactInfo.email}</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                  View Details
+              <div className="flex flex-wrap items-center gap-2">
+                <button 
+                  onClick={() => handleViewBookingDetails(booking)}
+                  className="flex items-center space-x-1 px-3 py-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-sm hover:shadow-md"
+                >
+                  <Eye className="w-4 h-4" />
+                  <span className="hidden sm:inline">View Details</span>
+                  <span className="sm:hidden">Details</span>
                 </button>
-                <button className="text-gray-600 hover:text-gray-700 text-sm">
-                  Download
+                <button 
+                  onClick={() => handleShareItinerary(booking)}
+                  className="flex items-center space-x-1 px-3 py-2 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-sm hover:shadow-md"
+                >
+                  <Share2 className="w-4 h-4" />
+                  <span className="hidden sm:inline">Share Itinerary</span>
+                  <span className="sm:hidden">Share</span>
+                </button>
+                <button className="flex items-center space-x-1 px-3 py-2 text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-lg text-sm transition-all duration-200 transform hover:scale-105 shadow-sm hover:shadow-md">
+                  <Download className="w-4 h-4" />
+                  <span className="hidden sm:inline">Download</span>
+                  <span className="sm:hidden">PDF</span>
                 </button>
               </div>
             </div>
@@ -913,6 +983,267 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
     </div>
   )
 
+  const renderBookingDetailsModal = () => {
+    if (!selectedBooking || !showBookingDetails) return null
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+            <h2 className="text-2xl font-bold text-gray-900">Booking Details</h2>
+            <button
+              onClick={() => setShowBookingDetails(false)}
+              className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          
+          <div className="p-6 space-y-6">
+            {/* Header Information */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{selectedBooking.destination}</h3>
+                  <div className="flex items-center space-x-4 text-sm text-gray-600">
+                    <span className="flex items-center space-x-1">
+                      <Calendar className="w-4 h-4" />
+                      <span>{formatDate(selectedBooking.travelDates.startDate)} - {formatDate(selectedBooking.travelDates.endDate)}</span>
+                    </span>
+                    <span className="flex items-center space-x-1">
+                      <User className="w-4 h-4" />
+                      <span>{selectedBooking.travelers} travelers</span>
+                    </span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-3xl font-bold text-gray-900">{formatCurrency(selectedBooking.totalAmount)}</div>
+                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(selectedBooking.status)}`}>
+                    {selectedBooking.status}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Booking Information */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-gray-50 rounded-xl p-4">
+                <h4 className="font-semibold text-gray-900 mb-3">Booking Information</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Reference:</span>
+                    <span className="font-medium">{selectedBooking.bookingReference}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Booked on:</span>
+                    <span className="font-medium">{formatDate(selectedBooking.bookingDate)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Provider:</span>
+                    <span className="font-medium">{selectedBooking.provider}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 rounded-xl p-4">
+                <h4 className="font-semibold text-gray-900 mb-3">Contact Information</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Name:</span>
+                    <span className="font-medium">{selectedBooking.contactInfo.name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Email:</span>
+                    <span className="font-medium">{selectedBooking.contactInfo.email}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Phone:</span>
+                    <span className="font-medium">{selectedBooking.contactInfo.phone || 'N/A'}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Information */}
+            <div className="bg-gray-50 rounded-xl p-4">
+              <h4 className="font-semibold text-gray-900 mb-3">Payment Details</h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div>
+                  <span className="text-gray-600 block">Status:</span>
+                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedBooking.paymentStatus)}`}>
+                    {selectedBooking.paymentStatus}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-gray-600 block">Total Amount:</span>
+                  <span className="font-semibold">{formatCurrency(selectedBooking.totalAmount)}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Itinerary Details */}
+            {selectedBooking.itineraryId && (
+              <div className="bg-gray-50 rounded-xl p-4">
+                <h4 className="font-semibold text-gray-900 mb-3">Itinerary</h4>
+                <div className="flex items-center justify-center py-8">
+                  <div className="text-center">
+                    <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                    <p className="text-gray-600 mb-3">Detailed itinerary available</p>
+                    <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                      View Full Itinerary
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Special Requests */}
+            {selectedBooking.specialRequests && selectedBooking.specialRequests.length > 0 && (
+              <div className="bg-gray-50 rounded-xl p-4">
+                <h4 className="font-semibold text-gray-900 mb-3">Special Requests</h4>
+                <div className="space-y-2">
+                  {selectedBooking.specialRequests.map((request: string, index: number) => (
+                    <div key={index} className="flex items-start space-x-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-sm text-gray-600">{request}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Documents */}
+            {selectedBooking.documents && selectedBooking.documents.length > 0 && (
+              <div className="bg-gray-50 rounded-xl p-4">
+                <h4 className="font-semibold text-gray-900 mb-3">Documents</h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {selectedBooking.documents.map((doc, index) => (
+                    <a
+                      key={index}
+                      href={doc.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-2 p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      <Download className="w-4 h-4 text-gray-600" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">{doc.name}</p>
+                        <p className="text-xs text-gray-500 capitalize">{doc.type}</p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex justify-between items-center pt-4 border-t border-gray-200">
+              <button
+                onClick={() => handleShareItinerary(selectedBooking)}
+                className="flex items-center space-x-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+              >
+                <Share2 className="w-4 h-4" />
+                <span>Share Itinerary</span>
+              </button>
+              <div className="flex space-x-3">
+                <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                  Download PDF
+                </button>
+                <button
+                  onClick={() => setShowBookingDetails(false)}
+                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const renderShareModal = () => {
+    if (!shareBooking || !showShareModal) return null
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
+          <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-gray-900">Share Itinerary</h3>
+            <button
+              onClick={() => {
+                setShowShareModal(false)
+                setCopySuccess(false)
+              }}
+              className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          
+          <div className="p-6 space-y-4">
+            <div className="text-center mb-6">
+              <h4 className="font-semibold text-gray-900 mb-2">{shareBooking.destination}</h4>
+              <p className="text-sm text-gray-600">
+                {formatDate(shareBooking.travelDates.startDate)} - {formatDate(shareBooking.travelDates.endDate)}
+              </p>
+            </div>
+
+            {/* Copy Link */}
+            <button
+              onClick={() => handleCopyLink(shareBooking)}
+              className={`w-full flex items-center justify-center space-x-3 p-3 border rounded-lg transition-all ${
+                copySuccess 
+                  ? 'bg-green-50 border-green-200 text-green-700' 
+                  : 'border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              {copySuccess ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+              <span className="font-medium">
+                {copySuccess ? 'Link Copied!' : 'Copy Link'}
+              </span>
+            </button>
+
+            {/* Email Share */}
+            <button
+              onClick={() => handleEmailShare(shareBooking)}
+              className="w-full flex items-center justify-center space-x-3 p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <Mail className="w-5 h-5 text-gray-600" />
+              <span>Share via Email</span>
+            </button>
+
+            {/* Social Media */}
+            <div className="grid grid-cols-3 gap-3">
+              <button
+                onClick={() => handleSocialShare('whatsapp', shareBooking)}
+                className="flex flex-col items-center space-y-2 p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <MessageCircle className="w-6 h-6 text-green-600" />
+                <span className="text-xs font-medium">WhatsApp</span>
+              </button>
+              <button
+                onClick={() => handleSocialShare('facebook', shareBooking)}
+                className="flex flex-col items-center space-y-2 p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <Facebook className="w-6 h-6 text-blue-600" />
+                <span className="text-xs font-medium">Facebook</span>
+              </button>
+              <button
+                onClick={() => handleSocialShare('twitter', shareBooking)}
+                className="flex flex-col items-center space-y-2 p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <Twitter className="w-6 h-6 text-blue-400" />
+                <span className="text-xs font-medium">Twitter</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-transparent">
       {/* Header */}
@@ -985,6 +1316,10 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
           {activeTab === 'settings' && renderSettings()}
         </div>
       </div>
+
+      {/* Modals */}
+      {renderBookingDetailsModal()}
+      {renderShareModal()}
     </div>
   )
 }

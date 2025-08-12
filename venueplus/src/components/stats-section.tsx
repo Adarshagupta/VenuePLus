@@ -37,35 +37,35 @@ export function StatsSection() {
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
       
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-light text-white mb-6">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-white mb-4 md:mb-6">
             Trusted by <span className="font-bold bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">Travelers Worldwide</span>
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto px-4">
             Join the community of explorers who have discovered their perfect journeys with VenuePlus
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="group text-center p-8 rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 hover:bg-white/20 transition-all-smooth hover:scale-105"
+              className="group text-center p-4 md:p-6 lg:p-8 rounded-xl md:rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 hover:bg-white/20 transition-all-smooth hover:scale-105"
             >
-              <div className={`w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br ${stat.color} p-4 group-hover:scale-110 transition-transform-smooth`}>
-                <div className="text-2xl">{stat.icon}</div>
+              <div className={`w-12 md:w-14 lg:w-16 h-12 md:h-14 lg:h-16 mx-auto mb-4 md:mb-6 rounded-xl md:rounded-2xl bg-gradient-to-br ${stat.color} p-3 md:p-4 group-hover:scale-110 transition-transform-smooth`}>
+                <div className="text-lg md:text-xl lg:text-2xl">{stat.icon}</div>
               </div>
               
-              <div className="text-4xl font-bold text-white mb-2 group-hover:scale-110 transition-transform-smooth">
+              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-1 md:mb-2 group-hover:scale-110 transition-transform-smooth">
                 {stat.value}
               </div>
               
-              <div className="text-lg font-semibold text-blue-200 mb-2">
+              <div className="text-sm md:text-base lg:text-lg font-semibold text-blue-200 mb-1 md:mb-2">
                 {stat.label}
               </div>
               
-              <div className="text-sm text-gray-300">
+              <div className="text-xs md:text-sm text-gray-300">
                 {stat.description}
               </div>
             </div>
@@ -73,10 +73,10 @@ export function StatsSection() {
         </div>
 
         {/* Call to action */}
-        <div className="text-center mt-16">
-          <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-lg rounded-full px-6 py-3 border border-white/20">
+        <div className="text-center mt-12 md:mt-16">
+          <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-lg rounded-full px-4 md:px-6 py-2 md:py-3 border border-white/20">
             <span className="text-white">🚀</span>
-            <span className="text-white font-medium">Join 50,000+ happy travelers</span>
+            <span className="text-white font-medium text-sm md:text-base">Join 50,000+ happy travelers</span>
           </div>
         </div>
       </div>
