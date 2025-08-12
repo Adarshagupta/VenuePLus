@@ -262,36 +262,36 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
   }, [isFullscreen])
 
   return (
-    <div className={`modal-backdrop flex items-center justify-center ${isFullscreen ? 'p-0' : 'p-4'}`}>
-      <div className={`bg-white ${isFullscreen ? 'rounded-none w-full h-full' : 'rounded-3xl w-full max-w-7xl h-[85vh] max-h-[900px] min-h-[600px]'} flex shadow-2xl overflow-hidden animate-soft-fade-in transition-all duration-300`}>
+    <div className={`modal-backdrop flex items-center justify-center ${isFullscreen ? 'p-0' : 'p-2 md:p-4'}`}>
+      <div className={`bg-white ${isFullscreen ? 'rounded-none w-full h-full' : 'rounded-2xl md:rounded-3xl w-full max-w-7xl h-[95vh] md:h-[85vh] max-h-[900px] min-h-[500px] md:min-h-[600px]'} flex flex-col md:flex-row shadow-2xl overflow-hidden animate-soft-fade-in transition-all duration-300`}>
         {/* Left Sidebar - Progress Navigation */}
-        <div className={`${isFullscreen ? 'w-96' : 'w-80'} bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 border-r border-gray-100 flex flex-col transition-all duration-300`}>
+        <div className={`${isFullscreen ? 'w-96' : 'w-full md:w-80'} bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 border-r-0 md:border-r border-gray-100 flex flex-col transition-all duration-300 ${!isFullscreen ? 'md:min-h-0' : ''}`}>
           {/* Header */}
-          <div className="p-4 border-b border-gray-100">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">M</span>
+          <div className="p-3 md:p-4 border-b border-gray-100">
+            <div className="flex items-center justify-between mb-3 md:mb-4">
+              <div className="flex items-center space-x-2 md:space-x-3">
+                <div className="w-8 md:w-10 h-8 md:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg md:rounded-xl flex items-center justify-center">
+                  <span className="text-white font-bold text-sm md:text-lg">M</span>
                 </div>
                 <div>
                   <div className="flex items-center space-x-2">
-                    <h1 className="text-lg font-semibold text-gray-800">Travel Planning</h1>
+                    <h1 className="text-base md:text-lg font-semibold text-gray-800">Travel Planning</h1>
                     {isFullscreen && (
-                      <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-full animate-bounce-in">
+                      <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-full animate-bounce-in hidden md:inline-block">
                         Fullscreen
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500">Plan Your Perfect Trip</p>
+                  <p className="text-xs text-gray-500 hidden md:block">Plan Your Perfect Trip</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1 md:space-x-2">
                 <button 
                   onClick={toggleFullscreen}
-                  className="p-2 rounded-xl bg-white/80 backdrop-blur-sm text-gray-600 hover:text-gray-800 hover:bg-white hover:shadow-md transition-all duration-200 group relative"
+                  className="p-1.5 md:p-2 rounded-lg md:rounded-xl bg-white/80 backdrop-blur-sm text-gray-600 hover:text-gray-800 hover:bg-white hover:shadow-md transition-all duration-200 group relative hidden md:block"
                   title={isFullscreen ? 'Exit Fullscreen (ESC)' : 'Enter Fullscreen (F11)'}
                 >
-                  {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
+                  {isFullscreen ? <Minimize className="w-4 md:w-5 h-4 md:h-5" /> : <Maximize className="w-4 md:w-5 h-4 md:h-5" />}
                   
                   {/* Tooltip */}
                   <div className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
@@ -300,22 +300,22 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
                 </button>
                 <button 
                   onClick={onClose}
-                  className="p-2 rounded-xl bg-white/80 backdrop-blur-sm text-gray-600 hover:text-gray-800 hover:bg-white hover:shadow-md transition-all duration-200"
+                  className="p-1.5 md:p-2 rounded-lg md:rounded-xl bg-white/80 backdrop-blur-sm text-gray-600 hover:text-gray-800 hover:bg-white hover:shadow-md transition-all duration-200"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 md:w-5 h-4 md:h-5" />
                 </button>
               </div>
             </div>
             
             {/* Overall Progress */}
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-4 border border-white/50">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-gray-700">Progress</span>
-                <span className="text-sm font-bold gradient-text-primary">{Math.round(getProgressPercentage())}%</span>
+            <div className="bg-white/60 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-4 border border-white/50">
+              <div className="flex items-center justify-between mb-2 md:mb-3">
+                <span className="text-xs md:text-sm font-medium text-gray-700">Progress</span>
+                <span className="text-xs md:text-sm font-bold gradient-text-primary">{Math.round(getProgressPercentage())}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-gray-200 rounded-full h-2 md:h-3 overflow-hidden">
                 <div 
-                  className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 h-3 rounded-full transition-all duration-700 ease-out transform relative overflow-hidden"
+                  className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 h-2 md:h-3 rounded-full transition-all duration-700 ease-out transform relative overflow-hidden"
                   style={{ width: `${getProgressPercentage()}%` }}
                 >
                   <div className="absolute inset-0 animate-progress-shimmer"></div>
@@ -325,9 +325,9 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
           </div>
 
           {/* Step Navigation */}
-          <div className="flex-1 p-4 space-y-2">
-            <h3 className="text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wider">Planning Steps</h3>
-            <p className="text-xs text-gray-500 mb-4">Click on completed steps to edit your preferences</p>
+          <div className="flex-1 p-3 md:p-4 space-y-1 md:space-y-2 overflow-y-auto max-h-[40vh] md:max-h-none">
+            <h3 className="text-xs md:text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wider">Planning Steps</h3>
+            <p className="text-xs text-gray-500 mb-3 md:mb-4 hidden md:block">Click on completed steps to edit your preferences</p>
             {steps.map((step, index) => (
               <div
                 key={step}
@@ -343,7 +343,7 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
                 <button
                   onClick={() => goToStep(index)}
                   disabled={index > currentStep}
-                  className={`w-full text-left relative p-3 rounded-2xl border transition-all duration-300 ${
+                  className={`w-full text-left relative p-2 md:p-3 rounded-xl md:rounded-2xl border transition-all duration-300 ${
                     index === currentStep
                       ? 'bg-gradient-to-r from-blue-500 to-purple-600 border-transparent shadow-lg text-white'
                       : index < currentStep
@@ -351,9 +351,9 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
                       : 'bg-white/60 border-gray-200 cursor-not-allowed'
                   } ${index <= currentStep ? 'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2' : ''}`}
                 >
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2 md:space-x-3">
                     <div
-                      className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                      className={`w-6 md:w-8 h-6 md:h-8 rounded-lg md:rounded-xl flex items-center justify-center transition-all duration-300 ${
                         index === currentStep
                           ? 'bg-white/20 backdrop-blur-sm text-white'
                           : index < currentStep
@@ -362,18 +362,18 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
                       }`}
                     >
                       {index < currentStep ? (
-                        <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
-                          <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <div className="w-3 md:w-5 h-3 md:h-5 rounded-full bg-green-500 flex items-center justify-center">
+                          <svg className="w-2 md:w-3 h-2 md:h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
                         </div>
                       ) : (
-                        <span className="text-lg">{getStepIcon(step, index)}</span>
+                        <span className="text-sm md:text-lg">{getStepIcon(step, index)}</span>
                       )}
                     </div>
                     <div className="flex-1">
                       <h4
-                        className={`font-semibold transition-colors duration-300 ${
+                        className={`text-sm md:text-base font-semibold transition-colors duration-300 ${
                           index === currentStep
                             ? 'text-white'
                             : index < currentStep
@@ -385,7 +385,7 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
                       </h4>
                       <div className="flex items-center justify-between">
                         <p
-                          className={`text-sm transition-colors duration-300 ${
+                          className={`text-xs md:text-sm transition-colors duration-300 ${
                             index === currentStep
                               ? 'text-white/80'
                               : index < currentStep
@@ -401,7 +401,7 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
                           }
                         </p>
                         {index < currentStep && (
-                          <Edit2 className="w-3 h-3 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                          <Edit2 className="w-3 h-3 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hidden md:block" />
                         )}
                       </div>
                     </div>
@@ -420,40 +420,7 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
             ))}
           </div>
 
-          {/* Trip Summary Pills */}
-          <div className="p-4 border-t border-gray-100">
-            <h4 className="text-sm font-semibold text-gray-700 mb-3">Trip Details</h4>
-            <div className="space-y-2">
-              <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-2 rounded-xl text-sm font-medium flex items-center space-x-2 animate-bounce-in">
-                <span>🌟</span>
-                <span>{tripData?.destination || 'Select Destination'}</span>
-              </div>
-              {tripData?.duration && (
-                <div className="bg-white border border-gray-200 px-3 py-2 rounded-xl text-sm font-medium text-gray-700 flex items-center space-x-2 animate-slide-in-left animation-delay-100">
-                  <span>⏱️</span>
-                  <span>{tripData.duration}</span>
-                </div>
-              )}
-              {tripData?.startDate && (
-                <div className="bg-white border border-gray-200 px-3 py-2 rounded-xl text-sm font-medium text-gray-700 flex items-center space-x-2 animate-slide-in-left animation-delay-200">
-                  <span>📅</span>
-                  <span>{tripData.startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                </div>
-              )}
-              {tripData?.fromCity && (
-                <div className="bg-white border border-gray-200 px-3 py-2 rounded-xl text-sm font-medium text-gray-700 flex items-center space-x-2 animate-slide-in-left animation-delay-300">
-                  <span>✈️</span>
-                  <span>{tripData.fromCity}</span>
-                </div>
-              )}
-              {tripData?.rooms && tripData.rooms.length > 0 && (
-                <div className="bg-white border border-gray-200 px-3 py-2 rounded-xl text-sm font-medium text-gray-700 flex items-center space-x-2 animate-slide-in-left animation-delay-400">
-                  <span>👥</span>
-                  <span>{tripData.rooms.reduce((total, room) => total + room.adults, 0)} Travelers</span>
-                </div>
-              )}
-            </div>
-          </div>
+          
 
           {/* Navigation Buttons */}
           <div className="p-4 border-t border-gray-100 space-y-3">
@@ -481,21 +448,21 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
         {/* Right Content Area */}
         <div className="flex-1 flex flex-col min-h-0">
           {/* Step Header */}
-          <div className="flex-shrink-0 p-4 border-b border-gray-100 bg-gradient-to-r from-white to-gray-50">
-            <div className="flex items-center space-x-3 mb-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-xl">
+          <div className="flex-shrink-0 p-3 md:p-4 border-b border-gray-100 bg-gradient-to-r from-white to-gray-50">
+            <div className="flex items-center space-x-2 md:space-x-3 mb-2">
+              <div className="w-8 md:w-10 h-8 md:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl md:rounded-2xl flex items-center justify-center text-white text-lg md:text-xl">
                 {getStepIcon(steps[currentStep], currentStep)}
               </div>
               <div>
-                <h2 className="text-xl font-bold text-gray-900">{getStepTitle(steps[currentStep])}</h2>
-                <p className="text-sm text-gray-600">Step {currentStep + 1} of {steps.length}</p>
+                <h2 className="text-lg md:text-xl font-bold text-gray-900">{getStepTitle(steps[currentStep])}</h2>
+                <p className="text-xs md:text-sm text-gray-600">Step {currentStep + 1} of {steps.length}</p>
               </div>
             </div>
             
             {/* Validation Error */}
             {validationError && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm animate-soft-fade-in flex items-center space-x-2">
-                <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+              <div className="p-3 md:p-4 bg-red-50 border border-red-200 rounded-lg md:rounded-xl text-red-700 text-xs md:text-sm animate-soft-fade-in flex items-center space-x-2">
+                <div className="w-4 md:w-5 h-4 md:h-5 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-white text-xs">!</span>
                 </div>
                 <span>{validationError}</span>
@@ -507,7 +474,7 @@ export function TripPlanningModal({ onClose, isAuthenticated }: TripPlanningModa
           <div className="flex-1 overflow-hidden">
             <div 
               key={currentStep}
-              className={`h-full overflow-y-auto custom-scrollbar ${isFullscreen ? 'p-8' : 'p-6'} animate-slide-in-right transition-all duration-300`}
+              className={`h-full overflow-y-auto custom-scrollbar ${isFullscreen ? 'p-6 md:p-8' : 'p-4 md:p-6'} animate-slide-in-right transition-all duration-300`}
             >
               {renderCurrentStep()}
             </div>

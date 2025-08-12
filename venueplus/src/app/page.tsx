@@ -1092,23 +1092,23 @@ export default function HomePage() {
           ></div>
         </div>
         
-        <div className="max-w-[1600px] mx-auto px-6 lg:px-8 xl:px-16 relative z-10">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 relative z-10">
       {/* Hero Section */}
-          <div className="flex items-start justify-between min-h-[600px] py-8">
+          <div className="flex flex-col lg:flex-row items-start justify-between min-h-[600px] py-4 lg:py-8 gap-8 lg:gap-0">
             {/* Left Content */}
-            <div className="flex-1 max-w-[600px] pr-20 pt-8">
+            <div className="flex-1 max-w-full lg:max-w-[600px] lg:pr-20 pt-4 lg:pt-8">
               {/* Main Heading with Gradient and Airplane */}
               <div className="relative">
-                {/* Decorative Airplane */}
-                <div className="absolute -top-8 -right-16 transform rotate-12">
+                {/* Decorative Airplane - Hidden on mobile */}
+                <div className="hidden lg:block absolute -top-8 -right-16 transform rotate-12">
                   <div className="relative">
-                    <Plane className="w-20 h-20 text-sky-500/40" strokeWidth={2} />
+                    <Plane className="w-16 xl:w-20 h-16 xl:h-20 text-sky-500/40" strokeWidth={2} />
                     {/* Vapor trail */}
-                    <div className="absolute top-1/2 left-0 w-24 h-1 bg-gradient-to-r from-sky-400/30 to-transparent transform -translate-y-1/2 -translate-x-full"></div>
+                    <div className="absolute top-1/2 left-0 w-20 xl:w-24 h-1 bg-gradient-to-r from-sky-400/30 to-transparent transform -translate-y-1/2 -translate-x-full"></div>
                   </div>
                 </div>
                 
-                <h1 className="text-[4.5rem] leading-[1.1] font-bold mb-6 tracking-tight bg-gradient-to-r from-sky-700 via-sky-600 to-cyan-600 bg-clip-text text-transparent animate-fade-in">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[4.5rem] leading-[1.1] font-bold mb-4 lg:mb-6 tracking-tight bg-gradient-to-r from-sky-700 via-sky-600 to-cyan-600 bg-clip-text text-transparent animate-fade-in">
                   Discover Your<br />
                   <span className="bg-gradient-to-r from-sky-600 via-cyan-500 to-blue-500 bg-clip-text text-transparent">
                     Perfect Travel Experience
@@ -1117,14 +1117,14 @@ export default function HomePage() {
               </div>
           
               {/* Subtitle */}
-              <p className="text-lg text-gray-600 mb-10 leading-relaxed max-w-[420px] font-normal">
+              <p className="text-base md:text-lg text-gray-600 mb-6 lg:mb-10 leading-relaxed max-w-full lg:max-w-[420px] font-normal">
                 Explore curated destinations, authentic experiences, and hidden gems. Plan your perfect trip with AI-powered recommendations.
               </p>
               
 
               
               {/* Interactive Search Bar with Autocomplete */}
-              <div className="relative mb-8 group">
+              <div className="relative mb-6 lg:mb-8 group">
                 <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-violet-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-300"></div>
                 <div className="relative">
                   <input
@@ -1136,14 +1136,14 @@ export default function HomePage() {
                     }}
                     onFocus={() => setShowSearchSuggestions(searchQuery.length > 0)}
                     onBlur={() => setTimeout(() => setShowSearchSuggestions(false), 200)}
-                    placeholder="Where would you like to go? (e.g., Paris, Tokyo, Bali)"
-                    className="w-full px-5 py-4 pr-14 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-gray-900 placeholder-gray-400 text-base bg-white/95 backdrop-blur-sm shadow-sky-lg hover:shadow-sky-xl transition-all duration-300"
+                    placeholder="Where would you like to go?"
+                    className="w-full px-4 md:px-5 py-3 md:py-4 pr-12 md:pr-14 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-gray-900 placeholder-gray-400 text-sm md:text-base bg-white/95 backdrop-blur-sm shadow-sky-lg hover:shadow-sky-xl transition-all duration-300"
                   />
                   <button 
                     onClick={() => setIsModalOpen(true)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 text-white p-2.5 rounded-xl transition-all duration-300 shadow-sky-lg hover:shadow-sky-xl hover:scale-105"
+                    className="absolute right-3 md:right-4 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 text-white p-2 md:p-2.5 rounded-xl transition-all duration-300 shadow-sky-lg hover:shadow-sky-xl hover:scale-105"
                   >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 md:w-5 h-4 md:h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                     </svg>
                   </button>
@@ -1214,9 +1214,9 @@ export default function HomePage() {
             </div>
             
             {/* Right Content - Enhanced Visual Gallery */}
-            <div className="flex-1 relative max-w-[900px] pl-8">
+            <div className="flex-1 relative max-w-full lg:max-w-[900px] lg:pl-8">
               {/* Main Hero Image */}
-              <div className="relative rounded-[2rem] h-[480px] overflow-hidden border border-gray-100 shadow-sky-2xl group">
+              <div className="relative rounded-[1.5rem] lg:rounded-[2rem] h-[300px] md:h-[400px] lg:h-[480px] overflow-hidden border border-gray-100 shadow-sky-2xl group">
                 <img 
                   src={selectedDestination.image}
                   alt={`Beautiful ${selectedDestination.name} landscape`}
@@ -1230,16 +1230,16 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                 
                 {/* Location badge */}
-                <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-sky-lg transform transition-all duration-300 group-hover:scale-105">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
-                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <div className="absolute bottom-3 md:bottom-6 left-3 md:left-6 bg-white/95 backdrop-blur-sm rounded-xl lg:rounded-2xl p-3 lg:p-4 shadow-sky-lg transform transition-all duration-300 group-hover:scale-105">
+                  <div className="flex items-center space-x-2 lg:space-x-3">
+                    <div className="w-8 lg:w-10 h-8 lg:h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg lg:rounded-xl flex items-center justify-center">
+                      <svg className="w-4 lg:w-5 h-4 lg:h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                       </svg>
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900">{selectedDestination.name}</div>
-                      <div className="text-sm text-gray-600">{selectedDestination.description}</div>
+                      <div className="font-semibold text-gray-900 text-sm lg:text-base">{selectedDestination.name}</div>
+                      <div className="text-xs lg:text-sm text-gray-600">{selectedDestination.description}</div>
                     </div>
                   </div>
                   
@@ -1339,20 +1339,20 @@ export default function HomePage() {
           {/* Content Grid Section */}
           <div className="py-8 border-t border-gray-100">
                         {/* Category Navigation */}
-            <div className="flex items-center justify-between mb-10">
-              <div className="flex items-center space-x-8 overflow-x-auto">
-                <button className="text-gray-900 font-medium border-b-2 border-gray-900 pb-3 whitespace-nowrap">Popular</button>
-                <button className="text-gray-600 hover:text-gray-900 font-medium pb-3 whitespace-nowrap">Europe</button>
-                <button className="text-gray-600 hover:text-gray-900 font-medium pb-3 whitespace-nowrap">Asia</button>
-                <button className="text-gray-600 hover:text-gray-900 font-medium pb-3 whitespace-nowrap">Adventure</button>
-                <button className="text-gray-600 hover:text-gray-900 font-medium pb-3 whitespace-nowrap">Beach</button>
-                <button className="text-gray-600 hover:text-gray-900 font-medium pb-3 whitespace-nowrap">Culture</button>
-                <button className="text-gray-600 hover:text-gray-900 font-medium pb-3 whitespace-nowrap">Food & Wine</button>
-                <button className="text-gray-600 hover:text-gray-900 font-medium pb-3 whitespace-nowrap">Luxury</button>
-                <button className="text-gray-600 hover:text-gray-900 font-medium pb-3 whitespace-nowrap">Budget</button>
-                <button className="text-gray-600 hover:text-gray-900 font-medium pb-3 whitespace-nowrap">Solo Travel</button>
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 md:mb-10 gap-4">
+              <div className="flex items-center space-x-4 md:space-x-8 overflow-x-auto w-full md:w-auto">
+                <button className="text-gray-900 font-medium border-b-2 border-gray-900 pb-2 md:pb-3 whitespace-nowrap text-sm md:text-base">Popular</button>
+                <button className="text-gray-600 hover:text-gray-900 font-medium pb-2 md:pb-3 whitespace-nowrap text-sm md:text-base">Europe</button>
+                <button className="text-gray-600 hover:text-gray-900 font-medium pb-2 md:pb-3 whitespace-nowrap text-sm md:text-base">Asia</button>
+                <button className="text-gray-600 hover:text-gray-900 font-medium pb-2 md:pb-3 whitespace-nowrap text-sm md:text-base">Adventure</button>
+                <button className="text-gray-600 hover:text-gray-900 font-medium pb-2 md:pb-3 whitespace-nowrap text-sm md:text-base">Beach</button>
+                <button className="text-gray-600 hover:text-gray-900 font-medium pb-2 md:pb-3 whitespace-nowrap text-sm md:text-base hidden md:block">Culture</button>
+                <button className="text-gray-600 hover:text-gray-900 font-medium pb-2 md:pb-3 whitespace-nowrap text-sm md:text-base hidden lg:block">Food & Wine</button>
+                <button className="text-gray-600 hover:text-gray-900 font-medium pb-2 md:pb-3 whitespace-nowrap text-sm md:text-base hidden lg:block">Luxury</button>
+                <button className="text-gray-600 hover:text-gray-900 font-medium pb-2 md:pb-3 whitespace-nowrap text-sm md:text-base hidden lg:block">Budget</button>
+                <button className="text-gray-600 hover:text-gray-900 font-medium pb-2 md:pb-3 whitespace-nowrap text-sm md:text-base hidden lg:block">Solo Travel</button>
               </div>
-              <button className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 font-medium">
+              <button className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 font-medium text-sm md:text-base flex-shrink-0">
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
                 </svg>
@@ -1365,7 +1365,7 @@ export default function HomePage() {
               {/* Left Arrow */}
               <button
                 onClick={scrollLeft}
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg hover:shadow-xl border border-gray-200 rounded-full p-3 transition-all duration-300 group"
+                className="hidden md:block absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg hover:shadow-xl border border-gray-200 rounded-full p-3 transition-all duration-300 group"
                 style={{ marginLeft: '-20px' }}
               >
                 <svg className="w-6 h-6 text-gray-600 group-hover:text-purple-600 transition-colors" fill="currentColor" viewBox="0 0 24 24">
@@ -1376,7 +1376,7 @@ export default function HomePage() {
               {/* Right Arrow */}
               <button
                 onClick={scrollRight}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg hover:shadow-xl border border-gray-200 rounded-full p-3 transition-all duration-300 group"
+                className="hidden md:block absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg hover:shadow-xl border border-gray-200 rounded-full p-3 transition-all duration-300 group"
                 style={{ marginRight: '-20px' }}
               >
                 <svg className="w-6 h-6 text-gray-600 group-hover:text-purple-600 transition-colors" fill="currentColor" viewBox="0 0 24 24">
@@ -1393,7 +1393,7 @@ export default function HomePage() {
                   scrollBehavior: 'smooth'
                 }}
               >
-                <div className="flex space-x-6 pb-4 px-4" style={{ width: 'fit-content', minWidth: '100%' }}>
+                <div className="flex space-x-4 md:space-x-6 pb-4 px-3 md:px-4" style={{ width: 'fit-content', minWidth: '100%' }}>
               {/* Enhanced Travel destination cards with real images - Now Clickable for 7-Day Packages */}
               {[
                 { 
@@ -1455,10 +1455,10 @@ export default function HomePage() {
                       setSelectedDestinationPackage(selectedPackage)
                     }
                   }}
-                  className={`w-72 h-96 bg-white rounded-2xl shadow-sky-lg border border-gray-100 overflow-hidden cursor-pointer transform transition-all duration-500 group perspective-1000 flex-shrink-0 ${
+                  className={`w-64 md:w-72 h-80 md:h-96 bg-white rounded-xl md:rounded-2xl shadow-sky-lg border border-gray-100 overflow-hidden cursor-pointer transform transition-all duration-500 group perspective-1000 flex-shrink-0 ${
                     hoveredCard === destination.name 
-                      ? 'shadow-sky-2xl -translate-y-3 scale-105 rotate-x-2 rotate-y-2' 
-                      : 'hover:shadow-sky-xl hover:-translate-y-2 hover:scale-102'
+                      ? 'shadow-sky-2xl -translate-y-2 md:-translate-y-3 scale-105 md:rotate-x-2 md:rotate-y-2' 
+                      : 'hover:shadow-sky-xl hover:-translate-y-1 md:hover:-translate-y-2 hover:scale-102'
                   }`}
                   style={{ 
                     animationDelay: `${index * 100}ms`,
@@ -2009,7 +2009,7 @@ export default function HomePage() {
       `}</style>
 
       {/* Enhanced Section Components */}
-      <SearchSection onOpenModal={() => setIsModalOpen(true)} />
+    
 
             {/* Things to do - Seasonal Experiences Section */}
       <section className="py-20 px-6 lg:px-8 xl:px-16 bg-gradient-to-b from-white to-sky-50/30">
@@ -2311,11 +2311,11 @@ export default function HomePage() {
 
       {/* Activity Details Modal */}
       {selectedActivity && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 md:p-4">
+          <div className="bg-white rounded-2xl md:rounded-3xl max-w-4xl w-full max-h-[95vh] md:max-h-[90vh] overflow-y-auto">
             <div className="relative">
               {/* Header Image */}
-              <div className="h-64 md:h-80 relative overflow-hidden rounded-t-3xl">
+              <div className="h-48 md:h-64 lg:h-80 relative overflow-hidden rounded-t-2xl md:rounded-t-3xl">
                 <img 
                   src={selectedActivity.image} 
                   alt={selectedActivity.title}
@@ -2326,22 +2326,22 @@ export default function HomePage() {
                 {/* Close Button */}
                 <button 
                   onClick={() => setSelectedActivity(null)}
-                  className="absolute top-4 right-4 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors backdrop-blur-sm"
+                  className="absolute top-3 md:top-4 right-3 md:right-4 w-10 md:w-12 h-10 md:h-12 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors backdrop-blur-sm"
                 >
-                  <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 md:w-6 h-5 md:h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
                   </svg>
                 </button>
                 
                 {/* Title Overlay */}
-                <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <div className="text-sm font-semibold mb-2 uppercase tracking-wider opacity-90">{selectedActivity.location}</div>
-                  <h2 className="text-3xl md:text-4xl font-bold leading-tight">{selectedActivity.title}</h2>
+                <div className="absolute bottom-4 md:bottom-6 left-4 md:left-6 right-4 md:right-6 text-white">
+                  <div className="text-xs md:text-sm font-semibold mb-1 md:mb-2 uppercase tracking-wider opacity-90">{selectedActivity.location}</div>
+                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight">{selectedActivity.title}</h2>
                 </div>
               </div>
               
               {/* Content */}
-              <div className="p-6 md:p-8">
+              <div className="p-4 md:p-6 lg:p-8">
                 {/* Rating and Price Row */}
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                   <div className="flex items-center mb-4 md:mb-0">
@@ -2425,19 +2425,19 @@ export default function HomePage() {
                 </div>
                 
                 {/* Action Buttons */}
-                <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex flex-col md:flex-row gap-3 md:gap-4">
                   <button 
                     onClick={() => {
                       setSelectedActivity(null)
                       setIsModalOpen(true)
                     }}
-                    className="flex-1 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                    className="flex-1 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl md:rounded-2xl font-bold text-base md:text-lg shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
                   >
                     Book This Experience
                   </button>
                   <button 
                     onClick={() => setSelectedActivity(null)}
-                    className="flex-1 md:flex-none bg-gray-100 hover:bg-gray-200 text-gray-700 px-8 py-4 rounded-2xl font-bold text-lg transition-colors"
+                    className="flex-1 md:flex-none bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 md:px-8 py-3 md:py-4 rounded-xl md:rounded-2xl font-bold text-base md:text-lg transition-colors"
                   >
                     Continue Browsing
                   </button>

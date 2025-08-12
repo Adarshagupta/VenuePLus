@@ -60,22 +60,22 @@ export function FeatureShowcase() {
         <div className="absolute bottom-20 right-10 w-16 h-16 bg-blue-200/30 rounded-full blur-xl animate-float-particles" style={{ animationDelay: '2s' }}></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-light text-gray-800 mb-6 animate-fade-in">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-gray-800 mb-4 md:mb-6 animate-fade-in">
             Why Choose <span className="font-bold gradient-text-primary">Our Platform</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in px-4" style={{ animationDelay: '0.2s' }}>
             Experience the future of travel planning with our cutting-edge platform designed for modern travelers
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {features.map((feature, index) => (
             <div
               key={index}
               data-card-index={index}
-              className={`group bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 relative overflow-hidden cursor-pointer ${
+              className={`group bg-white rounded-xl md:rounded-2xl p-6 md:p-8 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 md:hover:-translate-y-2 border border-gray-100 relative overflow-hidden cursor-pointer ${
                 visibleCards.has(index) 
                   ? 'animate-scale-in opacity-100' 
                   : 'opacity-0 translate-y-8'
@@ -88,15 +88,15 @@ export function FeatureShowcase() {
               {/* Shine effect on hover */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out"></div>
               
-              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} p-4 mb-6 group-hover:scale-110 transition-all duration-300 relative z-10 group-hover:rotate-3`}>
-                <feature.icon className="w-8 h-8 text-white" />
+              <div className={`w-12 md:w-16 h-12 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br ${feature.color} p-3 md:p-4 mb-4 md:mb-6 group-hover:scale-110 transition-all duration-300 relative z-10 group-hover:rotate-3`}>
+                <feature.icon className="w-6 md:w-8 h-6 md:h-8 text-white" />
               </div>
               
-              <h3 className="text-xl font-semibold text-gray-800 mb-4 group-hover:text-purple-600 transition-colors duration-300 relative z-10">
+              <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-3 md:mb-4 group-hover:text-purple-600 transition-colors duration-300 relative z-10">
                 {feature.title}
               </h3>
               
-              <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300 relative z-10">
+              <p className="text-sm md:text-base text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300 relative z-10">
                 {feature.description}
               </p>
 
