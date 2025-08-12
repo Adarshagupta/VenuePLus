@@ -25,6 +25,7 @@ model User {
   preferences Json?  // Store user preferences and travel style
   stats     Json?    // Store user travel statistics
   subscription Json? // Store subscription information
+  lastLoginAt DateTime? // Track last login for admin analytics
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
