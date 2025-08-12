@@ -373,8 +373,8 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
                 <div className="flex items-center space-x-2 px-3 py-1 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-full">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                   <span className="text-sm text-gray-600 font-medium">
-                    Member since {formatDate(profile.stats.memberSince)}
-                  </span>
+                  Member since {formatDate(profile.stats.memberSince)}
+                </span>
                 </div>
                 {profile.subscription && (
                   <span className={`px-4 py-2 rounded-full text-sm font-semibold shadow-lg ${
@@ -415,17 +415,17 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
         
         {expandedSections.includes('stats') && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="group text-center p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl hover:from-blue-100 hover:to-cyan-100 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                <Plane className="w-8 h-8 text-white" />
+            <div className="text-center p-6">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Plane className="w-8 h-8 text-blue-500" />
               </div>
               <div className="text-3xl font-bold text-gray-900 mb-1">{profile.stats.totalTrips}</div>
               <div className="text-sm text-gray-600 font-medium">Total Trips</div>
             </div>
             
-            <div className="group text-center p-6 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl hover:from-emerald-100 hover:to-teal-100 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-              <div className="w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                <DollarSign className="w-8 h-8 text-white" />
+            <div className="text-center p-6">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <DollarSign className="w-8 h-8 text-emerald-500" />
               </div>
               <div className="text-3xl font-bold text-gray-900 mb-1">
                 {formatCurrency(profile.stats.totalSpent).replace('.00', '')}
@@ -433,17 +433,17 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
               <div className="text-sm text-gray-600 font-medium">Total Spent</div>
             </div>
             
-            <div className="group text-center p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl hover:from-purple-100 hover:to-pink-100 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                <Calendar className="w-8 h-8 text-white" />
+            <div className="text-center p-6">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Calendar className="w-8 h-8 text-purple-500" />
               </div>
               <div className="text-3xl font-bold text-gray-900 mb-1">{profile.stats.totalDaysTravel}</div>
               <div className="text-sm text-gray-600 font-medium">Days Traveled</div>
             </div>
             
-            <div className="group text-center p-6 bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl hover:from-orange-100 hover:to-red-100 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-              <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                <Globe className="w-8 h-8 text-white" />
+            <div className="text-center p-6">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Globe className="w-8 h-8 text-orange-500" />
               </div>
               <div className="text-3xl font-bold text-gray-900 mb-1">{profile.stats.countriesVisited}</div>
               <div className="text-sm text-gray-600 font-medium">Countries</div>
@@ -986,7 +986,7 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
   const renderBookingDetailsModal = () => {
     if (!selectedBooking || !showBookingDetails) return null
 
-    return (
+  return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
           <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
@@ -1293,7 +1293,7 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
                   <div className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all duration-300 ${
                     isActive ? 'bg-white/20' : 'bg-transparent group-hover:bg-white/20'
                   }`}>
-                    <Icon className="w-4 h-4" />
+                  <Icon className="w-4 h-4" />
                   </div>
                   <span>{tab.label}</span>
                   {isActive && (
@@ -1309,12 +1309,12 @@ export function UserProfile({ userId, onClose }: UserProfileProps) {
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="animate-fade-in">
-          {activeTab === 'overview' && renderOverview()}
-          {activeTab === 'itineraries' && renderItineraries()}
-          {activeTab === 'bookings' && renderBookings()}
-          {activeTab === 'memories' && renderMemories()}
-          {activeTab === 'settings' && renderSettings()}
-        </div>
+        {activeTab === 'overview' && renderOverview()}
+        {activeTab === 'itineraries' && renderItineraries()}
+        {activeTab === 'bookings' && renderBookings()}
+        {activeTab === 'memories' && renderMemories()}
+        {activeTab === 'settings' && renderSettings()}
+      </div>
       </div>
 
       {/* Modals */}
