@@ -8,6 +8,22 @@ import {
   BarChart3, PieChart, LineChart, Globe, Plane, Heart,
   ChevronLeft, ChevronRight, RefreshCw, X, BookOpen
 } from 'lucide-react'
+import {
+  LineChart as RechartsLineChart,
+  Line,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart as RechartsPieChart,
+  Pie,
+  Cell
+} from 'recharts'
 
 interface AdminDashboardProps {}
 
@@ -613,16 +629,42 @@ export function AdminDashboard({}: AdminDashboardProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 bg-white/70 backdrop-blur-lg rounded-3xl shadow-xl border border-white/30 p-8">
           <h3 className="text-xl font-bold text-gray-900 mb-6">Revenue Trend</h3>
-          <div className="h-64 flex items-end justify-between space-x-2">
-            {analytics?.monthlyStats.map((stat, index) => (
-              <div key={stat.month} className="flex-1 flex flex-col items-center space-y-2">
-                <div 
-                  className="w-full bg-gradient-to-t from-indigo-500 to-purple-600 rounded-t-lg transition-all duration-500"
-                  style={{ height: `${(stat.revenue / 13000000) * 100}%` }}
-                ></div>
-                <span className="text-xs text-gray-600">{stat.month}</span>
-              </div>
-            ))}
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <RechartsLineChart data={analytics?.monthlyStats.map(stat => ({
+                month: stat.month,
+                revenue: stat.revenue / 1000 // Convert to thousands for better display
+              })) || []}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis 
+                  dataKey="month" 
+                  stroke="#6b7280"
+                  fontSize={12}
+                />
+                <YAxis 
+                  stroke="#6b7280"
+                  fontSize={12}
+                  tickFormatter={(value) => `₹${value}k`}
+                />
+                <Tooltip 
+                  contentStyle={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    border: 'none',
+                    borderRadius: '12px',
+                    boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
+                  }}
+                  formatter={(value: any) => [`₹${value}k`, 'Revenue']}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="revenue" 
+                  stroke="#8b5cf6" 
+                  strokeWidth={3}
+                  dot={{ fill: '#8b5cf6', strokeWidth: 2, r: 6 }}
+                  activeDot={{ r: 8, fill: '#8b5cf6' }}
+                />
+              </RechartsLineChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
@@ -656,6 +698,161 @@ export function AdminDashboard({}: AdminDashboardProps) {
                 <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full" style={{ width: '67%' }}></div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* User Growth Chart */}
+      <div className="bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 p-8 hover:shadow-3xl transition-all duration-500">
+        <h2 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6">User Growth & Bookings</h2>
+        <div className="h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={analytics?.monthlyStats.map(stat => ({
+              month: stat.month,
+              users: stat.users,
+              bookings: stat.bookings
+            })) || []}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis 
+                dataKey="month" 
+                stroke="#6b7280"
+                fontSize={12}
+              />
+              <YAxis 
+                stroke="#6b7280"
+                fontSize={12}
+              />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  border: 'none',
+                  borderRadius: '12px',
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
+                }}
+              />
+              <Area
+                type="monotone"
+                dataKey="users"
+                stackId="1"
+                stroke="#10b981"
+                fill="#10b981"
+                fillOpacity={0.6}
+                strokeWidth={2}
+              />
+              <Area
+                type="monotone"
+                dataKey="bookings"
+                stackId="2"
+                stroke="#f59e0b"
+                fill="#f59e0b"
+                fillOpacity={0.6}
+                strokeWidth={2}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Booking Status Distribution */}
+        <div className="bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 p-8 hover:shadow-3xl transition-all duration-500">
+          <h2 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6">Booking Status Distribution</h2>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <RechartsPieChart>
+                <Tooltip 
+                  contentStyle={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    border: 'none',
+                    borderRadius: '12px',
+                    boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
+                  }}
+                />
+                <Pie
+                  dataKey="value"
+                  data={[
+                    { name: 'Confirmed', value: 45, color: '#3B82F6' },
+                    { name: 'Pending', value: 25, color: '#F59E0B' },
+                    { name: 'Completed', value: 20, color: '#10B981' },
+                    { name: 'Cancelled', value: 10, color: '#EF4444' }
+                  ]}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  innerRadius={40}
+                  paddingAngle={2}
+                >
+                  {[
+                    { name: 'Confirmed', value: 45, color: '#3B82F6' },
+                    { name: 'Pending', value: 25, color: '#F59E0B' },
+                    { name: 'Completed', value: 20, color: '#10B981' },
+                    { name: 'Cancelled', value: 10, color: '#EF4444' }
+                  ].map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+              </RechartsPieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="grid grid-cols-2 gap-4 mt-4">
+            {[
+              { name: 'Confirmed', value: 45, color: '#3B82F6' },
+              { name: 'Pending', value: 25, color: '#F59E0B' },
+              { name: 'Completed', value: 20, color: '#10B981' },
+              { name: 'Cancelled', value: 10, color: '#EF4444' }
+            ].map((item, index) => (
+              <div key={index} className="flex items-center space-x-2">
+                <div 
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: item.color }}
+                ></div>
+                <span className="text-sm text-gray-600">{item.name}: {item.value}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Top Destinations */}
+        <div className="bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 p-8 hover:shadow-3xl transition-all duration-500">
+          <h2 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6">Top Destinations</h2>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={analytics?.topDestinations.map(dest => ({
+                name: dest.name,
+                revenue: dest.revenue / 1000, // Convert to thousands
+                bookings: dest.bookings || 0
+              })) || []}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis 
+                  dataKey="name" 
+                  stroke="#6b7280"
+                  fontSize={12}
+                  angle={-45}
+                  textAnchor="end"
+                  height={60}
+                />
+                <YAxis 
+                  stroke="#6b7280"
+                  fontSize={12}
+                  tickFormatter={(value) => `₹${value}k`}
+                />
+                <Tooltip 
+                  contentStyle={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    border: 'none',
+                    borderRadius: '12px',
+                    boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
+                  }}
+                  formatter={(value: any) => [`₹${value}k`, 'Revenue']}
+                />
+                <Bar 
+                  dataKey="revenue" 
+                  fill="#f59e0b"
+                  radius={[4, 4, 0, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
