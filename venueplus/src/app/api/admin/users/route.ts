@@ -5,8 +5,14 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(request: NextRequest) {
   try {
-    // Temporarily disable auth for debugging
     console.log('Admin users API called')
+    
+    // Check if Prisma is available
+    if (!prisma) {
+      console.error('Prisma client is not available')
+      return NextResponse.json({ error: 'Database not available' }, { status: 500 })
+    }
+    console.log('Prisma client is available')
     
     // TODO: Re-enable authentication after debugging
     // const session = await getServerSession(authOptions)
@@ -41,11 +47,14 @@ export async function GET(request: NextRequest) {
     }
 
     // Get total count for pagination
+    console.log('Getting user count...')
     const totalUsers = await prisma.user.count({
       where: whereClause
     })
+    console.log('Total users:', totalUsers)
 
     // Fetch users with pagination
+    console.log('Fetching users with pagination...')
     const users = await prisma.user.findMany({
       where: whereClause,
       select: {
@@ -70,8 +79,10 @@ export async function GET(request: NextRequest) {
       skip: (page - 1) * limit,
       take: limit
     })
+    console.log('Fetched users:', users.length)
 
     // Get booking totals for each user
+    console.log('Calculating user stats...')
     const usersWithStats = await Promise.all(
       users.map(async (user) => {
         // Get total spent from bookings
@@ -102,7 +113,9 @@ export async function GET(request: NextRequest) {
         }
       })
     )
+    console.log('Calculated stats for users:', usersWithStats.length)
 
+    console.log('Returning response...')
     return NextResponse.json({
       users: usersWithStats,
       pagination: {
