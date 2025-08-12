@@ -620,55 +620,9 @@ export function EnhancedItineraryGenerator({ tripData, onUpdate, onNext }: Enhan
             <Sparkles className="w-6 h-6 animate-pulse" />
           </div>
         </button>
-        <p className="text-sm text-gray-500">
-          Powered by Google Gemini 1.5 Pro AI • Generates in 30-60 seconds
-        </p>
 
-        <div className="pt-6">
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 mb-4">
-            <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center">
-              <Brain className="w-5 h-5 mr-2 text-purple-600" />
-              Production AI Features
-            </h3>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div className="flex items-center">
-                <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                Real venue recommendations
-              </div>
-              <div className="flex items-center">
-                <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                Live pricing & availability
-              </div>
-              <div className="flex items-center">
-                <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                Local insider knowledge
-              </div>
-              <div className="flex items-center">
-                <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                Cultural immersion experiences
-              </div>
-              <div className="flex items-center">
-                <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                Hidden gems & secret spots
-              </div>
-              <div className="flex items-center">
-                <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                Professional travel documents
-              </div>
-            </div>
-          </div>
-          
-          <button
-            onClick={testGeminiAPI}
-            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-300 mr-4"
-          >
-            🧪 Test API Connection
-          </button>
-          
-          <p className="text-xs text-gray-500 mt-3">
-            ⚡ Powered by Gemini 1.5 Pro • Professional-grade travel planning
-          </p>
-        </div>
+
+
       </div>
     </div>
   )
