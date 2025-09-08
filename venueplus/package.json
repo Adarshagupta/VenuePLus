@@ -10,9 +10,6 @@
     "postinstall": "prisma generate",
     "db:seed": "npx tsx prisma/seed.ts"
   },
-  "prisma": {
-    "seed": "npx tsx prisma/seed.ts"
-  },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "@next-auth/prisma-adapter": "^1.0.7",
