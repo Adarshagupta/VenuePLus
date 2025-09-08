@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useSession } from 'next-auth/react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { 
@@ -35,7 +35,7 @@ interface PackageData {
   images: string[]
 }
 
-export default function BookPackagePage() {
+function BookPackageContent() {
   const { data: session, status } = useSession()
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -757,5 +757,20 @@ export default function BookPackagePage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function BookPackagePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading package details...</p>
+        </div>
+      </div>
+    }>
+      <BookPackageContent />
+    </Suspense>
   )
 }
