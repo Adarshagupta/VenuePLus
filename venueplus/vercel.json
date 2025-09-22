@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "NEXTAUTH_SECRET": "fallback-secret-key-for-deployment-please-change-in-dashboard",
+    "NEXTAUTH_URL": "https://makemyway.vercel.app",
+    "DATABASE_URL": "postgresql://dummy:dummy@localhost:5432/dummy",
+    "NODE_ENV": "production"
+  }
+}
+
