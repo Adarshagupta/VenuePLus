@@ -25,6 +25,28 @@ Go to your Vercel project dashboard → Settings → Environment Variables and a
 - `GMAIL_USER`: your-email@gmail.com
 - `GMAIL_APP_PASSWORD`: your-gmail-app-password
 
+## 🚨 URGENT FIX for 404 Error
+
+Your app is getting 404 errors because of missing environment variables. Here's the immediate fix:
+
+### Step 1: Set Environment Variables in Vercel Dashboard
+
+Go to your Vercel project → Settings → Environment Variables and add these **immediately**:
+
+```
+NEXTAUTH_SECRET=your-super-secret-key-here-make-it-very-long-and-random-at-least-32-chars
+NEXTAUTH_URL=https://makemyway.vercel.app
+DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
+NODE_ENV=production
+```
+
+### Step 2: Test the Fix
+
+After adding environment variables, test these URLs:
+- `https://makemyway.vercel.app/test-deployment` - Simple test page
+- `https://makemyway.vercel.app/api/health` - API health check
+- `https://makemyway.vercel.app/` - Main homepage
+
 ## Quick Setup for Testing
 
 For immediate deployment testing, you can use these minimal environment variables:
